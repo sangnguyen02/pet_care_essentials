@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="white">#FDF1F5</color>
+    <color name="black">#232023</color>
+    <color name="primary">#0A5A8C</color>
+    <color name="textOnPrimary">#EE8E46</color>
+    <color name="editText_background">#EE8E46</color>
+    <color name="tabLayout_background">#EE8E46</color>
+    <color name="btn_background">#0057A0</color>
+    <color name="onPrimary">#004080</color>
+    <color name="dotBanner">#D3D3D3</color>
+
+</resources>

@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">PetCare Essentials</string>
+    <string name="skipSignIn_button">SKIP</string>
+    <string name="login_background">login_background</string>
+    <string name="fab_google">Google Login</string>
+    <string name="fab_guest">Guest Login</string>
+    <string name="welcome">Welcome to PetCare Essential</string>
+    <string name="hint_phone_number">Phone Number</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="btn_sign_in">Sign In</string>
+    <string name="btn_sign_up">Sign Up</string>
+    <string name="tv_forgot_password">Forgot Password</string>
+    <string name="main_welcome">Welcome</string>
+    <string name="main_categories">Categories</string>
+    <string name="main_see_all">See all</string>
+</resources>
