@@ -2,12 +2,34 @@
 <resources>
     <color name="white">#FDF1F5</color>
     <color name="black">#232023</color>
-    <color name="primary">#0A5A8C</color>
+    <color name="grey">#9C9C9C</color>
+    <color name="light_grey">#D8DCD6</color>
+    <color name="text_input">#4E4A4A</color>
+    <color name="light_primary">#90E0EF</color>
+    <color name="primary">#0077B6</color>
+    <color name="dark_primary">#0A5A8C</color>
     <color name="textOnPrimary">#EE8E46</color>
     <color name="editText_background">#EE8E46</color>
-    <color name="tabLayout_background">#EE8E46</color>
-    <color name="btn_background">#0057A0</color>
+    <color name="tabLayout_background">#00B4D8</color>
+    <color name="btn_background">#0077B6</color>
     <color name="onPrimary">#004080</color>
     <color name="dotBanner">#D3D3D3</color>
+
+    <color name="bottom_nav_item_color">
+        <!-- Color for inactive items -->
+        <selector xmlns:android="http://schemas.android.com/apk/res/android">
+            <item android:color="@color/white" android:state_checked="true"/> <!-- Active state -->
+            <item android:color="@color/grey"/> <!-- Inactive state -->
+        </selector>
+    </color>
+
+    <color name="bottom_nav_item_icon_color">
+        <!-- Color for inactive icons -->
+        <selector xmlns:android="http://schemas.android.com/apk/res/android">
+            <item android:color="@color/white" android:state_checked="true"/> <!-- Active state -->
+            <item android:color="@color/grey"/> <!-- Inactive state -->
+        </selector>
+    </color>
+
 
 </resources>

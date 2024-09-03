@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.SplashActivity"
@@ -21,8 +22,8 @@
         app:layout_constraintWidth_percent="0.5"
         app:lottie_autoPlay="true"
         app:lottie_loop="false"
-        app:lottie_rawRes="@raw/splash"
-        app:lottie_speed="3" />
+        app:lottie_rawRes="@raw/splash2"
+        app:lottie_speed="1" />
 
     <TextView
         android:layout_width="wrap_content"

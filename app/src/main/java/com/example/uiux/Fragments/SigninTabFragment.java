@@ -11,10 +11,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.uiux.R;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class SigninTabFragment extends Fragment {
     View rootView;
-    EditText edtPhone, edtPassword;
+    TextInputEditText edtPhone, edtPassword;
 
     @Nullable
     @Override

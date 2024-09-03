@@ -5,17 +5,15 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.uiux.Fragments.SigninTabFragment;
 import com.example.uiux.Fragments.SignupTabFragment;
 
-public class OnboardingAdapter extends FragmentStateAdapter {
+public class EntryAdapter extends FragmentStateAdapter {
     private Context context;
     int totalTabs;
-    public OnboardingAdapter(@NonNull FragmentActivity fragmentActivity, int totalTabs) {
+    public EntryAdapter(@NonNull FragmentActivity fragmentActivity, int totalTabs) {
         super(fragmentActivity);
         this.totalTabs = totalTabs;
     }

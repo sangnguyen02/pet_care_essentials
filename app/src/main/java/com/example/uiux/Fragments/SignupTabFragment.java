@@ -11,10 +11,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.uiux.R;
+import com.google.android.material.textfield.TextInputEditText;
 
 public class SignupTabFragment extends Fragment {
     View rootView;
-    EditText edtPhone, edtEmail, edtPassword, edtConfirmPassword;
+    TextInputEditText edtPhone, edtEmail, edtPassword, edtConfirmPassword;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

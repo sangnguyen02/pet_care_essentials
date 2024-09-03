@@ -1,86 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signInLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
+    android:orientation="vertical"
+    >
 
-    <EditText
-        android:id="@+id/edt_phone_number"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/edt_height"
-        android:autofillHints=""
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:hint="@string/hint_phone_number"
-        android:inputType="phone"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:textSize="@dimen/text_size"
-        android:textColor="@color/black"
-        android:fontFamily="@font/roboto_bold"
-        android:background="@drawable/edt_bg"
-        app:layout_constraintWidth_percent=".8"
-        app:layout_constraintVertical_bias=".075"
-        app:layout_constraintHorizontal_bias=".5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        app:shapeAppearanceOverlay="@style/Button4"
+        app:hintTextColor="@color/text_input"
+        app:boxStrokeColor="@color/text_input"
+        app:boxStrokeWidth="1dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        >
 
-    <EditText
-        android:id="@+id/edt_password"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/edt_height"
-        android:autofillHints=""
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/edt_height"
+            android:inputType="phone|number"
+            android:id="@+id/edt_phone_number"
+            android:ems="10"
+            android:textSize="@dimen/text_size"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_flex"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:hint="@string/hint_password"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        app:shapeAppearanceOverlay="@style/Button4"
+        app:hintTextColor="@color/text_input"
+        app:boxStrokeColor="@color/text_input"
+        app:boxStrokeWidth="1dp"
+        app:endIconMode="password_toggle"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+    >
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edt_height"
         android:inputType="textPassword"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:layout_marginTop="20dp"
+        android:id="@+id/edt_password"
+        android:ems="10"
         android:textSize="@dimen/text_size"
         android:textColor="@color/black"
-        android:fontFamily="@font/roboto_bold"
-        android:background="@drawable/edt_bg"
-        app:layout_constraintWidth_percent=".8"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintHorizontal_bias=".5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edt_phone_number" />
+        android:fontFamily="@font/roboto_flex"
+        />
+    </com.google.android.material.textfield.TextInputLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:textSize="11sp"
+        android:text="@string/tv_forgot_password"
+        android:textAlignment="textEnd"
+        android:textColor="@color/black"
+        android:fontFamily="@font/roboto_flex"
+
+        />
 
     <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/btn_sign_in"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/btn_background"
-        android:fontFamily="@font/roboto_bold"
         android:text="@string/btn_sign_in"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintWidth_percent=".8" />
-    
-    <TextView
-        android:id="@+id/tv_forgot_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/tv_forgot_password"
         android:textSize="16sp"
-        android:textColor="@color/white"
-        android:textAlignment="center"
-        android:fontFamily="@font/roboto_flex"
-        android:layout_marginTop="10dp"
+        android:textAllCaps="false"
+        android:elevation="15dp"
+        android:gravity="center"
+        android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintHorizontal_bias="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/edt_password"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edt_password"/>
+        android:layout_marginTop="8dp"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        app:shapeAppearanceOverlay="@style/Button5"
+        app:backgroundTint="@color/tabLayout_background"
+        />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

@@ -22,7 +22,7 @@ public class SplashActivity extends AppCompatActivity {
         runnable = new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(SplashActivity.this, OnboardingActivity.class);
+                Intent intent = new Intent(SplashActivity.this, EntryActivity.class);
                 startActivity(intent);
                 finish();
             }
