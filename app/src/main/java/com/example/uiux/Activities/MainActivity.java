@@ -14,6 +14,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.uiux.R;
 
+import Model.Account;
+
 public class MainActivity extends AppCompatActivity {
 
     SearchView searchView;
@@ -23,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-
         initWidget();
         searchViewConfig();
 
