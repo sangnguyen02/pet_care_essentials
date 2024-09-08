@@ -125,7 +125,7 @@ public class EntryActivity extends AppCompatActivity {
                     account.setPassword(" ");
 
                     database.getReference().child("Account").child(user.getUid()).setValue(account);
-                    Intent intent=new Intent(EntryActivity.this,MainActivity.class);
+                    Intent intent=new Intent(EntryActivity.this,MainActivityUser.class);
                     startActivity(intent);
                 }
                 else
