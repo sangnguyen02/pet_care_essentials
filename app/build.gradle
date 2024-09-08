@@ -48,4 +48,12 @@ dependencies {
     implementation libs.circleimageview
     implementation(libs.dotsindicator)
     implementation libs.glide
+    implementation(libs.firebase.bom)
+    implementation(libs.firebase.auth)
+    implementation(libs.play.services.auth)
+    implementation libs.google.firebase.auth
+    implementation libs.play.services.gcm
+    implementation libs.firebase.auth.v2130
+    implementation libs.play.services.auth.v2060
+
 }

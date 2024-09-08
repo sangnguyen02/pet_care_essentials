@@ -1,27 +1,53 @@
 {
   "project_info": {
-    "project_number": "373983441287",
-    "firebase_url": "https://petcareessentials-d29a5-default-rtdb.firebaseio.com",
-    "project_id": "petcareessentials-d29a5",
-    "storage_bucket": "petcareessentials-d29a5.appspot.com"
+    "project_number": "262802383617",
+    "firebase_url": "https://petcareessentials-ede77-default-rtdb.firebaseio.com",
+    "project_id": "petcareessentials-ede77",
+    "storage_bucket": "petcareessentials-ede77.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:373983441287:android:4afbcb5ad28e5e5b446322",
+        "mobilesdk_app_id": "1:262802383617:android:018ebfbf044d095d62b100",
         "android_client_info": {
           "package_name": "com.example.uiux"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "262802383617-8ppm8mklgtaoakttmnngbejeg75j4nk0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.uiux",
+            "certificate_hash": "ff5e0f9101186427f99b606ae11dbab50d60ad6a"
+          }
+        },
+        {
+          "client_id": "262802383617-ajhoprej56177hn9o3iic8unu3lu5ueg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.uiux",
+            "certificate_hash": "ea727309a9b3ff9b1b55816ab77987966ad889f9"
+          }
+        },
+        {
+          "client_id": "262802383617-4aamsr4g0210lb9gnrsicb4o3d3ef5hf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBPtZXH9JLR6ZHnmjs1d84zMThLkJCNElc"
+          "current_key": "AIzaSyCKKZSsfnBl1NJps8pE9cuF9q9kxWRTfUM"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "262802383617-4aamsr4g0210lb9gnrsicb4o3d3ef5hf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

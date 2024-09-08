@@ -1,4 +1,5 @@
 <resources>
+    <string name="default_web_client_id">262802383617-4aamsr4g0210lb9gnrsicb4o3d3ef5hf.apps.googleusercontent.com</string>
     <string name="app_name">PetCare Essentials</string>
     <string name="skipSignIn_button">SKIP</string>
     <string name="login_background">login_background</string>
