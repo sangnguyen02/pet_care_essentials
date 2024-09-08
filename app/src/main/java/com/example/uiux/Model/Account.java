@@ -1,12 +1,12 @@
-package com.example.uiux.Model;
+package Model;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Account {
     private String account_id;
-    private String first_name;
-    private String last_name;
+    private String fullname;
     private String email;
     private String password;
     private Date birthday;
@@ -20,10 +20,9 @@ public class Account {
     public Account() {
     }
 
-    public Account(String account_id, String first_name, String last_name, String email, String password, Date birthday, String gender, String phone, int account_type, String address, String image) {
+    public Account(String account_id, String fullname, String email, String password, Date birthday, String gender, String phone, int account_type, String address, String image) {
         this.account_id = account_id;
-        this.first_name = first_name;
-        this.last_name = last_name;
+        this.fullname=fullname;
         this.email = email;
         this.password = password;
         this.birthday = birthday;
@@ -42,21 +41,15 @@ public class Account {
         this.account_id = account_id;
     }
 
-    public String getFirst_name() {
-        return first_name;
+    public String getFullname() {
+        return fullname;
     }
 
-    public void setFirst_name(String first_name) {
-        this.first_name = first_name;
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
-    public String getLast_name() {
-        return last_name;
-    }
 
-    public void setLast_name(String last_name) {
-        this.last_name = last_name;
-    }
 
     public String getEmail() {
         return email;
@@ -121,4 +114,5 @@ public class Account {
     public void setImage(String image) {
         this.image = image;
     }
+
 }
