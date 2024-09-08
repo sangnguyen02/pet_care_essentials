@@ -122,21 +122,20 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_sign_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_sign_up"
-        android:text="@string/btn_sign_up"
-        android:textSize="16sp"
-        android:textAllCaps="false"
+        android:layout_gravity="center"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="5dp"
         android:elevation="15dp"
         android:gravity="center"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp"
-        android:layout_marginTop="8dp"
+        android:text="@string/btn_sign_up"
+        android:textAllCaps="false"
         android:textColor="@color/white"
-        android:layout_gravity="center"
-        app:shapeAppearanceOverlay="@style/Button5"
+        android:textSize="16sp"
         app:backgroundTint="@color/tabLayout_background"
-        />
+        app:shapeAppearanceOverlay="@style/Button5" />
 
 </LinearLayout>

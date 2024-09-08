@@ -55,5 +55,6 @@ dependencies {
     implementation libs.play.services.gcm
     implementation libs.firebase.auth.v2130
     implementation libs.play.services.auth.v2060
+    implementation libs.jbcrypt
 
 }
