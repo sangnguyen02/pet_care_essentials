@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.Admin.MainActivityAdmin"
+            android:exported="false" />
+        <activity
             android:name=".Activities.EntryActivity"
             android:exported="false" />
         <activity

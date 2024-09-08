@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.uiux.Activities.Admin.MainActivityAdmin;
 import com.example.uiux.Activities.User.MainActivityUser;
 import com.example.uiux.Adapters.EntryAdapter;
 import com.example.uiux.R;

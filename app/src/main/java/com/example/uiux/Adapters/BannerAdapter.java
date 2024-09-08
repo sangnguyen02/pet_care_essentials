@@ -1,6 +1,6 @@
 package com.example.uiux.Adapters;
 import com.bumptech.glide.Glide;
-import com.example.uiux.Models.Banner;
+import com.example.uiux.Model.Banner;
 import com.example.uiux.R;
 import android.view.LayoutInflater;
 import android.view.View;

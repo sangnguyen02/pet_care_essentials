@@ -1,6 +1,5 @@
 package com.example.uiux.Activities;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -8,13 +7,9 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.uiux.R;
-
-import Model.Account;
+import com.google.firebase.database.DatabaseReference;
 
 public class MainActivity extends AppCompatActivity {
 
