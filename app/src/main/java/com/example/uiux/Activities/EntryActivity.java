@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.uiux.Activities.Admin.MainActivityAdmin;
+import com.example.uiux.Activities.User.UserUpdateProfile;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -120,12 +121,12 @@ public class EntryActivity extends AppCompatActivity {
                     account.setFullname(user.getDisplayName());
                     account.setPhone(user.getPhoneNumber() != null ? user.getPhoneNumber() : ""); // Check for null
                     account.setGender(" ");
-                    account.setBirthday(new Date());
+                    account.setBirthday(new Date().toString());
                     account.setAddress(" ");
                     account.setPassword(" ");
 
                     database.getReference().child("Account").child(user.getUid()).setValue(account);
-                    Intent intent=new Intent(EntryActivity.this,MainActivityUser.class);
+                    Intent intent=new Intent(EntryActivity.this, UserUpdateProfile.class);
                     startActivity(intent);
                 }
                 else

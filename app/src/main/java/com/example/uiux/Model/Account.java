@@ -1,5 +1,5 @@
-package Model;
 
+package Model;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -9,7 +9,7 @@ public class Account {
     private String fullname;
     private String email;
     private String password;
-    private Date birthday;
+    private String birthday;
     private  String gender;
     private  String Phone;
     private  int account_type;
@@ -20,7 +20,7 @@ public class Account {
     public Account() {
     }
 
-    public Account(String account_id, String fullname, String email, String password, Date birthday, String gender, String phone, int account_type, String address, String image) {
+    public Account(String account_id, String fullname, String email, String password, String birthday, String gender, String phone, int account_type, String address, String image) {
         this.account_id = account_id;
         this.fullname=fullname;
         this.email = email;
@@ -67,11 +67,11 @@ public class Account {
         this.password = password;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 

@@ -2,7 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
+
 
     <application
         android:allowBackup="true"
@@ -14,6 +22,28 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.User.LoginActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.User.Sent_OTPActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.User.LoginActivityUser"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.User.UserUpdateProfile"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.User.MainActivity"
+            android:exported="false"
+            android:label="@string/title_activity_main"
+            android:theme="@style/Theme.Uiux" />
+        <activity
+            android:name=".Activities.User.UpdateProfileActivity"
+            android:exported="false"
+            android:label="@string/title_activity_update_profile"
+            android:theme="@style/Theme.Uiux" />
+        <activity
             android:name=".Activities.Admin.MainActivityAdmin"
             android:exported="false" />
         <activity
@@ -22,17 +52,16 @@
         <activity
             android:name=".Activities.User.MainActivityUser"
             android:exported="false" />
-
         <activity
             android:name=".Activities.SplashActivity"
             android:exported="true"
-            android:theme="@style/MyTheme.Splash">
+            android:theme="@style/Theme.Uiux">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Activities.MainActivity"
             android:exported="false" />
