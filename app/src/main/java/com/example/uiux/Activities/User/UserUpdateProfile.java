@@ -17,8 +17,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.uiux.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.hbb20.CountryCodePicker;
@@ -35,7 +38,6 @@ public class UserUpdateProfile extends AppCompatActivity {
     private TextView tvBirthday;
     private ImageView imgAvatar;
     private Uri imageUri;
-    private CountryCodePicker countryCodePicker;
     private String account_id;
     private DatabaseReference databaseReference;
 
@@ -47,32 +49,14 @@ public class UserUpdateProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_update_profile);
-
         // Initialize widgets
         initWidget();
-
-        // Get data from Intent
-        Intent intent = getIntent();
-        String fullname = intent.getStringExtra("fullname");
-        String email = intent.getStringExtra("email");
-        String imageUrl = intent.getStringExtra("image");
-        account_id = intent.getStringExtra("account_id");
-
-        // Display user information
-        if (fullname != null && !fullname.isEmpty()) {
-            tvFullname.setText(fullname);
-        }
-        if (email != null && !email.isEmpty()) {
-            tvEmail.setText(email);
-        }
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            Glide.with(this).load(imageUrl).into(imgAvatar);
-        }
 
         // Set up button listeners
         btnBirthday.setOnClickListener(view -> showDatePickerDialog());
         btnChooseImage.setOnClickListener(view -> chooseImage());
         btnUpdate.setOnClickListener(view -> updateAccountInfo());
+        loadUserProfile();
     }
 
     // Show date picker dialog
@@ -86,7 +70,6 @@ public class UserUpdateProfile extends AppCompatActivity {
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
-
     // Choose image from gallery
     private void chooseImage() {
         Intent intent = new Intent(Intent.ACTION_PICK);
@@ -94,7 +77,6 @@ public class UserUpdateProfile extends AppCompatActivity {
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
-    // Update account information
     private void updateAccountInfo() {
         String fullName = tvFullname.getText().toString().trim();
         String gender = tvGender.getText().toString().trim();
@@ -108,22 +90,87 @@ public class UserUpdateProfile extends AppCompatActivity {
             return;
         }
 
+        // Check if the phone number exists in Firebase database
+        databaseReference = FirebaseDatabase.getInstance().getReference("Account");
+        databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    DataSnapshot userSnapshot = dataSnapshot.getChildren().iterator().next();
+                    account_id = userSnapshot.getKey(); // Get existing user ID
+                    updateUserInFirebase(fullName, gender, phone, email, address, birthday);
+                } else {
+                    // If user does not exist, create a new profile
+                    createUserInFirebase(fullName, gender, phone, email, address, birthday);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(UserUpdateProfile.this, "Failed to check user", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void updateUserInFirebase(String fullName, String gender, String phone, String email, String address, String birthday) {
+        DatabaseReference userRef = databaseReference.child(account_id);
+
+        // Update individual fields directly in Firebase
+        userRef.child("fullname").setValue(fullName);
+        userRef.child("email").setValue(email);
+        userRef.child("phone").setValue(phone);
+        userRef.child("gender").setValue(gender);
+        userRef.child("birthday").setValue(birthday);
+        userRef.child("address").setValue(address);
+
+        // Check if imageUri is not null, upload the image to Firebase Storage
         if (imageUri != null) {
-            uploadImageToFirebase(imageUri);
+            uploadImageToFirebase(imageUri, userRef); // Upload image and update its URL in the database
         } else {
-            saveAccountInfo(null);
+            Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
         }
     }
+private void createUserInFirebase(String fullName, String gender, String phone, String email, String address, String birthday) {
+    DatabaseReference newUserRef = databaseReference.push();
+    account_id = newUserRef.getKey(); // Get a new unique ID
+    Model.Account account = new Model.Account();
+    account.setFullname(fullName);
+    account.setEmail(email);
+    account.setPhone(phone);
+    account.setGender(gender);
+    account.setBirthday(birthday);
+    account.setAddress(address);
+    account.setAccount_id(account_id);
 
-    // Upload image to Firebase Storage
-    private void uploadImageToFirebase(Uri imageUri) {
+    if (imageUri != null) {
+        // Upload image and update account information after image upload
+        uploadImageToFirebase(imageUri, newUserRef);
+    } else {
+        newUserRef.setValue(account).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(this, "New profile created successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Failed to create new profile", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+}
+
+    private void uploadImageToFirebase(Uri imageUri, DatabaseReference userRef) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
         StorageReference imageRef = storageRef.child("Account_Image/" + System.currentTimeMillis() + ".jpg");
 
         imageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
             imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                 String imageUrl = uri.toString();
-                saveAccountInfo(imageUrl);
+
+                // Update the image URL in Firebase
+                userRef.child("image").setValue(imageUrl).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(UserUpdateProfile.this, "Profile updated successfully with image", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(UserUpdateProfile.this, "Failed to update profile with image", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }).addOnFailureListener(e -> {
                 Toast.makeText(UserUpdateProfile.this, "Failed to get image URL", Toast.LENGTH_SHORT).show();
             });
@@ -159,7 +206,66 @@ public class UserUpdateProfile extends AppCompatActivity {
             });
         }
     }
+    private void loadUserProfile() {
+          Intent intent = getIntent();
+          String fullname = intent.getStringExtra("fullname");
+          String email = intent.getStringExtra("email");
+          String imageUrl = intent.getStringExtra("image");
+          account_id = intent.getStringExtra("account_id");
 
+        // Display user information
+        if (fullname != null && !fullname.isEmpty()) {
+            tvFullname.setText(fullname);
+        }
+        if (email != null && !email.isEmpty()) {
+            tvEmail.setText(email);
+        }
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Glide.with(this).load(imageUrl).into(imgAvatar);
+        }
+
+        // Reference to the Firebase database
+        databaseReference = FirebaseDatabase.getInstance().getReference("Account");
+
+        // Query Firebase to check if the user exists
+        databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Get user data
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Model.Account account = snapshot.getValue(Model.Account.class);
+
+                        // Populate the fields with the user's data
+                        if (account != null) {
+                            account_id = account.getAccount_id();
+                            tvPhone.setText(account.getPhone()!=null?account.getPhone():" ");
+                            tvFullname.setText(account.getFullname() != null ? account.getFullname() : "");
+                            tvGender.setText(account.getGender() != null ? account.getGender() : "");
+                            tvEmail.setText(account.getEmail() != null ? account.getEmail() : "");
+                            tvAddress.setText(account.getAddress() != null ? account.getAddress() : "");
+                            tvBirthday.setText(account.getBirthday() != null ? account.getBirthday() : "");
+                            // Load image if it exists
+                            if (account.getImage() != null) {
+                                Glide.with(UserUpdateProfile.this)
+                                        .load(account.getImage())
+                                        .into(imgAvatar);
+                            }
+                        }
+                    }
+                } else {
+                    // If the user doesn't exist, prompt them to create a profile
+                    Toast.makeText(UserUpdateProfile.this, "No existing profile found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle errors
+                Toast.makeText(UserUpdateProfile.this, "Failed to load data: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     // Handle the result of the image picker
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -169,10 +275,8 @@ public class UserUpdateProfile extends AppCompatActivity {
             imgAvatar.setImageURI(imageUri);
         }
     }
-
     // Initialize widgets
-    private void initWidget() {
-
+    private void  initWidget() {
         btnBirthday = findViewById(R.id.btn_birthday);
         tvBirthday = findViewById(R.id.tv_birthday);
         tvFullname = findViewById(R.id.edt_fullname);
