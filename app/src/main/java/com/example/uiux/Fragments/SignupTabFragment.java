@@ -5,8 +5,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,7 +16,12 @@ import com.example.uiux.Utils.PasswordUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import Model.Account;
 
@@ -27,24 +30,22 @@ public class SignupTabFragment extends Fragment {
     TextInputEditText edtPhone, edtEmail, edtPassword, edtConfirmPassword;
     MaterialButton signUp;
     private FirebaseAuth mAuth;
+    private DatabaseReference databaseReference;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.signup_tab_fragment, container, false);
 
         initWidget();
-        signUp=rootView.findViewById(R.id.btn_sign_up);
+        signUp = rootView.findViewById(R.id.btn_sign_up);
         mAuth = FirebaseAuth.getInstance();
-        signUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                registerAccount();
-            }
-        });
+        databaseReference = FirebaseDatabase.getInstance().getReference("Account");
+
+        signUp.setOnClickListener(view -> registerAccount());
 
         return rootView;
     }
-
 
     void initWidget() {
         edtPhone = rootView.findViewById(R.id.edt_phone_number_sign_up);
@@ -52,11 +53,9 @@ public class SignupTabFragment extends Fragment {
         edtPassword = rootView.findViewById(R.id.edt_password_sign_up);
         edtConfirmPassword = rootView.findViewById(R.id.edt_confirm_password);
     }
+
     private void registerAccount() {
         String email = edtEmail.getText().toString().trim();
-        String rawPassword  = edtPassword.getText().toString().trim();
-        String hashedPassword = PasswordUtils.hashPassword(rawPassword);
-        String confirmPassword = edtConfirmPassword.getText().toString().trim();
         String phone = edtPhone.getText().toString().trim();
 
         // Kiểm tra điều kiện nhập liệu
@@ -65,40 +64,99 @@ public class SignupTabFragment extends Fragment {
             return;
         }
 
-        if (TextUtils.isEmpty(rawPassword )) {
-            edtPassword.setError("Mật khẩu không được để trống");
+        if (TextUtils.isEmpty(phone)) {
+            edtPhone.setError("Số điện thoại không được để trống");
             return;
         }
 
-        if (!rawPassword .equals(confirmPassword)) {
+        // Kiểm tra xem email hoặc số điện thoại đã tồn tại hay chưa
+        checkIfEmailOrPhoneExists(email, phone);
+    }
+
+    private void checkIfEmailOrPhoneExists(String email, String phone) {
+        databaseReference.orderByChild("email").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Email đã tồn tại
+                    edtEmail.setError("Email đã tồn tại");
+                    Toast.makeText(getActivity(), "Email đã tồn tại", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Nếu email chưa tồn tại, kiểm tra số điện thoại
+                    checkPhone(phone);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), "Có lỗi xảy ra: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void checkPhone(String phone) {
+        databaseReference.orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Số điện thoại đã tồn tại
+                    edtPhone.setError("Số điện thoại đã tồn tại");
+                    Toast.makeText(getActivity(), "Số điện thoại đã tồn tại", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Nếu cả email và số điện thoại chưa tồn tại, tiến hành đăng ký
+                    createAccount();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getActivity(), "Có lỗi xảy ra: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void createAccount() {
+        String email = edtEmail.getText().toString().trim();
+        String rawPassword = edtPassword.getText().toString().trim();
+        String hashedPassword = PasswordUtils.hashPassword(rawPassword);
+        String confirmPassword = edtConfirmPassword.getText().toString().trim();
+        String phone = edtPhone.getText().toString().trim();
+
+        if (!rawPassword.equals(confirmPassword)) {
             edtConfirmPassword.setError("Mật khẩu xác nhận không khớp");
             return;
         }
 
         // Sử dụng Firebase để đăng ký tài khoản với email và mật khẩu
-        mAuth.createUserWithEmailAndPassword(email, hashedPassword)
+        mAuth.createUserWithEmailAndPassword(email, rawPassword)
                 .addOnCompleteListener(getActivity(), task -> {
                     if (task.isSuccessful()) {
-                        // Đăng ký thành công
-                        Toast.makeText(getActivity(), "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-
-                        // Gửi thông tin tài khoản đến cơ sở dữ liệu (nếu cần)
-                        saveUserInfoToDatabase(phone, email,hashedPassword);
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            // Gửi email xác thực
+                            user.sendEmailVerification().addOnCompleteListener(verificationTask -> {
+                                if (verificationTask.isSuccessful()) {
+                                    Toast.makeText(getActivity(), "Email xác thực đã được gửi. Vui lòng kiểm tra hộp thư.", Toast.LENGTH_LONG).show();
+                                    saveUserInfoToDatabase(phone, email, hashedPassword);
+                                    mAuth.signOut(); // Đăng xuất sau khi đăng ký để đợi xác thực
+                                } else {
+                                    Toast.makeText(getActivity(), "Gửi email xác thực thất bại.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     } else {
-                        // Đăng ký thất bại
                         Toast.makeText(getActivity(), "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
     // Phương thức lưu thông tin tài khoản vào Firebase Realtime Database
-    private void saveUserInfoToDatabase(String phone, String email,String password) {
-        // Giả sử bạn muốn lưu thông tin vào cơ sở dữ liệu
+    private void saveUserInfoToDatabase(String phone, String email, String password) {
         String userId = mAuth.getCurrentUser().getUid();
-        Account account=new Account();
+        Account account = new Account();
         account.setEmail(email);
         account.setPhone(phone);
- 
+
         FirebaseDatabase.getInstance().getReference("Account").child(userId)
                 .setValue(account)
                 .addOnCompleteListener(task -> {
