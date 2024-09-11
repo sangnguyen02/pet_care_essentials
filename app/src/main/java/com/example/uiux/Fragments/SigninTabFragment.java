@@ -111,6 +111,7 @@ public class SigninTabFragment extends Fragment {
 
                         Intent intent = new Intent(getContext(), Sent_OTPActivity.class);
                         intent.putExtra("phone", fullPhoneNumber);
+                        intent.putExtra("PhoneNumber",edtPhone.getText().toString());
                         intent.putExtra("verificationId", verificationId);
                         startActivity(intent);
 

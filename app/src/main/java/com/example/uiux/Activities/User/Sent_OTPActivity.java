@@ -46,7 +46,8 @@ public class Sent_OTPActivity extends AppCompatActivity {
         // Nhận dữ liệu từ Intent
         Intent intent = getIntent();
         String phone = intent.getStringExtra("phone");
-        Log.e("Phone", phone);
+        String PhoneNumer=intent.getStringExtra("PhoneNumber");
+        Log.e("PhoneNumber", PhoneNumer);
 
         // Ánh xạ các view
         inputCode1 = findViewById(R.id.inputCode1);
@@ -86,8 +87,9 @@ public class Sent_OTPActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
                                             UserAccountRepository account=new UserAccountRepository();
-                                            account.getAccountByPhone(phone);
-                                            Intent MainUserIntent = new Intent(getApplicationContext(), MainActivityUser.class);
+                                            account.getAccountByPhone(PhoneNumer);
+                                            Intent MainUserIntent = new Intent(getApplicationContext(), PhoneUpdateProfileActivity.class);
+                                            MainUserIntent.putExtra("PhoneNumer",PhoneNumer);
                                             MainUserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(MainUserIntent);
                                         } else {
@@ -134,7 +136,6 @@ public class Sent_OTPActivity extends AppCompatActivity {
             }
         });
     }
-
     // Hàm để bắt đầu đếm ngược 30 giây
     private void startResendTimer() {
         // Ẩn nút Resend OTP và hiển thị TextView đếm ngược

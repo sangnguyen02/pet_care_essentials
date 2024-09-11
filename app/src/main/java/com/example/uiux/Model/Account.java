@@ -8,7 +8,6 @@ public class Account {
     private String account_id;
     private String fullname;
     private String email;
-    private String password;
     private String birthday;
     private  String gender;
     private  String Phone;
@@ -20,11 +19,10 @@ public class Account {
     public Account() {
     }
 
-    public Account(String account_id, String fullname, String email, String password, String birthday, String gender, String phone, int account_type, String address, String image) {
+    public Account(String account_id, String fullname, String email, String birthday, String gender, String phone, int account_type, String address, String image) {
         this.account_id = account_id;
         this.fullname=fullname;
         this.email = email;
-        this.password = password;
         this.birthday = birthday;
         this.gender = gender;
         Phone = phone;
@@ -57,14 +55,6 @@ public class Account {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getBirthday() {

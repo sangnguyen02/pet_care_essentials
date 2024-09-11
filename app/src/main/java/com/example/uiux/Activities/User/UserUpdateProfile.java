@@ -4,7 +4,9 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,132 +17,84 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.uiux.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.hbb20.CountryCodePicker;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
+
+import Model.Account;
 
 public class UserUpdateProfile extends AppCompatActivity {
     private Button btnBirthday, btnUpdate, btnChooseImage;
-    private TextView tvBirthday, tvGender, tvPhone, tvEmail, tvAddress, tvFullname;
+    private EditText tvGender, tvPhone, tvEmail, tvAddress, tvFullname;
+    private TextView tvBirthday;
     private ImageView imgAvatar;
     private Uri imageUri;
+    private CountryCodePicker countryCodePicker;
+    private String account_id;
+    private DatabaseReference databaseReference;
 
-    private DatabaseReference accountRef;
-    private FirebaseUser currentUser;
-    private StorageReference storageRef;
     private Calendar calendar = Calendar.getInstance();
+    private static final int PICK_IMAGE_REQUEST = 100;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_update_profile);
 
-        // Khởi tạo các widget
+        // Initialize widgets
         initWidget();
 
-        // Lấy thông tin người dùng hiện tại từ Firebase
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        accountRef = FirebaseDatabase.getInstance().getReference("Account").child(currentUser.getUid());
-        storageRef = FirebaseStorage.getInstance().getReference("Account_Image");
+        // Get data from Intent
+        Intent intent = getIntent();
+        String fullname = intent.getStringExtra("fullname");
+        String email = intent.getStringExtra("email");
+        String imageUrl = intent.getStringExtra("image");
+        account_id = intent.getStringExtra("account_id");
 
-        // Hiển thị thông tin người dùng
-        loadUserInfo();
+        // Display user information
+        if (fullname != null && !fullname.isEmpty()) {
+            tvFullname.setText(fullname);
+        }
+        if (email != null && !email.isEmpty()) {
+            tvEmail.setText(email);
+        }
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Glide.with(this).load(imageUrl).into(imgAvatar);
+        }
 
-        // Chọn ngày sinh bằng DatePickerDialog
+        // Set up button listeners
         btnBirthday.setOnClickListener(view -> showDatePickerDialog());
-
-        // Chọn ảnh đại diện
         btnChooseImage.setOnClickListener(view -> chooseImage());
-
-        // Cập nhật thông tin
         btnUpdate.setOnClickListener(view -> updateAccountInfo());
     }
 
-    // Tải thông tin người dùng từ Firebase và hiển thị lên giao diện
-    private void loadUserInfo() {
-        accountRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    // Kiểm tra và cập nhật từng trường
-                    String fullName = snapshot.child("fullname").getValue(String.class);
-                    if (fullName != null && !fullName.isEmpty()) {
-                        tvFullname.setText(fullName);
-                    }
-
-                    String gender = snapshot.child("gender").getValue(String.class);
-                    if (gender != null && !gender.isEmpty()) {
-                        tvGender.setText(gender);
-                    }
-
-                    String phone = snapshot.child("phone").getValue(String.class);
-                    if (phone != null && !phone.isEmpty()) {
-                        tvPhone.setText(phone);
-                    }
-
-                    String email = snapshot.child("email").getValue(String.class);
-                    if (email != null && !email.isEmpty()) {
-                        tvEmail.setText(email);
-                    }
-
-                    String address = snapshot.child("address").getValue(String.class);
-                    if (address != null && !address.isEmpty()) {
-                        tvAddress.setText(address);
-                    }
-
-                    String birthday = snapshot.child("birthday").getValue(String.class);
-                    if (birthday != null && !birthday.isEmpty()) {
-                        tvBirthday.setText(birthday);
-                    }
-
-                    String avatarUrl = snapshot.child("avatar").getValue(String.class);
-                    if (avatarUrl != null && !avatarUrl.isEmpty()) {
-                        Glide.with(UserUpdateProfile.this).load(avatarUrl).into(imgAvatar);
-                    }
-                } else {
-                    Toast.makeText(UserUpdateProfile.this, "Không tìm thấy thông tin người dùng", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(UserUpdateProfile.this, "Lỗi khi tải thông tin người dùng", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-    // Mở hộp thoại chọn ngày sinh
+    // Show date picker dialog
     private void showDatePickerDialog() {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            tvBirthday.setText(sdf.format(calendar.getTime()));  // Hiển thị ngày sinh đã chọn
+            tvBirthday.setText(sdf.format(calendar.getTime()));
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 
-    // Hàm chọn ảnh từ thư viện
+    // Choose image from gallery
     private void chooseImage() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        startActivityForResult(intent, 100);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
     }
 
-    // Cập nhật thông tin tài khoản
+    // Update account information
     private void updateAccountInfo() {
         String fullName = tvFullname.getText().toString().trim();
         String gender = tvGender.getText().toString().trim();
@@ -154,57 +108,71 @@ public class UserUpdateProfile extends AppCompatActivity {
             return;
         }
 
-        HashMap<String, Object> updateMap = new HashMap<>();
-        updateMap.put("fullname", fullName);
-        updateMap.put("gender", gender);
-        updateMap.put("phone", phone);
-        updateMap.put("email", email);
-        updateMap.put("address", address);
-        updateMap.put("birthday", birthday);
-
-        // Kiểm tra nếu có ảnh đại diện, cập nhật lên Firebase Storage
         if (imageUri != null) {
-            StorageReference fileRef = storageRef.child(currentUser.getUid() + ".jpg");
-            fileRef.putFile(imageUri).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        updateMap.put("avatar", uri.toString());
-                        accountRef.updateChildren(updateMap).addOnCompleteListener(updateTask -> {
-                            if (updateTask.isSuccessful()) {
-                                Toast.makeText(UserUpdateProfile.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(UserUpdateProfile.this, "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    });
-                } else {
-                    Toast.makeText(this, "Lỗi khi tải ảnh lên", Toast.LENGTH_SHORT).show();
-                }
-            });
+            uploadImageToFirebase(imageUri);
         } else {
-            // Nếu không có hình ảnh, chỉ cập nhật thông tin khác
-            accountRef.updateChildren(updateMap).addOnCompleteListener(task -> {
+            saveAccountInfo(null);
+        }
+    }
+
+    // Upload image to Firebase Storage
+    private void uploadImageToFirebase(Uri imageUri) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference imageRef = storageRef.child("Account_Image/" + System.currentTimeMillis() + ".jpg");
+
+        imageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                String imageUrl = uri.toString();
+                saveAccountInfo(imageUrl);
+            }).addOnFailureListener(e -> {
+                Toast.makeText(UserUpdateProfile.this, "Failed to get image URL", Toast.LENGTH_SHORT).show();
+            });
+        }).addOnFailureListener(e -> {
+            Toast.makeText(UserUpdateProfile.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    // Save account information to Firebase Realtime Database
+    private void saveAccountInfo(String imageUrl) {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Account");
+        //phoneNum=  countryCodePicker.getFullNumberWithPlus();
+
+        Account account = new Account();
+        account.setFullname(tvFullname.getText().toString().trim());
+        account.setEmail(tvEmail.getText().toString().trim());
+        account.setPhone(tvPhone.getText().toString().trim());
+        account.setGender(tvGender.getText().toString().trim());
+        account.setBirthday(tvBirthday.getText().toString().trim());
+        account.setAddress(tvAddress.getText().toString().trim());
+        account.setAccount_id(account_id);
+        if (imageUrl != null) {
+            account.setImage(imageUrl);
+        }
+
+        if (account_id != null) {
+            databaseReference.child(account_id).setValue(account).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
-                    Toast.makeText(UserUpdateProfile.this, "Cập nhật thành công", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserUpdateProfile.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(UserUpdateProfile.this, "Cập nhật thất bại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserUpdateProfile.this, "Failed to update profile", Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
 
-    // Nhận kết quả khi người dùng chọn ảnh
+    // Handle the result of the image picker
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
-            imgAvatar.setImageURI(imageUri);  // Hiển thị ảnh đã chọn
+            imgAvatar.setImageURI(imageUri);
         }
     }
 
-    // Khởi tạo các widget
+    // Initialize widgets
     private void initWidget() {
+
         btnBirthday = findViewById(R.id.btn_birthday);
         tvBirthday = findViewById(R.id.tv_birthday);
         tvFullname = findViewById(R.id.edt_fullname);

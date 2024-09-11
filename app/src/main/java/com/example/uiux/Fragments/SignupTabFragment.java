@@ -98,7 +98,7 @@ public class SignupTabFragment extends Fragment {
         Account account=new Account();
         account.setEmail(email);
         account.setPhone(phone);
-        account.setPassword(password);
+ 
         FirebaseDatabase.getInstance().getReference("Account").child(userId)
                 .setValue(account)
                 .addOnCompleteListener(task -> {

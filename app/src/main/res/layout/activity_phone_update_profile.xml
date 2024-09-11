@@ -6,13 +6,13 @@
     android:padding="16dp">
 
     <EditText
-        android:id="@+id/edt_fullname"
+        android:id="@+id/edt_fullname2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Họ và tên"
         android:inputType="textPersonName"/>
     <EditText
-        android:id="@+id/edt_gender"
+        android:id="@+id/edt_gender2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Gioi tinh"
@@ -21,24 +21,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
-            android:id="@+id/edt_phone"
+            android:id="@+id/edt_phone2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Số điện thoại"
             android:inputType="phone"/>
 
     </LinearLayout>
-
-
-
     <EditText
-        android:id="@+id/edt_email"
+        android:id="@+id/edt_email2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Email"
         android:inputType="textEmailAddress"/>
     <EditText
-        android:id="@+id/edt_address"
+        android:id="@+id/edt_address2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Address"
@@ -46,14 +43,14 @@
 
     <!-- Chọn ngày sinh -->
     <Button
-        android:id="@+id/btn_birthday"
+        android:id="@+id/btn_birthday2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Chọn ngày sinh"/>
 
     <!-- TextView để hiển thị ngày sinh sau khi chọn -->
     <TextView
-        android:id="@+id/tv_birthday"
+        android:id="@+id/tv_birthday2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Ngày sinh chưa chọn"
@@ -61,20 +58,21 @@
 
     <!-- Chọn ảnh đại diện và các nút khác -->
     <ImageView
-        android:id="@+id/img_avatar"
+        android:id="@+id/img_avatar2"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        />
 
     <Button
-        android:id="@+id/btn_choose_image"
+        android:id="@+id/btn_choose_image2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Chọn ảnh đại diện"
         android:layout_gravity="center"/>
 
     <Button
-        android:id="@+id/btn_update"
+        android:id="@+id/btn_update2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cập nhật thông tin"/>
