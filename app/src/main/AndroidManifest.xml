@@ -13,70 +13,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-<!--    <application-->
-<!--        android:allowBackup="true"-->
-<!--        android:dataExtractionRules="@xml/data_extraction_rules"-->
-<!--        android:fullBackupContent="@xml/backup_rules"-->
-<!--        android:icon="@mipmap/ic_app"-->
-<!--        android:label="@string/app_name"-->
-<!--        android:roundIcon="@mipmap/ic_app_round"-->
-<!--        android:supportsRtl="true"-->
-<!--        android:theme="@style/Theme.Uiux">-->
-<!--        <activity-->
-<!--            android:name=".Activities.User.AddressActivity"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".Activities.User.PhoneUpdateProfileActivity"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".Activities.User.LoginActivity"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".Activities.User.Sent_OTPActivity"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".Activities.User.LoginActivityUser"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".Activities.User.UserUpdateProfile"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".Activities.User.MainActivity"-->
-<!--            android:exported="false"-->
-<!--            android:label="@string/title_activity_main"-->
-<!--            android:theme="@style/Theme.Uiux" />-->
-<!--        <activity-->
-<!--            android:name=".Activities.User.UpdateProfileActivity"-->
-<!--            android:exported="false"-->
-<!--            android:label="@string/title_activity_update_profile"-->
-<!--            android:theme="@style/Theme.Uiux" />-->
-<!--        <activity-->
-<!--            android:name=".Activities.Admin.MainActivityAdmin"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".Activities.EntryActivity"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".Activities.User.MainActivityUser"-->
-<!--            android:exported="false" />-->
-<!--        <activity-->
-<!--            android:name=".Activities.SplashActivity"-->
-<!--            android:exported="true"-->
-<!--            android:theme="@style/Theme.Uiux">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-<!--        <activity-->
-<!--            android:name=".Activities.MainActivity"-->
-<!--            android:exported="false" />-->
-
-<!--        <meta-data-->
-<!--            android:name="preloaded_fonts"-->
-<!--            android:resource="@array/preloaded_fonts" />-->
-<!--    </application>-->
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -86,44 +22,18 @@
         android:roundIcon="@mipmap/ic_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
-
-        <!-- Thêm intent-filter vào AddressActivity -->
         <activity
             android:name=".Activities.User.AddressActivity"
-            android:exported="true"> <!-- Đổi từ false thành true -->
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-
-        <!-- Các activity khác -->
-        <activity
-            android:name=".Activities.User.PhoneUpdateProfileActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.User.LoginActivity"
+            android:name=".Activities.User.PhoneUpdateProfileActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.User.Sent_OTPActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.User.LoginActivityUser"
-            android:exported="false" />
-        <activity
             android:name=".Activities.User.UserUpdateProfile"
             android:exported="false" />
-        <activity
-            android:name=".Activities.User.MainActivity"
-            android:exported="false"
-            android:label="@string/title_activity_main"
-            android:theme="@style/Theme.Uiux" />
-        <activity
-            android:name=".Activities.User.UpdateProfileActivity"
-            android:exported="false"
-            android:label="@string/title_activity_update_profile"
-            android:theme="@style/Theme.Uiux" />
         <activity
             android:name=".Activities.Admin.MainActivityAdmin"
             android:exported="false" />
@@ -135,8 +45,13 @@
             android:exported="false" />
         <activity
             android:name=".Activities.SplashActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Uiux" />
+            android:exported="true"
+            android:theme="@style/Theme.Uiux">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activities.MainActivity"
             android:exported="false" />
@@ -145,6 +60,5 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
     </application>
-
 
 </manifest>
