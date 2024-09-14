@@ -1,5 +1,7 @@
 package com.example.uiux.Fragments;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,10 +13,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.uiux.Activities.User.Sent_OTPActivity;
 import com.example.uiux.R;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;
@@ -24,6 +28,7 @@ import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.hbb20.CountryCodePicker;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class SigninTabFragment extends Fragment {
@@ -77,6 +82,26 @@ public class SigninTabFragment extends Fragment {
         edtPhone = rootView.findViewById(R.id.edt_phone_number);
         signIn = rootView.findViewById(R.id.btn_sign_in);
         countryCodePicker.registerCarrierNumberEditText(edtPhone);
+
+        // Thêm sự kiện cho CountryCodePicker để tùy chỉnh kích thước dialog
+        countryCodePicker.setDialogEventsListener(new CountryCodePicker.DialogEventsListener() {
+            @Override
+            public void onCcpDialogOpen(Dialog dialogInterface) {
+
+                // Chỉnh kích thước của dialog (ví dụ: rộng 800px và cao 600px)
+                ((Dialog) dialogInterface).getWindow().setLayout(800, 800);
+            }
+
+            @Override
+            public void onCcpDialogDismiss(DialogInterface dialogInterface) {
+                // Xử lý khi dialog đóng
+            }
+
+            @Override
+            public void onCcpDialogCancel(DialogInterface dialogInterface) {
+                // Xử lý khi dialog bị hủy
+            }
+        });
     }
 
     private void SentOTP(String phoneNumber) {
@@ -111,9 +136,10 @@ public class SigninTabFragment extends Fragment {
 
                         Intent intent = new Intent(getContext(), Sent_OTPActivity.class);
                         intent.putExtra("phone", fullPhoneNumber);
-                        intent.putExtra("PhoneNumber",edtPhone.getText().toString());
+                        intent.putExtra("PhoneNumber", Objects.requireNonNull(edtPhone.getText()).toString());
                         intent.putExtra("verificationId", verificationId);
                         startActivity(intent);
+
 
                         progressBar.setVisibility(View.GONE);
                         signIn.setVisibility(View.VISIBLE);
@@ -123,6 +149,12 @@ public class SigninTabFragment extends Fragment {
 
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
+
+    public interface OnOtpSentListener {
+        void onOtpSent(String verificationId, String phoneNumber);
+    }
 }
+
+
 
 

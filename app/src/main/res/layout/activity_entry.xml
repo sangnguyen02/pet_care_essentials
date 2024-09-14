@@ -68,13 +68,13 @@
             <androidx.viewpager2.widget.ViewPager2
                 android:id="@+id/tab_view_pager"
                 android:layout_width="match_parent"
-                android:layout_height="320dp"
+                android:layout_height="0dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/tab_view_pager_bg"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHeight_percent="0.72"
+                app:layout_constraintHeight_percent="0.53"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tab_layout_entry"
@@ -84,9 +84,8 @@
                 android:id="@+id/fab_btns"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="16dp"
@@ -96,24 +95,43 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 tools:ignore="ContentDescription">
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/fab_guest"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginEnd="30dp"
-                    android:backgroundTint="@color/white"
-                    android:elevation="35dp"
-                    android:foreground="@drawable/guest"
-                    />
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/edt_height"
+                    android:text="Sign in as Guest"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/roboto_bold"
+                    android:textAlignment="center"
+                    app:rippleColor="@color/text_input"
+                    app:backgroundTint="@color/white"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/text_input"
+                    app:icon="@drawable/guest"
+                    app:iconTint="@color/black"
+                    app:iconSize="20dp"
+                    app:iconGravity="textStart"
+                    app:shapeAppearanceOverlay="@style/Button5"
+                    tools:ignore="HardcodedText" />
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/fab_google"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:backgroundTint="@color/white"
-                    android:elevation="35dp"
-                    android:foreground="@drawable/google"
-                    />
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/edt_height"
+                    android:text="Sign in as Google"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/roboto_bold"
+                    android:textAlignment="center"
+                    app:rippleColor="@color/text_input"
+                    app:backgroundTint="@color/white"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/text_input"
+                    app:icon="@drawable/google"
+                    app:iconTint="@color/black"
+                    app:iconSize="25dp"
+                    app:iconGravity="textStart"
+                    app:shapeAppearanceOverlay="@style/Button5"
+                    tools:ignore="HardcodedText" />
 
             </LinearLayout>
 

@@ -23,11 +23,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.Objects;
+
 import Model.Account;
 
 public class SignupTabFragment extends Fragment {
     View rootView;
-    TextInputEditText edtPhone, edtEmail, edtPassword, edtConfirmPassword;
+    TextInputEditText edtPhone, edtEmail;
     MaterialButton signUp;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
@@ -50,13 +52,11 @@ public class SignupTabFragment extends Fragment {
     void initWidget() {
         edtPhone = rootView.findViewById(R.id.edt_phone_number_sign_up);
         edtEmail = rootView.findViewById(R.id.edt_email);
-        edtPassword = rootView.findViewById(R.id.edt_password_sign_up);
-        edtConfirmPassword = rootView.findViewById(R.id.edt_confirm_password);
     }
 
     private void registerAccount() {
-        String email = edtEmail.getText().toString().trim();
-        String phone = edtPhone.getText().toString().trim();
+        String email = Objects.requireNonNull(edtEmail.getText()).toString().trim();
+        String phone = Objects.requireNonNull(edtPhone.getText()).toString().trim();
 
         // Kiểm tra điều kiện nhập liệu
         if (TextUtils.isEmpty(email)) {
@@ -116,20 +116,15 @@ public class SignupTabFragment extends Fragment {
     }
 
     private void createAccount() {
-        String email = edtEmail.getText().toString().trim();
-        String rawPassword = edtPassword.getText().toString().trim();
-        String hashedPassword = PasswordUtils.hashPassword(rawPassword);
-        String confirmPassword = edtConfirmPassword.getText().toString().trim();
-        String phone = edtPhone.getText().toString().trim();
+        String email = Objects.requireNonNull(edtEmail.getText()).toString().trim();
+        String rawPassword = "123456";
+        String phone = Objects.requireNonNull(edtPhone.getText()).toString().trim();
 
-        if (!rawPassword.equals(confirmPassword)) {
-            edtConfirmPassword.setError("Mật khẩu xác nhận không khớp");
-            return;
-        }
+
 
         // Sử dụng Firebase để đăng ký tài khoản với email và mật khẩu
         mAuth.createUserWithEmailAndPassword(email, rawPassword)
-                .addOnCompleteListener(getActivity(), task -> {
+                .addOnCompleteListener(requireActivity(), task -> {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
                         if (user != null) {
@@ -137,7 +132,7 @@ public class SignupTabFragment extends Fragment {
                             user.sendEmailVerification().addOnCompleteListener(verificationTask -> {
                                 if (verificationTask.isSuccessful()) {
                                     Toast.makeText(getActivity(), "Email xác thực đã được gửi. Vui lòng kiểm tra hộp thư.", Toast.LENGTH_LONG).show();
-                                    saveUserInfoToDatabase(phone, email, hashedPassword);
+                                    saveUserInfoToDatabase(phone, email);
                                     mAuth.signOut(); // Đăng xuất sau khi đăng ký để đợi xác thực
                                 } else {
                                     Toast.makeText(getActivity(), "Gửi email xác thực thất bại.", Toast.LENGTH_SHORT).show();
@@ -145,14 +140,14 @@ public class SignupTabFragment extends Fragment {
                             });
                         }
                     } else {
-                        Toast.makeText(getActivity(), "Đăng ký thất bại: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Đăng ký thất bại: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
     // Phương thức lưu thông tin tài khoản vào Firebase Realtime Database
-    private void saveUserInfoToDatabase(String phone, String email, String password) {
-        String userId = mAuth.getCurrentUser().getUid();
+    private void saveUserInfoToDatabase(String phone, String email) {
+        String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
         Account account = new Account();
         account.setEmail(email);
         account.setPhone(phone);
