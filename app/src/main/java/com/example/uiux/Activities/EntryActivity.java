@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.uiux.Activities.User.MainActivityUser;
@@ -23,6 +24,8 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptionsExtension;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,7 +37,7 @@ import com.google.android.material.tabs.TabLayout;
 public class EntryActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager2;
-    FloatingActionButton google, guest;
+    MaterialButton google, guest;
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     int RC_SIGN_IN = 20;
@@ -129,6 +132,7 @@ public class EntryActivity extends AppCompatActivity {
         viewPager2 = findViewById(R.id.tab_view_pager);
         google = findViewById(R.id.fab_google);
         guest = findViewById(R.id.fab_guest);
+
     }
 
     // Cấu hình Tab Layout

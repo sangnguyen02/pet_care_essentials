@@ -6,6 +6,7 @@ import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -62,7 +63,8 @@ public class Sent_OTPActivity extends AppCompatActivity {
         verificationId = intent.getStringExtra("verificationId");
 
         // Xử lý nhập OTP
-        SennOTPInput();
+        //SennOTPInput();
+        setupOTPInputs();
 
         // Xử lý khi nhấn nút Verify
         Btn_Verify.setOnClickListener(new View.OnClickListener() {
@@ -158,81 +160,39 @@ public class Sent_OTPActivity extends AppCompatActivity {
             }
         }.start();
     }
+
     // Hàm xử lý việc di chuyển con trỏ khi nhập mã OTP
-    private void SennOTPInput() {
-        inputCode1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+    private void setupOTPInputs() {
+        // Apply the same TextWatcher for all EditTexts
+        EditText[] otpInputs = {inputCode1, inputCode2, inputCode3, inputCode4, inputCode5, inputCode6};
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().trim().isEmpty()) {
-                    inputCode2.requestFocus();
+        for (int i = 0; i < otpInputs.length; i++) {
+            final int index = i;
+
+            otpInputs[index].addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.length() == 1 && index < otpInputs.length - 1) {
+                        otpInputs[index + 1].requestFocus(); // Move to next input
+                    }
                 }
-            }
 
-            @Override
-            public void afterTextChanged(Editable editable) { }
-        });
+                @Override
+                public void afterTextChanged(Editable s) {}
+            });
 
-        inputCode2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().trim().isEmpty()) {
-                    inputCode3.requestFocus();
+            otpInputs[index].setOnKeyListener((v, keyCode, event) -> {
+                if (keyCode == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN) {
+                    if (otpInputs[index].getText().toString().isEmpty() && index > 0) {
+                        otpInputs[index - 1].requestFocus(); // Move to previous input on delete
+                    }
                 }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) { }
-        });
-
-        inputCode3.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().trim().isEmpty()) {
-                    inputCode4.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) { }
-        });
-
-        inputCode4.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().trim().isEmpty()) {
-                    inputCode5.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) { }
-        });
-
-        inputCode5.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().trim().isEmpty()) {
-                    inputCode6.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) { }
-        });
+                return false;
+            });
+        }
     }
+
 }

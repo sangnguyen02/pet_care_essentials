@@ -6,7 +6,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
+    android:gravity="center"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".Activities.User.Sent_OTPActivity">
 
@@ -119,8 +120,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Didn't receive the OTP"
+            android:text="Didn't receive the OTP?"
             android:textColor="@color/black"
+            android:fontFamily="@font/roboto_flex"
             android:textSize="14sp"/>
 
         <TextView
@@ -130,7 +132,7 @@
             android:layout_marginStart="8dp"
             android:text="Resend OTP"
             android:textSize="15sp"
-            android:textStyle="bold"/>
+            android:fontFamily="@font/roboto_bold"/>
 
     </LinearLayout>
     <LinearLayout
@@ -159,7 +161,7 @@
     <!-- Verify Button -->
     <com.google.android.material.button.MaterialButton
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/edt_height"
         android:id="@+id/btn_verify"
         android:text="Verify"
         android:textSize="16sp"
@@ -170,7 +172,9 @@
         android:layout_marginEnd="5dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/white"
+        android:fontFamily="@font/roboto_bold"
         android:layout_gravity="center"
         app:shapeAppearanceOverlay="@style/Button5"
-        app:backgroundTint="@color/tabLayout_background"/>
+        app:backgroundTint="@color/tabLayout_background"
+        tools:ignore="HardcodedText" />
 </LinearLayout>

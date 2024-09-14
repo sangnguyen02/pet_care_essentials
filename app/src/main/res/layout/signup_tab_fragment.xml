@@ -12,36 +12,67 @@
     android:orientation="vertical"
     >
 
-    <com.google.android.material.textfield.TextInputLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/hint_phone_number"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        app:shapeAppearanceOverlay="@style/Button4"
-        app:hintTextColor="@color/text_input"
-        app:boxStrokeColor="@color/text_input"
-        app:boxStrokeWidth="1dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        >
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_login"
+        app:layout_constraintVertical_bias="0.107">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
+        <com.hbb20.CountryCodePicker
+            android:id="@+id/login_country_code2"
+            android:layout_width="wrap_content"
             android:layout_height="@dimen/edt_height"
-            android:inputType="phone|number"
-            android:id="@+id/edt_phone_number_sign_up"
-            android:ems="10"
-            android:textSize="@dimen/text_size"
-            android:textColor="@color/black"
-            android:fontFamily="@font/roboto_flex"
+            android:background="@color/white"
+            app:ccpDialog_cornerRadius="30dp"
+            app:ccp_showFlag="false"
+            app:ccp_showNameCode="false"
+            app:ccp_showPhoneCode="true"
+            app:ccpDialog_showFastScroller="false"
+            android:gravity="center"
+            app:ccp_textSize="15sp"
+            app:ccp_autoDetectCountry="true"
+            app:layout_constraintBottom_toBottomOf="@+id/text_input_phone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_input_phone" />
 
-            />
-    </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/text_input_phone"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/edt_height"
+            android:hint="@string/hint_phone_number"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            app:shapeAppearanceOverlay="@style/Button4"
+            app:hintTextColor="@color/text_input"
+            app:boxStrokeColor="@color/text_input"
+            app:boxStrokeWidth="1dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            app:layout_constraintStart_toEndOf="@id/login_country_code2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_phone_number_sign_up"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="phone|number"
+                android:ems="10"
+                android:textSize="@dimen/text_size"
+                android:textColor="@color/black"
+                android:fontFamily="@font/roboto_flex" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/edt_height"
         android:hint="@string/hint_email"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
@@ -55,7 +86,7 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="@dimen/edt_height"
+            android:layout_height="match_parent"
             android:inputType="textEmailAddress"
             android:id="@+id/edt_email"
             android:ems="10"
@@ -63,61 +94,6 @@
             android:textColor="@color/black"
             android:fontFamily="@font/roboto_flex"
 
-            />
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_password"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        app:shapeAppearanceOverlay="@style/Button4"
-        app:hintTextColor="@color/text_input"
-        app:boxStrokeColor="@color/text_input"
-        app:boxStrokeWidth="1dp"
-        app:endIconMode="password_toggle"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        >
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/edt_height"
-            android:inputType="textPassword"
-            android:id="@+id/edt_password_sign_up"
-            android:ems="10"
-            android:textSize="@dimen/text_size"
-            android:textColor="@color/black"
-            android:fontFamily="@font/roboto_flex"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_confirm_password"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        app:shapeAppearanceOverlay="@style/Button4"
-        app:hintTextColor="@color/text_input"
-        app:boxStrokeColor="@color/text_input"
-        app:boxStrokeWidth="1dp"
-        app:endIconMode="password_toggle"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        >
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/edt_height"
-            android:inputType="textPassword"
-            android:id="@+id/edt_confirm_password"
-            android:ems="10"
-            android:textSize="@dimen/text_size"
-            android:textColor="@color/black"
-            android:fontFamily="@font/roboto_flex"
             />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -135,6 +111,7 @@
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="16sp"
+        android:fontFamily="@font/roboto_bold"
         app:backgroundTint="@color/tabLayout_background"
         app:shapeAppearanceOverlay="@style/Button5" />
 
