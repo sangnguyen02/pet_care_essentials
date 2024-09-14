@@ -1,19 +1,27 @@
 package com.example.uiux.Activities.User;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.uiux.Model.Account_Address;
 import com.example.uiux.Model.District;
 import com.example.uiux.Model.Province;
 import com.example.uiux.Model.Ward;
 import com.example.uiux.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +40,11 @@ public class AddressActivity extends AppCompatActivity {
     private ArrayAdapter<Province> provinceAdapter;
     private ArrayAdapter<District> districtAdapter;
     private ArrayAdapter<Ward> wardAdapter;
+    private EditText detailAdressTv;
+    private DatabaseReference databaseReference;
+    private Button saveBTN;
+    private CheckBox checkBoxDefault;
+    Account_Address accountAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +55,72 @@ public class AddressActivity extends AppCompatActivity {
         provinceSpinner = findViewById(R.id.provinceSpinner);
         districtSpinner = findViewById(R.id.districtSpinner);
         wardSpinner = findViewById(R.id.wardSpinner);
+        detailAdressTv=findViewById(R.id.detailAddress);
+        saveBTN=findViewById(R.id.saveBTN);
+        checkBoxDefault=findViewById(R.id.checkBox);
+        accountAddress=new Account_Address();
+        databaseReference = FirebaseDatabase.getInstance().getReference("Account_Address");
+        Intent intent= getIntent();
+        String account_id= intent.getStringExtra("account_id");
+        accountAddress.setAccount_id(account_id);
+        // Sự kiện Chọn tỉnh
+        ProvinceSelection();
+        //Sự kiện Chọn quận huyện
+        DistrictSelection();
+        //Sự kiện Chọn xã/phường
+        Wardselection();
+        checkBoxDefault.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                accountAddress.setIs_default(checkBoxDefault.isChecked());
+            }
+        });
+        saveBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                uploadAddressToFirebase();
+                Toast.makeText(getApplicationContext(), "Da upload", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
-        // Gọi AsyncTask để lấy danh sách tỉnh từ API
+    private void Wardselection() {
+        wardSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Ward selectedDistrict = (Ward) adapterView.getItemAtPosition(i);
+
+                Toast.makeText(getApplicationContext(), "Chọn ward: " + selectedDistrict.getWardName(), Toast.LENGTH_SHORT).show();
+                accountAddress.setWard( selectedDistrict.getWardName());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    private void DistrictSelection() {
+        // Xử lý sự kiện chọn quận/huyện
+        districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                District selectedDistrict = (District) parentView.getItemAtPosition(position);
+                Toast.makeText(getApplicationContext(), "Chọn quận/huyện: " + selectedDistrict.getDistrictName(), Toast.LENGTH_SHORT).show();
+                accountAddress.setDistrict(selectedDistrict.getDistrictName());
+                // Gọi API để lấy danh sách phường/xã theo district_id
+                new FetchWardsTask().execute("https://vapi.vnappmob.com/api/province/ward/" + selectedDistrict.getDistrictId());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // Không có gì được chọn
+            }
+        });
+    }
+
+    private void ProvinceSelection() {
         new FetchProvincesTask().execute("https://vapi.vnappmob.com/api/province/");
 
         // Xử lý sự kiện chọn tỉnh
@@ -52,26 +129,9 @@ public class AddressActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 Province selectedProvince = (Province) parentView.getItemAtPosition(position);
                 Toast.makeText(getApplicationContext(), "Chọn tỉnh: " + selectedProvince.getProvinceName(), Toast.LENGTH_SHORT).show();
-
+                accountAddress.setProvince(selectedProvince.getProvinceName());
                 // Gọi API để lấy danh sách quận/huyện theo province_id
                 new FetchDistrictsTask().execute("https://vapi.vnappmob.com/api/province/district/" + selectedProvince.getProvinceId());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Không có gì được chọn
-            }
-        });
-
-        // Xử lý sự kiện chọn quận/huyện
-        districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                District selectedDistrict = (District) parentView.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "Chọn quận/huyện: " + selectedDistrict.getDistrictName(), Toast.LENGTH_SHORT).show();
-
-                // Gọi API để lấy danh sách phường/xã theo district_id
-                new FetchWardsTask().execute("https://vapi.vnappmob.com/api/province/ward/" + selectedDistrict.getDistrictId());
             }
 
             @Override
@@ -121,6 +181,26 @@ public class AddressActivity extends AppCompatActivity {
             }
         }
     }
+    private void uploadAddressToFirebase() {
+        String detailAddress = detailAdressTv.getText().toString();
+        if (!detailAddress.isEmpty()) {
+            accountAddress.setAddress_details(detailAddress);
+            String id = databaseReference.push().getKey();
+            if (id != null) {
+                accountAddress.setAccount_address_id(id);
+                databaseReference.child(id).setValue(accountAddress)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(AddressActivity.this, "Địa chỉ đã được lưu!", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(AddressActivity.this, "Lưu địa chỉ thất bại!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        } else {
+            Toast.makeText(AddressActivity.this, "Vui lòng nhập địa chỉ chi tiết!", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     // AsyncTask để lấy danh sách quận/huyện từ API
     private class FetchDistrictsTask extends AsyncTask<String, Void, List<District>> {
@@ -162,7 +242,6 @@ public class AddressActivity extends AppCompatActivity {
             }
         }
     }
-
     // AsyncTask để lấy danh sách phường/xã từ API
     private class FetchWardsTask extends AsyncTask<String, Void, List<Ward>> {
 

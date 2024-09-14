@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +19,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
+import com.example.uiux.Activities.EntryActivity;
 import com.example.uiux.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,8 +35,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 public class PhoneUpdateProfileActivity extends AppCompatActivity {
-    private Button btnBirthday, btnUpdate, btnChooseImage;
-    private EditText tvGender, tvPhone, tvEmail, tvAddress, tvFullname;
+    private Button btnBirthday, btnUpdate, btnChooseImage,btnAddress;
+    private EditText tvGender, tvPhone, tvEmail, tvFullname;
     private TextView tvBirthday;
     private ImageView imgAvatar;
     private Uri imageUri;
@@ -60,20 +62,29 @@ public class PhoneUpdateProfileActivity extends AppCompatActivity {
         btnBirthday.setOnClickListener(view -> showDatePickerDialog());
         btnChooseImage.setOnClickListener(view -> chooseImage());
         btnUpdate.setOnClickListener(view -> updateAccountInfo());
+        btnAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent gotoAddress= new Intent(PhoneUpdateProfileActivity.this, AddressActivity.class);
+                gotoAddress.putExtra("account_id",account_id);
+                startActivity(gotoAddress);
+            }
+        });
         loadUserProfile();
 
 
     }
 
-private void updateAccountInfo() {
+
+
+    private void updateAccountInfo() {
     String fullName = tvFullname.getText().toString().trim();
     String gender = tvGender.getText().toString().trim();
     String phone = tvPhone.getText().toString().trim();
     String email = tvEmail.getText().toString().trim();
-    String address = tvAddress.getText().toString().trim();
     String birthday = tvBirthday.getText().toString().trim();
 
-    if (fullName.isEmpty() || phone.isEmpty() || email.isEmpty() || address.isEmpty() || birthday.equals("Ngày sinh chưa chọn")) {
+    if (fullName.isEmpty() || phone.isEmpty() || email.isEmpty() ||  birthday.equals("Ngày sinh chưa chọn")) {
         Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
         return;
     }
@@ -86,10 +97,10 @@ private void updateAccountInfo() {
             if (dataSnapshot.exists()) {
                 DataSnapshot userSnapshot = dataSnapshot.getChildren().iterator().next();
                 account_id = userSnapshot.getKey(); // Get existing user ID
-                updateUserInFirebase(fullName, gender, phone, email, address, birthday);
+                updateUserInFirebase(fullName, gender, phone, email, birthday);
             } else {
                 // If user does not exist, create a new profile
-                createUserInFirebase(fullName, gender, phone, email, address, birthday);
+                createUserInFirebase(fullName, gender, phone, email, birthday);
             }
         }
 
@@ -99,7 +110,7 @@ private void updateAccountInfo() {
         }
     });
 }
-private void createUserInFirebase(String fullName, String gender, String phone, String email, String address, String birthday) {
+private void createUserInFirebase(String fullName, String gender, String phone, String email, String birthday) {
         DatabaseReference newUserRef = databaseReference.push();
         account_id = newUserRef.getKey(); // Get a new unique ID
         Model.Account account = new Model.Account();
@@ -108,7 +119,6 @@ private void createUserInFirebase(String fullName, String gender, String phone, 
         account.setPhone(phone);
         account.setGender(gender);
         account.setBirthday(birthday);
-        account.setAddress(address);
         account.setAccount_id(account_id);
         if (imageUri != null) {
            // uploadImageToFirebase(imageUri); // Upload image to Firebase if available
@@ -123,7 +133,7 @@ private void createUserInFirebase(String fullName, String gender, String phone, 
         }
     }
 
-private void updateUserInFirebase(String fullName, String gender, String phone, String email, String address, String birthday) {
+private void updateUserInFirebase(String fullName, String gender, String phone, String email, String birthday) {
     DatabaseReference userRef = databaseReference.child(account_id);
 
     // Update individual fields directly in Firebase
@@ -132,7 +142,6 @@ private void updateUserInFirebase(String fullName, String gender, String phone, 
     userRef.child("phone").setValue(phone);
     userRef.child("gender").setValue(gender);
     userRef.child("birthday").setValue(birthday);
-    userRef.child("address").setValue(address);
 
     // Check if imageUri is not null, upload the image to Firebase Storage
     if (imageUri != null) {
@@ -190,7 +199,6 @@ private void loadUserProfile() {
                         tvFullname.setText(account.getFullname() != null ? account.getFullname() : "");
                         tvGender.setText(account.getGender() != null ? account.getGender() : "");
                         tvEmail.setText(account.getEmail() != null ? account.getEmail() : "");
-                        tvAddress.setText(account.getAddress() != null ? account.getAddress() : "");
                         tvBirthday.setText(account.getBirthday() != null ? account.getBirthday() : "");
 
                         // Load image if it exists
@@ -223,10 +231,10 @@ private void loadUserProfile() {
         tvGender = findViewById(R.id.edt_gender2);
         tvPhone = findViewById(R.id.edt_phone2);
         tvEmail = findViewById(R.id.edt_email2);
-        tvAddress = findViewById(R.id.edt_address2);
         imgAvatar = findViewById(R.id.img_avatar2);
         btnChooseImage = findViewById(R.id.btn_choose_image2);
         btnUpdate = findViewById(R.id.btn_update2);
+        btnAddress=findViewById(R.id.btn_addess);
     }
     private void showDatePickerDialog() {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
