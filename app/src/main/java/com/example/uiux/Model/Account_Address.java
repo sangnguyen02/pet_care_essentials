@@ -8,10 +8,8 @@ public class Account_Address {
     private  String district;
     private String ward;
     private String address_details;
-    private  boolean is_default;
 
-    public Account_Address() {
-    }
+
 
     public Account_Address(String account_address_id, String account_id, String phone, String province, String district, String ward, String address_details, boolean is_default) {
         this.account_address_id = account_address_id;
@@ -23,6 +21,13 @@ public class Account_Address {
         this.address_details = address_details;
         this.is_default = is_default;
     }
+
+    private  boolean is_default;
+
+    public Account_Address() {
+    }
+
+
 
     public String getAccount_address_id() {
         return account_address_id;

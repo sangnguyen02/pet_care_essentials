@@ -1,0 +1,66 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <Spinner
+        android:id="@+id/provinceSpinner"
+        android:layout_width="356dp"
+        android:layout_height="53dp"
+        android:autofillHints="name"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/grey"/>
+
+    <Spinner
+        android:id="@+id/districtSpinner"
+        android:layout_width="355dp"
+        android:layout_height="44dp"
+        android:layout_marginTop="76dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/provinceSpinner"
+        android:background="@color/grey"/>
+
+    <Spinner
+        android:id="@+id/wardSpinner"
+        android:layout_width="356dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="132dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/districtSpinner"
+        android:background="@color/grey"/>
+
+    <EditText
+        android:id="@+id/detailAddress"
+        android:layout_width="351dp"
+        android:layout_height="57dp"
+        android:text="detail address"
+        app:layout_constraintBottom_toTopOf="@+id/checkBox"
+        app:layout_constraintTop_toBottomOf="@+id/wardSpinner"
+        tools:layout_editor_absoluteX="20dp" />
+
+    <CheckBox
+        android:id="@+id/checkBox"
+        android:layout_width="186dp"
+        android:layout_height="43dp"
+        android:layout_marginBottom="76dp"
+        android:text="Default address"
+        app:layout_constraintBottom_toTopOf="@+id/btnSave"
+        tools:layout_editor_absoluteX="96dp" />
+
+    <Button
+        android:id="@+id/btnSave"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

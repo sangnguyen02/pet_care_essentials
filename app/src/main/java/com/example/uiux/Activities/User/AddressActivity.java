@@ -42,7 +42,7 @@ public class AddressActivity extends AppCompatActivity {
     private ArrayAdapter<Ward> wardAdapter;
     private EditText detailAdressTv;
     private DatabaseReference databaseReference;
-    private Button saveBTN;
+    private Button saveBTN,updateAddressBTN;
     private CheckBox checkBoxDefault;
     Account_Address accountAddress;
 
@@ -58,6 +58,7 @@ public class AddressActivity extends AppCompatActivity {
         detailAdressTv=findViewById(R.id.detailAddress);
         saveBTN=findViewById(R.id.saveBTN);
         checkBoxDefault=findViewById(R.id.checkBox);
+        updateAddressBTN=findViewById(R.id.addressUpdate);
         accountAddress=new Account_Address();
         databaseReference = FirebaseDatabase.getInstance().getReference("Account_Address");
         Intent intent= getIntent();
@@ -82,16 +83,26 @@ public class AddressActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Da upload", Toast.LENGTH_SHORT).show();
             }
         });
+        updateAddressBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent gotoUpdate=new Intent(AddressActivity.this,UpdateAddressActivity.class);
+                gotoUpdate.putExtra("account_id",account_id);
+                startActivity(gotoUpdate);
+            }
+        });
     }
 
     private void Wardselection() {
         wardSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Ward selectedDistrict = (Ward) adapterView.getItemAtPosition(i);
+                Ward selectedWard = (Ward) adapterView.getItemAtPosition(i);
 
-                Toast.makeText(getApplicationContext(), "Chọn ward: " + selectedDistrict.getWardName(), Toast.LENGTH_SHORT).show();
-                accountAddress.setWard( selectedDistrict.getWardName());
+                Toast.makeText(getApplicationContext(), "Chọn ward: " + selectedWard.getWardName(), Toast.LENGTH_SHORT).show();
+                accountAddress.setWard(selectedWard.getWardId()+"+"+ selectedWard.getWardName());
+
+
             }
 
             @Override
@@ -108,7 +119,8 @@ public class AddressActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 District selectedDistrict = (District) parentView.getItemAtPosition(position);
                 Toast.makeText(getApplicationContext(), "Chọn quận/huyện: " + selectedDistrict.getDistrictName(), Toast.LENGTH_SHORT).show();
-                accountAddress.setDistrict(selectedDistrict.getDistrictName());
+                accountAddress.setDistrict(selectedDistrict.getDistrictId()+"+"+selectedDistrict.getDistrictName());
+
                 // Gọi API để lấy danh sách phường/xã theo district_id
                 new FetchWardsTask().execute("https://vapi.vnappmob.com/api/province/ward/" + selectedDistrict.getDistrictId());
             }
@@ -129,7 +141,8 @@ public class AddressActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 Province selectedProvince = (Province) parentView.getItemAtPosition(position);
                 Toast.makeText(getApplicationContext(), "Chọn tỉnh: " + selectedProvince.getProvinceName(), Toast.LENGTH_SHORT).show();
-                accountAddress.setProvince(selectedProvince.getProvinceName());
+                accountAddress.setProvince(selectedProvince.getProvinceId()+"+"+selectedProvince.getProvinceName());
+
                 // Gọi API để lấy danh sách quận/huyện theo province_id
                 new FetchDistrictsTask().execute("https://vapi.vnappmob.com/api/province/district/" + selectedProvince.getProvinceId());
             }
