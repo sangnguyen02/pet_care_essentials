@@ -38,7 +38,7 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PhoneUpdateProfileActivity extends AppCompatActivity {
-    private Button btnBirthday;
+    private Button btnBirthday, btnAddress;
     private EditText tvGender, tvPhone, tvEmail, tvAddress, tvFullname;
     private TextView tvBirthday;
     private CircleImageView imgAvatar;
