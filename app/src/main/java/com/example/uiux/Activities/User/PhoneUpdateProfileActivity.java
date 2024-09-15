@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -32,11 +33,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class PhoneUpdateProfileActivity extends AppCompatActivity {
-    private Button btnBirthday, btnUpdate, btnChooseImage;
+    private Button btnBirthday;
     private EditText tvGender, tvPhone, tvEmail, tvAddress, tvFullname;
     private TextView tvBirthday;
-    private ImageView imgAvatar;
+    private CircleImageView imgAvatar;
+    private ImageView img_back, img_update;
     private Uri imageUri;
     private String account_id;
     private DatabaseReference databaseReference;
@@ -52,14 +56,15 @@ public class PhoneUpdateProfileActivity extends AppCompatActivity {
         initWidget();
 
         Intent intent = getIntent();
-        String phoneNumber= intent.getStringExtra("PhoneNumer");
+        String phoneNumber= intent.getStringExtra("phone_no");
         if (phoneNumber != null && !phoneNumber.isEmpty()) {
             tvPhone.setText(phoneNumber);
         }
 
         btnBirthday.setOnClickListener(view -> showDatePickerDialog());
-        btnChooseImage.setOnClickListener(view -> chooseImage());
-        btnUpdate.setOnClickListener(view -> updateAccountInfo());
+        imgAvatar.setOnClickListener(view -> chooseImage());
+        img_update.setOnClickListener(view -> updateAccountInfo());
+        img_back.setOnClickListener(view -> back());
         loadUserProfile();
 
 
@@ -98,6 +103,10 @@ private void updateAccountInfo() {
             Toast.makeText(PhoneUpdateProfileActivity.this, "Failed to check user", Toast.LENGTH_SHORT).show();
         }
     });
+}
+
+private void back() {
+        finish();
 }
 private void createUserInFirebase(String fullName, String gender, String phone, String email, String address, String birthday) {
         DatabaseReference newUserRef = databaseReference.push();
@@ -225,8 +234,8 @@ private void loadUserProfile() {
         tvEmail = findViewById(R.id.edt_email2);
         tvAddress = findViewById(R.id.edt_address2);
         imgAvatar = findViewById(R.id.img_avatar2);
-        btnChooseImage = findViewById(R.id.btn_choose_image2);
-        btnUpdate = findViewById(R.id.btn_update2);
+        img_back = findViewById(R.id.img_back);
+        img_update = findViewById(R.id.img_update);
     }
     private void showDatePickerDialog() {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
@@ -244,6 +253,15 @@ private void loadUserProfile() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            imgAvatar.setImageURI(imageUri);
+        }
     }
 
 

@@ -90,8 +90,10 @@ public class Sent_OTPActivity extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             UserAccountRepository account=new UserAccountRepository();
                                             account.getAccountByPhone(PhoneNumer);
-                                            Intent MainUserIntent = new Intent(getApplicationContext(), PhoneUpdateProfileActivity.class);
-                                            MainUserIntent.putExtra("PhoneNumer",PhoneNumer);
+                                            Intent MainUserIntent = new Intent(getApplicationContext(), MainActivityUser.class);
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("phone_number", PhoneNumer);
+                                            MainUserIntent.putExtras(bundle);
                                             MainUserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                             startActivity(MainUserIntent);
                                         } else {
