@@ -23,6 +23,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.User.EditAddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.User.UpdateAddressActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.User.AddressActivity"
             android:exported="false" />
         <activity
@@ -49,6 +55,7 @@
             android:theme="@style/Theme.Uiux">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

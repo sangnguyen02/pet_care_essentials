@@ -34,12 +34,7 @@
         android:layout_height="wrap_content"
         android:hint="Email"
         android:inputType="textEmailAddress"/>
-    <EditText
-        android:id="@+id/edt_address2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Address"
-        android:inputType="textEmailAddress"/>
+
 
     <!-- Chọn ngày sinh -->
     <Button
@@ -76,4 +71,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Cập nhật thông tin"/>
+    <Button
+        android:id="@+id/btn_addess"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cập nhật địa chỉ"/>
 </LinearLayout>
