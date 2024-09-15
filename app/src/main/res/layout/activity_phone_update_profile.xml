@@ -1,9 +1,112 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    >
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        app:cardElevation="10dp"
+        >
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="16dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ripple_effect"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Edit Profile"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="22sp"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back"
+                app:layout_constraintStart_toEndOf="@+id/img_back"
+                app:layout_constraintTop_toTopOf="@+id/img_back"
+                tools:ignore="HardcodedText" />
+
+            <ImageView
+                android:id="@+id/img_update"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="24dp"
+                android:src="@drawable/tick"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="@drawable/ripple_effect"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_marginTop="4dp"
+        android:backgroundTint="@color/primary"
+        app:cardElevation="10dp"
+        app:cardCornerRadius="16dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/img_avatar2"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/user"/>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/background_oval_1"
+                android:elevation="1dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/edit"
+                app:layout_constraintBottom_toBottomOf="@+id/img_avatar2"
+                app:layout_constraintEnd_toEndOf="@+id/img_avatar2" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 
     <EditText
         android:id="@+id/edt_fullname2"
@@ -52,12 +155,12 @@
         android:paddingTop="10dp"/>
 
     <!-- Chọn ảnh đại diện và các nút khác -->
-    <ImageView
-        android:id="@+id/img_avatar2"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        />
+<!--    <ImageView-->
+<!--        android:id="@+id/img_avatar2"-->
+<!--        android:layout_width="100dp"-->
+<!--        android:layout_height="100dp"-->
+<!--        android:layout_gravity="center"-->
+<!--        />-->
 
     <Button
         android:id="@+id/btn_choose_image2"

@@ -1,5 +1,7 @@
 package com.example.uiux.Activities.User;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -23,6 +25,7 @@ import com.google.android.material.badge.BadgeDrawable;
 
 public class MainActivityUser extends AppCompatActivity {
     ActivityMainUserBinding binding;
+    String phone;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +35,16 @@ public class MainActivityUser extends AppCompatActivity {
         BadgeDrawable badgeDrawable = binding.bottomNavigationView.getOrCreateBadge(R.id.cart_screen);
         badgeDrawable.setVisible(true);
         badgeDrawable.setNumber(3);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            phone = extras.getString("phone_number");
+            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+            preferences.edit().putString("phone_number", phone).apply();
+            Log.d("Phone No Ở Main", phone);
+//            Log.d("Username", userName);
+        }
+
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.home_screen:
@@ -47,7 +60,11 @@ public class MainActivityUser extends AppCompatActivity {
                     replaceFragment(new CaringFragment());
                     break;
                 case R.id.profile_screen:
-                    replaceFragment(new ProfileFragment());
+                    ProfileFragment profileFragment = new ProfileFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("phone_number", phone);
+                    profileFragment.setArguments(bundle);
+                    replaceFragment(profileFragment);
                     break;
 
             }

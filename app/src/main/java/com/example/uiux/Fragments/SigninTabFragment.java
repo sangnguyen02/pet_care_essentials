@@ -60,9 +60,11 @@ public class SigninTabFragment extends Fragment {
                 phoneNumber = countryCodePicker.getFullNumberWithPlus();
                 Log.e("Phone Number", phoneNumber);
                 String phone = edtPhone.getText().toString().trim();
-
                 if (!countryCodePicker.isValidFullNumber() || phone.isEmpty()) {
                     edtPhone.setError("Phone number not valid");
+
+
+
                 } else {
                     if (mAuth == null) {
                         Toast.makeText(getActivity(), "Authentication failed", Toast.LENGTH_SHORT).show();
