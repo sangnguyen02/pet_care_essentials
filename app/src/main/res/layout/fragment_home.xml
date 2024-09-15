@@ -13,83 +13,92 @@
         android:layout_height="match_parent"
         tools:ignore="ContentDescription">
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:id="@+id/linear_search"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/blue_bg2"
-            android:orientation="horizontal"
+            app:cardElevation="10dp"
+            app:cardBackgroundColor="@color/primary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="14dp"
-                android:layout_marginEnd="4dp">
+                android:layout_height="60dp"
+                android:layout_alignParentTop="true"
+                android:orientation="horizontal"
+                >
 
-                <SearchView
-                    android:id="@+id/search_view"
-                    android:layout_width="0dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="20dp"
-                    android:background="@drawable/search_view_bg"
-                    android:ems="10"
-                    android:iconifiedByDefault="false"
-                    android:inputType="text"
-                    android:queryBackground="@android:color/transparent"
-                    android:queryHint="Search for products"
-                    android:theme="@style/ThemeOverlay.SearchView"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/iv_bell"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="HardcodedText" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="14dp"
+                    android:layout_marginEnd="4dp">
 
-                <ImageView
-                    android:id="@+id/iv_bell"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/search_view"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/bell"
-                    tools:ignore="ContentDescription" />
+                    <SearchView
+                        android:id="@+id/search_view"
+                        android:layout_width="0dp"
+                        android:layout_height="32dp"
+                        android:layout_marginEnd="20dp"
+                        android:background="@drawable/search_view_bg"
+                        android:ems="10"
+                        android:iconifiedByDefault="false"
+                        android:inputType="text"
+                        android:queryBackground="@android:color/transparent"
+                        android:queryHint="Search for products"
+                        android:theme="@style/ThemeOverlay.SearchView"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/iv_bell"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="HardcodedText" />
 
-                <ImageView
-                    android:id="@+id/iv_red_circle"
-                    android:layout_width="18dp"
-                    android:layout_height="18dp"
-                    app:layout_constraintBottom_toTopOf="@+id/iv_bell"
-                    app:layout_constraintEnd_toEndOf="@+id/iv_bell"
-                    app:layout_constraintStart_toEndOf="@+id/iv_bell"
-                    app:layout_constraintTop_toTopOf="@+id/iv_bell"
-                    app:srcCompat="@drawable/red_circle"
-                    tools:ignore="ContentDescription" />
+                    <ImageView
+                        android:id="@+id/iv_bell"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="16dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/search_view"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/bell"
+                        tools:ignore="ContentDescription" />
 
-                <TextView
-                    android:id="@+id/tv_no_of_notification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_bold"
-                    android:text="99"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/iv_red_circle"
-                    app:layout_constraintEnd_toEndOf="@id/iv_red_circle"
-                    app:layout_constraintStart_toStartOf="@+id/iv_red_circle"
-                    app:layout_constraintTop_toTopOf="@+id/iv_red_circle"
-                    tools:ignore="HardcodedText,SmallSp" />
+                    <ImageView
+                        android:id="@+id/iv_red_circle"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        app:layout_constraintBottom_toTopOf="@+id/iv_bell"
+                        app:layout_constraintEnd_toEndOf="@+id/iv_bell"
+                        app:layout_constraintStart_toEndOf="@+id/iv_bell"
+                        app:layout_constraintTop_toTopOf="@+id/iv_bell"
+                        app:srcCompat="@drawable/red_circle"
+                        tools:ignore="ContentDescription" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:id="@+id/tv_no_of_notification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text="99"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/iv_red_circle"
+                        app:layout_constraintEnd_toEndOf="@id/iv_red_circle"
+                        app:layout_constraintStart_toStartOf="@+id/iv_red_circle"
+                        app:layout_constraintTop_toTopOf="@+id/iv_red_circle"
+                        tools:ignore="HardcodedText,SmallSp" />
 
-        </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
 
         <ScrollView
             android:id="@+id/scroll_view"

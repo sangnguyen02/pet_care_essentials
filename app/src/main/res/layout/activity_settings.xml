@@ -19,7 +19,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/img_back"
+                android:id="@+id/img_back_settings"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -39,30 +39,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:fontFamily="@font/roboto_bold"
-                android:text="Edit Profile"
+                android:text="Account Setting"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/img_back"
-                app:layout_constraintStart_toEndOf="@+id/img_back"
-                app:layout_constraintTop_toTopOf="@+id/img_back"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back_settings"
+                app:layout_constraintStart_toEndOf="@+id/img_back_settings"
+                app:layout_constraintTop_toTopOf="@+id/img_back_settings"
                 tools:ignore="HardcodedText" />
-
-            <ImageView
-                android:id="@+id/img_update"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginEnd="24dp"
-                android:src="@drawable/tick"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription"
-                android:clickable="true"
-                android:focusable="true"
-                android:background="@drawable/ripple_effect"
-                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

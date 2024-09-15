@@ -14,8 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.example.uiux.Activities.User.PhoneUpdateProfileActivity;
+import com.example.uiux.Activities.User.Profile.PhoneUpdateProfileActivity;
+import com.example.uiux.Activities.User.Profile.SettingsActivity;
 import com.example.uiux.R;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -26,6 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
     View rootView;
+    MaterialCardView mcv_help_center;
     String phone;
     CircleImageView img_avatar, img_setting;
     TextView tv_username;
@@ -36,8 +39,6 @@ public class ProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_profile, container, false);
-        initWidget();
-
         // Lấy số điện thoại từ arguments
         Bundle args = getArguments();
         if (args != null) {
@@ -45,16 +46,7 @@ public class ProfileFragment extends Fragment {
             Log.d("ProfileFragment", "Phone Number: " + phone); // In ra log để kiểm tra
         }
 
-        // Event Img Avatar
-        img_avatar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(rootView.getContext(), PhoneUpdateProfileActivity.class);
-                intent.putExtra("phone_no", phone);
-                startActivity(intent);
-            }
-        });
-
+        initWidget();
         loadUserProfile();
 
 
@@ -62,10 +54,33 @@ public class ProfileFragment extends Fragment {
         return rootView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadUserProfile(); // Gọi lại để tải dữ liệu mới sau khi quay lại từ màn hình khác
+    }
+
     void initWidget() {
         img_avatar = rootView.findViewById(R.id.img_avatar);
         img_setting = rootView.findViewById(R.id.img_setting);
         tv_username = rootView.findViewById(R.id.tv_username);
+        mcv_help_center = rootView.findViewById(R.id.mcv_help_center);
+
+        img_avatar.setOnClickListener(view -> {
+            Intent intent = new Intent(rootView.getContext(), PhoneUpdateProfileActivity.class);
+            intent.putExtra("phone_no", phone);
+            startActivity(intent);
+        });
+
+        img_setting.setOnClickListener(view -> {
+            Intent intent = new Intent(rootView.getContext(), SettingsActivity.class);
+            intent.putExtra("phone_no", phone);
+            startActivity(intent);
+        });
+
+        mcv_help_center.setOnClickListener(view -> {
+
+        });
     }
 
     private void loadUserProfile() {

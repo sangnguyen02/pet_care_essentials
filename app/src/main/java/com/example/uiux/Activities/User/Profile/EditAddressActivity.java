@@ -1,4 +1,4 @@
-package com.example.uiux.Activities.User;
+package com.example.uiux.Activities.User.Profile;
 
 import android.os.Bundle;
 import android.widget.ArrayAdapter;

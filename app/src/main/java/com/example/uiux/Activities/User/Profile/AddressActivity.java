@@ -1,4 +1,4 @@
-package com.example.uiux.Activities.User;
+package com.example.uiux.Activities.User.Profile;
 
 import android.content.Intent;
 import android.os.AsyncTask;

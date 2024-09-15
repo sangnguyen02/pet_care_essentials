@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.uiux.Activities.User.EditAddressActivity;
+import com.example.uiux.Activities.User.Profile.EditAddressActivity;
 import com.example.uiux.Model.Account_Address;
 import com.example.uiux.R;
 

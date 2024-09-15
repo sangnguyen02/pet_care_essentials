@@ -30,4 +30,13 @@
     <string name="select_province">Chọn tỉnh</string>
     <string name="select_district">Chọn quận</string>
     <string name="select_ward">Chọn phường</string>
+
+
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="help_center">Help Center</string>
+    <string-array name="genders">
+        <item>@string/gender_male</item>
+        <item>@string/gender_female</item>
+    </string-array>
 </resources>
