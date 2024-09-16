@@ -133,7 +133,9 @@ public class AddressActivity extends AppCompatActivity {
     }
 
     private void ProvinceSelection() {
+
         new FetchProvincesTask().execute("https://vapi.vnappmob.com/api/province/");
+
 
         // Xử lý sự kiện chọn tỉnh
         provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -186,6 +188,9 @@ public class AddressActivity extends AppCompatActivity {
         protected void onPostExecute(List<Province> provinces) {
             super.onPostExecute(provinces);
             if (provinces != null) {
+                // Thêm hint vào danh sách
+                provinces.add(0, new Province("-1", "Chọn tỉnh", ""));
+
                 provinceAdapter = new ArrayAdapter<>(AddressActivity.this, android.R.layout.simple_spinner_item, provinces);
                 provinceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 provinceSpinner.setAdapter(provinceAdapter);
@@ -247,6 +252,9 @@ public class AddressActivity extends AppCompatActivity {
         protected void onPostExecute(List<District> districts) {
             super.onPostExecute(districts);
             if (districts != null) {
+                // Thêm hint vào danh sách
+                districts.add(0, new District("-1", "Chọn quận/huyện"));
+
                 districtAdapter = new ArrayAdapter<>(AddressActivity.this, android.R.layout.simple_spinner_item, districts);
                 districtAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 districtSpinner.setAdapter(districtAdapter);
@@ -287,6 +295,9 @@ public class AddressActivity extends AppCompatActivity {
         protected void onPostExecute(List<Ward> wards) {
             super.onPostExecute(wards);
             if (wards != null) {
+                // Thêm mục hint vào danh sách
+                wards.add(0, new Ward("-1", "Chọn phường/xã"));
+
                 wardAdapter = new ArrayAdapter<>(AddressActivity.this, android.R.layout.simple_spinner_item, wards);
                 wardAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 wardSpinner.setAdapter(wardAdapter);
