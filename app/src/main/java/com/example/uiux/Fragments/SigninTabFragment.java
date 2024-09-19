@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.uiux.Activities.User.Sent_OTPActivity;
 import com.example.uiux.R;
+import com.example.uiux.Utils.PhoneNumberValidator;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -60,10 +61,8 @@ public class SigninTabFragment extends Fragment {
                 phoneNumber = countryCodePicker.getFullNumberWithPlus();
                 Log.e("Phone Number", phoneNumber);
                 String phone = edtPhone.getText().toString().trim();
-                if (!countryCodePicker.isValidFullNumber() || phone.isEmpty()) {
+                if (!countryCodePicker.isValidFullNumber() || !PhoneNumberValidator.isValidPhoneNumber(phone)) {
                     edtPhone.setError("Phone number not valid");
-
-
 
                 } else {
                     if (mAuth == null) {
@@ -151,6 +150,7 @@ public class SigninTabFragment extends Fragment {
 
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
+
 
     public interface OnOtpSentListener {
         void onOtpSent(String verificationId, String phoneNumber);

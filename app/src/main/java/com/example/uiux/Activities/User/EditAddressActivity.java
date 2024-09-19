@@ -50,8 +50,6 @@ public class EditAddressActivity extends AppCompatActivity {
     private String addressId;
 
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

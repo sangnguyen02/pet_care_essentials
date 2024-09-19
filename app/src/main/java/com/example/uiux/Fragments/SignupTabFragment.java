@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.uiux.R;
+import com.example.uiux.Utils.EmailValidator;
 import com.example.uiux.Utils.PasswordUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -59,13 +60,18 @@ public class SignupTabFragment extends Fragment {
         String phone = Objects.requireNonNull(edtPhone.getText()).toString().trim();
 
         // Kiểm tra điều kiện nhập liệu
-        if (TextUtils.isEmpty(email)) {
-            edtEmail.setError("Email không được để trống");
+        if (!EmailValidator.isValidEmail(edtEmail.getText().toString().trim())|| TextUtils.isEmpty(email)) {
+            edtEmail.setError("Email không hợp lệ");
             return;
         }
 
         if (TextUtils.isEmpty(phone)) {
             edtPhone.setError("Số điện thoại không được để trống");
+            return;
+        }
+        else if(!isValidPhoneNumber(edtPhone.getText().toString().trim()))
+        {
+            edtPhone.setError("Số điện thoại không hợp lệ");
             return;
         }
 
@@ -144,7 +150,6 @@ public class SignupTabFragment extends Fragment {
                     }
                 });
     }
-
     // Phương thức lưu thông tin tài khoản vào Firebase Realtime Database
     private void saveUserInfoToDatabase(String phone, String email) {
         String userId = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
@@ -162,4 +167,13 @@ public class SignupTabFragment extends Fragment {
                     }
                 });
     }
+    public static boolean isValidPhoneNumber(String phoneNumber) {
+        // Số điện thoại phải bắt đầu với số 0 và có độ dài chính xác là 10 chữ số
+        String regex = "^0\\d{9}$";
+
+        // Kiểm tra xem số điện thoại có khớp với định dạng hay không
+        return phoneNumber.matches(regex);
+    }
+
+
 }
