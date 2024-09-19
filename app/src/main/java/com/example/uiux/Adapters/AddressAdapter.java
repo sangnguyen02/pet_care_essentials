@@ -67,6 +67,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
                 intent.putExtra("province_id",Province[0]);
                 intent.putExtra("district_id",District[0]);
                 intent.putExtra("ward_id",Ward[0]);
+                intent.putExtra("isDefualt",address.getIs_default());
                 context.startActivity(intent);
             });
         }

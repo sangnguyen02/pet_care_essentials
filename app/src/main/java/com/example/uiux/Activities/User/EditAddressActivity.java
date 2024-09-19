@@ -62,6 +62,7 @@ public class EditAddressActivity extends AppCompatActivity {
         wardSpinner = findViewById(R.id.wardSpinner);
         detailAdressTv = findViewById(R.id.detailAddress);
         saveBTN = findViewById(R.id.btnSave);
+        checkBoxDefault=findViewById(R.id.checkBox);
 
         addressId = getIntent().getStringExtra("address_id");
         addressRef = FirebaseDatabase.getInstance().getReference("Account_Address").child(addressId);
@@ -75,36 +76,74 @@ public class EditAddressActivity extends AppCompatActivity {
         saveBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Lấy giá trị từ các Spinner và EditText
                 String detailAddress = detailAdressTv.getText().toString().trim();
-                if (!detailAddress.isEmpty()) {
-                    accountAddress.setAddress_details(detailAddress);
+                accountAddress.setIs_default(checkBoxDefault.isChecked());
+
+                if (checkBoxDefault.isChecked()) {
+                    updateOtherAddressesToFalse(() -> { // Callback sau khi cập nhật xong các địa chỉ khác
+                        // Cập nhật địa chỉ hiện tại
+                        if (!detailAddress.isEmpty()) {
+                            accountAddress.setAddress_details(detailAddress);
+                        } else {
+                            Toast.makeText(EditAddressActivity.this, "Vui lòng nhập địa chỉ chi tiết", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if (provinceSpinner.getSelectedItem() != null && districtSpinner.getSelectedItem() != null && wardSpinner.getSelectedItem() != null) {
+                            addressRef.setValue(accountAddress).addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(EditAddressActivity.this, "Địa chỉ đã được cập nhật", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                } else {
+                                    Toast.makeText(EditAddressActivity.this, "Lỗi khi cập nhật địa chỉ", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            Toast.makeText(EditAddressActivity.this, "Vui lòng chọn đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                 } else {
-                    Toast.makeText(EditAddressActivity.this, "Vui lòng nhập địa chỉ chi tiết", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                if (provinceSpinner.getSelectedItem() != null && districtSpinner.getSelectedItem() != null && wardSpinner.getSelectedItem() != null) {
-                    // Thông báo cập nhật thành công
-                    Toast.makeText(EditAddressActivity.this, "Cập nhật địa chỉ thành công", Toast.LENGTH_SHORT).show();
-
-                    // Thực hiện cập nhật vào Firebase Realtime Database
+                    // Nếu không chọn làm mặc định thì chỉ cập nhật địa chỉ hiện tại
                     addressRef.setValue(accountAddress).addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             Toast.makeText(EditAddressActivity.this, "Địa chỉ đã được cập nhật", Toast.LENGTH_SHORT).show();
-                            finish(); // Quay lại trang trước hoặc đóng activity
+                            finish();
                         } else {
                             Toast.makeText(EditAddressActivity.this, "Lỗi khi cập nhật địa chỉ", Toast.LENGTH_SHORT).show();
                         }
                     });
-                } else {
-                    Toast.makeText(EditAddressActivity.this, "Vui lòng chọn đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
 
+
     }
+    private void updateOtherAddressesToFalse(Runnable onComplete) {
+        String userId = accountAddress.getAccount_id();
+        DatabaseReference addressRef2 = FirebaseDatabase.getInstance().getReference("Account_Address");
+
+        addressRef2.orderByChild("account_id").equalTo(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot addressSnapshot : snapshot.getChildren()) {
+                    Account_Address address = addressSnapshot.getValue(Account_Address.class);
+
+                    if (address != null && !address.getAccount_address_id().equals(accountAddress.getAccount_address_id())) {
+                        address.setIs_default(false);
+                        addressSnapshot.getRef().setValue(address);
+                    }
+                }
+                onComplete.run();  // Gọi callback sau khi hoàn thành
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Xử lý lỗi nếu có
+            }
+        });
+    }
+
 
     private void loadAddressData() {
         addressRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -112,6 +151,7 @@ public class EditAddressActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                      accountAddress = snapshot.getValue(Account_Address.class);
+                     checkBoxDefault.setChecked(accountAddress.getIs_default());
 //                    }
                 }
             }
@@ -138,7 +178,6 @@ public class EditAddressActivity extends AppCompatActivity {
             }
         });
     }
-
     private void DistrictSelection() {
         // Xử lý sự kiện chọn quận/huyện
         districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -158,12 +197,9 @@ public class EditAddressActivity extends AppCompatActivity {
             }
         });
     }
-
     private void ProvinceSelection() {
 
         new FetchProvincesTask().execute("https://vapi.vnappmob.com/api/province/");
-
-
         // Xử lý sự kiện chọn tỉnh
         provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -182,7 +218,6 @@ public class EditAddressActivity extends AppCompatActivity {
             }
         });
     }
-
     // AsyncTask để lấy danh sách tỉnh từ API
     private class FetchProvincesTask extends AsyncTask<String, Void, List<Province>> {
 
@@ -227,8 +262,6 @@ public class EditAddressActivity extends AppCompatActivity {
             }
         }
     }
-
-
     // AsyncTask để lấy danh sách quận/huyện từ API
     private class FetchDistrictsTask extends AsyncTask<String, Void, List<District>> {
 
@@ -317,7 +350,6 @@ public class EditAddressActivity extends AppCompatActivity {
             }
         }
     }
-
     // Phân tích JSON thành danh sách các đối tượng Province
     private List<Province> parseProvinces(String json) {
         List<Province> provinceList = new ArrayList<>();
@@ -338,7 +370,6 @@ public class EditAddressActivity extends AppCompatActivity {
         }
         return provinceList;
     }
-
     // Phân tích JSON thành danh sách các đối tượng District
     private List<District> parseDistricts(String json) {
         List<District> districtList = new ArrayList<>();
@@ -359,7 +390,6 @@ public class EditAddressActivity extends AppCompatActivity {
         }
         return districtList;
     }
-
     // Phân tích JSON thành danh sách các đối tượng Ward
     private List<Ward> parseWards(String json) {
         List<Ward> wardList = new ArrayList<>();
