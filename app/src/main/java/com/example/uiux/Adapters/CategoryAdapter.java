@@ -1,67 +1,62 @@
 package com.example.uiux.Adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.uiux.Model.Category;
 import com.example.uiux.R;
 
 import java.util.List;
 
-public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
-    private List<Category> categoryList;
-    private Context context;
-    private OnCategoryClickListener listener;
+import de.hdodenhof.circleimageview.CircleImageView;
 
-    public interface OnCategoryClickListener {
-        void onCategoryClick(Category category);
-    }
+public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
+    private List<Category> mListCategory;
 
-    public CategoryAdapter() {
-    }
-
-    public CategoryAdapter(List<Category> categoryList) {
-        this.categoryList = categoryList;
-    }
-
-    public CategoryAdapter(Context context, List<Category> categoryList, OnCategoryClickListener listener) {
-        this.context = context;
-        this.categoryList = categoryList;
-        this.listener = listener;
+    public CategoryAdapter(List<Category> mListCategory) {
+        this.mListCategory = mListCategory;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_category, parent, false);
-        return new ViewHolder(view);
+    public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_category, parent, false);
+        return new CategoryViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Category category = categoryList.get(position);
-        holder.categoryName.setText(category.getName());
+    public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
+        Category category = mListCategory.get(position);
+        if (category == null) {
+            return;
+        }
 
-        holder.itemView.setOnClickListener(v -> listener.onCategoryClick(category));
+        holder.tvCategoryName.setText(category.getName());
+        Glide.with(holder.itemView.getContext())
+                .load(category.getImageUrl()).fitCenter().override(64,64)
+                .into(holder.imgCategory);
     }
 
     @Override
     public int getItemCount() {
-        return categoryList.size();
+        return mListCategory != null ? mListCategory.size() : 0;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView categoryName;
+    public static class CategoryViewHolder extends RecyclerView.ViewHolder {
+        private CircleImageView imgCategory;
+        private TextView tvCategoryName;
 
-        public ViewHolder(@NonNull View itemView) {
+        public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
-            categoryName = itemView.findViewById(R.id.tv_category_name);
+            imgCategory = itemView.findViewById(R.id.img_category);
+            tvCategoryName = itemView.findViewById(R.id.tv_category_name);
         }
     }
 }
