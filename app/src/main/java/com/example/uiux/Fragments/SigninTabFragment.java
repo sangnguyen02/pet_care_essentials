@@ -133,6 +133,7 @@ public class SigninTabFragment extends Fragment {
                         resendingToken = token;
                         String fullPhoneNumber = countryCodePicker.getFullNumberWithPlus();
 
+
                         Intent intent = new Intent(getContext(), Sent_OTPActivity.class);
                         intent.putExtra("phone", fullPhoneNumber);
                         intent.putExtra("PhoneNumber", Objects.requireNonNull(edtPhone.getText()).toString());

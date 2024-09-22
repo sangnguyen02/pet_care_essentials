@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.example.uiux.Activities.Admin.MainActivityAdmin;
 import com.example.uiux.Activities.User.MainActivityUser;
 import com.example.uiux.Model.UserAccountRepository;
 import com.example.uiux.R;
@@ -69,6 +70,47 @@ public class Sent_OTPActivity extends AppCompatActivity {
         setupOTPInputs();
 
         // Xử lý khi nhấn nút Verify
+//        Btn_Verify.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (inputCode1.getText().toString().isEmpty() || inputCode2.getText().toString().isEmpty() ||
+//                        inputCode3.getText().toString().isEmpty() || inputCode4.getText().toString().isEmpty() ||
+//                        inputCode5.getText().toString().isEmpty() || inputCode6.getText().toString().isEmpty()) {
+//                    Toast.makeText(Sent_OTPActivity.this, "Enter OTP", Toast.LENGTH_SHORT).show();
+//                } else {
+//                    String code = inputCode1.getText().toString()
+//                            + inputCode2.getText().toString()
+//                            + inputCode3.getText().toString()
+//                            + inputCode4.getText().toString()
+//                            + inputCode5.getText().toString()
+//                            + inputCode6.getText().toString();
+//                    if (verificationId != null) {
+//                        PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(verificationId, code);
+//                        FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential)
+//                                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                                        if (task.isSuccessful()) {
+//                                            UserAccountRepository account=new UserAccountRepository();
+//                                            account.getAccountByPhone(PhoneNumer);
+//
+//                                            Intent MainUserIntent = new Intent(getApplicationContext(), MainActivityUser.class);
+//                                            Bundle bundle = new Bundle();
+//                                            bundle.putString("phone_number", PhoneNumer);
+//                                            MainUserIntent.putExtras(bundle);
+//                                            MainUserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                            startActivity(MainUserIntent);
+//                                        } else {
+//                                            Toast.makeText(Sent_OTPActivity.this, "Invalid Code", Toast.LENGTH_SHORT).show();
+//                                        }
+//                                    }
+//                                });
+//                    }
+//                }
+//            }
+//        });
+
+        // Xử lý khi nhấn nút Resend OTP
         Btn_Verify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,14 +132,25 @@ public class Sent_OTPActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
-                                            UserAccountRepository account=new UserAccountRepository();
-                                            account.getAccountByPhone(PhoneNumer);
-                                            Intent MainUserIntent = new Intent(getApplicationContext(), MainActivityUser.class);
-                                            Bundle bundle = new Bundle();
-                                            bundle.putString("phone_number", PhoneNumer);
-                                            MainUserIntent.putExtras(bundle);
-                                            MainUserIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(MainUserIntent);
+                                            UserAccountRepository accountRepository = new UserAccountRepository();
+                                            accountRepository.getAccountByPhone(PhoneNumer, new UserAccountRepository.OnAccountTypeListener() {
+                                                @Override
+                                                public void onAccountTypeReceived(int accountType) {
+                                                    Intent intent;
+                                                    if (accountType == 0) {
+                                                        // Chuyển hướng đến MainActivityUser
+                                                        intent = new Intent(getApplicationContext(), MainActivityUser.class);
+                                                    } else {
+                                                        // Chuyển hướng đến MainActivityAdmin
+                                                        intent = new Intent(getApplicationContext(), MainActivityAdmin.class);
+                                                    }
+                                                    Bundle bundle = new Bundle();
+                                                    bundle.putString("phone_number", PhoneNumer);
+                                                    intent.putExtras(bundle);
+                                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                    startActivity(intent);
+                                                }
+                                            });
                                         } else {
                                             Toast.makeText(Sent_OTPActivity.this, "Invalid Code", Toast.LENGTH_SHORT).show();
                                         }
@@ -108,7 +161,6 @@ public class Sent_OTPActivity extends AppCompatActivity {
             }
         });
 
-        // Xử lý khi nhấn nút Resend OTP
         resendOTP.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
