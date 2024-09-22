@@ -36,9 +36,15 @@
 
     <!-- Button để thêm danh mục -->
     <Button
-        android:id="@+id/btnAddCategory"
+    android:id="@+id/btnAddCategory"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Add Category"
+    android:layout_marginTop="16dp" />
+    <Button
+        android:id="@+id/btnUpdateCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Category"
+        android:text="Update Category"
         android:layout_marginTop="16dp" />
 </LinearLayout>

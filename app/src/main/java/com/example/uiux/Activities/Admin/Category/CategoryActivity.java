@@ -34,7 +34,7 @@ public class CategoryActivity extends AppCompatActivity {
     private EditText edtCategoryName;
     private Spinner spinnerCategoryStatus;
     private ImageView imgAvatar;
-    private Button btnChooseImage, btnAddCategory;
+    private Button btnChooseImage, btnAddCategory,btnUpdateCategory;
     private Uri imageUri;
     private ProgressDialog progressDialog;
 
@@ -54,6 +54,7 @@ public class CategoryActivity extends AppCompatActivity {
         imgAvatar = findViewById(R.id.img_avatar);
         btnChooseImage = findViewById(R.id.btn_choose_image);
         btnAddCategory = findViewById(R.id.btnAddCategory);
+        btnUpdateCategory=findViewById(R.id.btnUpdateCategory);
 
         // Khởi tạo Firebase
         storage = FirebaseStorage.getInstance();
@@ -79,6 +80,13 @@ public class CategoryActivity extends AppCompatActivity {
                 uploadImageAndAddCategory();
             } else {
                 Toast.makeText(CategoryActivity.this, "Please select an image and enter a category name", Toast.LENGTH_SHORT).show();
+            }
+        });
+        btnUpdateCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(CategoryActivity.this, UpdateCategoryActivity.class);
+                startActivity(intent);
             }
         });
     }
