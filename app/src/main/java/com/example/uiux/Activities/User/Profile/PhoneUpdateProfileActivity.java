@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -57,14 +58,15 @@ public class PhoneUpdateProfileActivity extends AppCompatActivity {
             edt_phone.setText(phoneNumber);
         }
 
-        btnAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent gotoAddress= new Intent(PhoneUpdateProfileActivity.this, AddressActivity.class);
-                gotoAddress.putExtra("account_id",account_id);
-                startActivity(gotoAddress);
-            }
-        });
+//        btnAddress.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent gotoAddress= new Intent(PhoneUpdateProfileActivity.this, AddressActivity.class);
+//                gotoAddress.putExtra("account_id",account_id);
+//                startActivity(gotoAddress);
+//            }
+//        });
+
         imgAvatar.setOnClickListener(view -> chooseImage());
         img_update.setOnClickListener(view -> updateAccountInfo());
         img_back.setOnClickListener(view -> back());
@@ -284,7 +286,7 @@ private void loadUserProfile() {
         String[] genders = getResources().getStringArray(R.array.genders);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Chọn giới tính")
+        builder.setTitle("Choose gender")
                 .setItems(genders, (dialog, which) -> {
                     edt_gender.setText(genders[which]);
                 });

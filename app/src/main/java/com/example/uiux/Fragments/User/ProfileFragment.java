@@ -30,6 +30,7 @@ public class ProfileFragment extends Fragment {
     View rootView;
     MaterialCardView mcv_help_center;
     String phone;
+    String accountId;
     CircleImageView img_avatar, img_setting;
     TextView tv_username;
     DatabaseReference databaseReference;
@@ -49,6 +50,27 @@ public class ProfileFragment extends Fragment {
         initWidget();
         loadUserProfile();
 
+        img_avatar.setOnClickListener(view -> {
+            Intent intent = new Intent(rootView.getContext(), PhoneUpdateProfileActivity.class);
+            intent.putExtra("phone_no", phone);
+            startActivity(intent);
+        });
+
+        img_setting.setOnClickListener(view -> {
+            if (accountId != null) {
+                Intent intent = new Intent(rootView.getContext(), SettingsActivity.class);
+                intent.putExtra("phone_no", phone);
+                intent.putExtra("account_id", accountId);
+                startActivity(intent);
+            } else {
+                Toast.makeText(rootView.getContext(), "Account ID is not available", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mcv_help_center.setOnClickListener(view -> {
+
+        });
+
 
 
         return rootView;
@@ -57,7 +79,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadUserProfile(); // Gọi lại để tải dữ liệu mới sau khi quay lại từ màn hình khác
+        loadUserProfile(); // Gọi lại để get dữ liệu mới sau khi quay lại từ màn hình khác
     }
 
     void initWidget() {
@@ -65,22 +87,6 @@ public class ProfileFragment extends Fragment {
         img_setting = rootView.findViewById(R.id.img_setting);
         tv_username = rootView.findViewById(R.id.tv_username);
         mcv_help_center = rootView.findViewById(R.id.mcv_help_center);
-
-        img_avatar.setOnClickListener(view -> {
-            Intent intent = new Intent(rootView.getContext(), PhoneUpdateProfileActivity.class);
-            intent.putExtra("phone_no", phone);
-            startActivity(intent);
-        });
-
-        img_setting.setOnClickListener(view -> {
-            Intent intent = new Intent(rootView.getContext(), SettingsActivity.class);
-            intent.putExtra("phone_no", phone);
-            startActivity(intent);
-        });
-
-        mcv_help_center.setOnClickListener(view -> {
-
-        });
     }
 
     private void loadUserProfile() {
@@ -99,7 +105,7 @@ public class ProfileFragment extends Fragment {
 
                         // Populate the fields with the user's data
                         if (account != null) {
-
+                            accountId = snapshot.getKey();
                             tv_username.setText(account.getFullname() != null ? account.getFullname() : "Chưa cập nhật");
                             // Load image if it exists
                             if (account.getImage() != null) {
@@ -107,6 +113,8 @@ public class ProfileFragment extends Fragment {
                                         .load(account.getImage())
                                         .into(img_avatar);
                             }
+                            Log.d("ProfileFragment", "Account ID: " + accountId); // Log giá trị accountId
+
                         }
                     }
                 } else {

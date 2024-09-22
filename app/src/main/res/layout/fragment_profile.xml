@@ -20,6 +20,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:strokeWidth="0dp"
                 app:cardCornerRadius="0dp"
                 app:cardElevation="10dp"
                 >
@@ -108,6 +109,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp"
                 app:rippleColor="@color/ripple_color"
+                android:backgroundTint="@color/white"
                 >
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
