@@ -40,4 +40,9 @@
         <item>@string/gender_male</item>
         <item>@string/gender_female</item>
     </string-array>
+
+    <string-array name="category_status_array">
+        <item>Active</item>
+        <item>Inactive</item>
+    </string-array>
 </resources>

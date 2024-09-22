@@ -135,7 +135,7 @@ public class UserUpdateProfile extends AppCompatActivity {
             Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
         }
     }
-private void createUserInFirebase(String fullName, String gender, String phone, String email, String birthday) {
+    private void createUserInFirebase(String fullName, String gender, String phone, String email, String birthday) {
     DatabaseReference newUserRef = databaseReference.push();
     account_id = newUserRef.getKey(); // Get a new unique ID
     Model.Account account = new Model.Account();

@@ -1,10 +1,13 @@
 package com.example.uiux.Activities.Admin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.uiux.Activities.Admin.Category.CategoryActivity;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Image;
 import com.example.uiux.Model.Supplies_Import;
@@ -20,7 +23,7 @@ import java.util.UUID;
 
 public class MainActivityAdmin extends AppCompatActivity {
 
-    MaterialButton postSupply_btn;
+    MaterialButton postSupply_btn,category_btn;
     DatabaseReference suppliesRef;
     DatabaseReference suppliesImageRef;
     DatabaseReference suppliesImportRef;
@@ -41,6 +44,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         suppliesReviewRef = FirebaseDatabase.getInstance().getReference("Supplies_Review");
 
         postSupply_btn = findViewById(R.id.post_supply);
+        category_btn=findViewById(R.id.category);
         postSupply_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,6 +118,13 @@ public class MainActivityAdmin extends AppCompatActivity {
                         .addOnFailureListener(e -> {
                             Toast.makeText(MainActivityAdmin.this, "Failed to post supply: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         });
+            }
+        });
+        category_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivityAdmin.this, CategoryActivity.class);
+                startActivity(intent);
             }
         });
     }
