@@ -36,6 +36,7 @@
     <string name="gender_female">Female</string>
     <string name="help_center">Help Center</string>
     <string name="address">Address</string>
+    <string name="add_new_address">Add New Address</string>
     <string-array name="genders">
         <item>@string/gender_male</item>
         <item>@string/gender_female</item>
