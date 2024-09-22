@@ -8,9 +8,11 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.uiux.Model.Account_Address;
@@ -18,6 +20,8 @@ import com.example.uiux.Model.District;
 import com.example.uiux.Model.Province;
 import com.example.uiux.Model.Ward;
 import com.example.uiux.R;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,9 +45,10 @@ public class EditAddressActivity extends AppCompatActivity {
     private ArrayAdapter<Province> provinceAdapter;
     private ArrayAdapter<District> districtAdapter;
     private ArrayAdapter<Ward> wardAdapter;
-    private EditText detailAdressTv;
+    private TextInputEditText detailAdressTv;
     //private DatabaseReference databaseReference;
-    private Button saveBTN;
+    private MaterialButton saveBTN;
+    private ImageView imgv_back;
     private CheckBox checkBoxDefault;
     Account_Address accountAddress;
     private DatabaseReference addressRef;
@@ -53,14 +58,19 @@ public class EditAddressActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_edit_address);
+        imgv_back = findViewById(R.id.imgv_back_edit_address);
+        provinceSpinner = findViewById(R.id.provinceSpinner_edit);
+        districtSpinner = findViewById(R.id.districtSpinner_edit);
+        wardSpinner = findViewById(R.id.wardSpinner_edit);
+        detailAdressTv = findViewById(R.id.edt_edit_address);
+        saveBTN = findViewById(R.id.btn_save_edit);
+        checkBoxDefault=findViewById(R.id.checkBox_edit);
 
-        provinceSpinner = findViewById(R.id.provinceSpinner);
-        districtSpinner = findViewById(R.id.districtSpinner);
-        wardSpinner = findViewById(R.id.wardSpinner);
-        detailAdressTv = findViewById(R.id.detailAddress);
-        saveBTN = findViewById(R.id.btnSave);
-        checkBoxDefault=findViewById(R.id.checkBox);
+        imgv_back.setOnClickListener(view -> {
+            finish();
+        });
 
         addressId = getIntent().getStringExtra("address_id");
         addressRef = FirebaseDatabase.getInstance().getReference("Account_Address").child(addressId);
@@ -71,50 +81,45 @@ public class EditAddressActivity extends AppCompatActivity {
         DistrictSelection();
         //Sự kiện Chọn xã/phường
         Wardselection();
-        saveBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String detailAddress = detailAdressTv.getText().toString().trim();
-                accountAddress.setIs_default(checkBoxDefault.isChecked());
+        saveBTN.setOnClickListener(v -> {
+            String detailAddress = detailAdressTv.getText().toString().trim();
+            accountAddress.setIs_default(checkBoxDefault.isChecked());
 
-                if (checkBoxDefault.isChecked()) {
-                    updateOtherAddressesToFalse(() -> { // Callback sau khi cập nhật xong các địa chỉ khác
-                        // Cập nhật địa chỉ hiện tại
-                        if (!detailAddress.isEmpty()) {
-                            accountAddress.setAddress_details(detailAddress);
-                        } else {
-                            Toast.makeText(EditAddressActivity.this, "Vui lòng nhập địa chỉ chi tiết", Toast.LENGTH_SHORT).show();
-                            return;
-                        }
+            if (checkBoxDefault.isChecked()) {
+                updateOtherAddressesToFalse(() -> { // Callback sau khi cập nhật xong các địa chỉ khác
+                    // Cập nhật địa chỉ hiện tại
+                    if (!detailAddress.isEmpty()) {
+                        accountAddress.setAddress_details(detailAddress);
+                    } else {
+                        Toast.makeText(EditAddressActivity.this, "Please enter the detail address.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-                        if (provinceSpinner.getSelectedItem() != null && districtSpinner.getSelectedItem() != null && wardSpinner.getSelectedItem() != null) {
-                            addressRef.setValue(accountAddress).addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    Toast.makeText(EditAddressActivity.this, "Địa chỉ đã được cập nhật", Toast.LENGTH_SHORT).show();
-                                    finish();
-                                } else {
-                                    Toast.makeText(EditAddressActivity.this, "Lỗi khi cập nhật địa chỉ", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        } else {
-                            Toast.makeText(EditAddressActivity.this, "Vui lòng chọn đầy đủ thông tin", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    // Nếu không chọn làm mặc định thì chỉ cập nhật địa chỉ hiện tại
-                    addressRef.setValue(accountAddress).addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(EditAddressActivity.this, "Địa chỉ đã được cập nhật", Toast.LENGTH_SHORT).show();
-                            finish();
-                        } else {
-                            Toast.makeText(EditAddressActivity.this, "Lỗi khi cập nhật địa chỉ", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
+                    if (provinceSpinner.getSelectedItem() != null && districtSpinner.getSelectedItem() != null && wardSpinner.getSelectedItem() != null) {
+                        addressRef.setValue(accountAddress).addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(EditAddressActivity.this, "Address updated.", Toast.LENGTH_SHORT).show();
+                                finish();
+                            } else {
+                                Toast.makeText(EditAddressActivity.this, "Failed to edit address.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(EditAddressActivity.this, "Please select information.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } else {
+                // Nếu không chọn làm mặc định thì chỉ cập nhật địa chỉ hiện tại
+                addressRef.setValue(accountAddress).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(EditAddressActivity.this, "Address updated.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(EditAddressActivity.this, "Failed to edit address.", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
-
-
 
     }
     private void updateOtherAddressesToFalse(Runnable onComplete) {
@@ -149,6 +154,7 @@ public class EditAddressActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                      accountAddress = snapshot.getValue(Account_Address.class);
+                    detailAdressTv.setText(accountAddress.getAddress_details());
                      checkBoxDefault.setChecked(accountAddress.getIs_default());
 //                    }
                 }
@@ -166,7 +172,7 @@ public class EditAddressActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Ward selectedWard = (Ward) adapterView.getItemAtPosition(i);
 
-                Toast.makeText(getApplicationContext(), "Chọn ward: " + selectedWard.getWardName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Select ward: " + selectedWard.getWardName(), Toast.LENGTH_SHORT).show();
                 accountAddress.setWard(selectedWard.getWardId()+"+"+ selectedWard.getWardName());
             }
 
@@ -182,7 +188,7 @@ public class EditAddressActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 District selectedDistrict = (District) parentView.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "Chọn quận/huyện: " + selectedDistrict.getDistrictName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Select district: " + selectedDistrict.getDistrictName(), Toast.LENGTH_SHORT).show();
                 accountAddress.setDistrict(selectedDistrict.getDistrictId()+"+"+selectedDistrict.getDistrictName());
 
                 // Gọi API để lấy danh sách phường/xã theo district_id
@@ -203,7 +209,7 @@ public class EditAddressActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 Province selectedProvince = (Province) parentView.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "Chọn tỉnh: " + selectedProvince.getProvinceName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Select province: " + selectedProvince.getProvinceName(), Toast.LENGTH_SHORT).show();
                 accountAddress.setProvince(selectedProvince.getProvinceId()+"+"+selectedProvince.getProvinceName());
 
                 // Gọi API để lấy danh sách quận/huyện theo province_id
@@ -256,7 +262,7 @@ public class EditAddressActivity extends AppCompatActivity {
                 provinceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 provinceSpinner.setAdapter(provinceAdapter);
             } else {
-                Toast.makeText(EditAddressActivity.this, "Không thể lấy dữ liệu!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditAddressActivity.this, "Cannot get provinces data!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -300,7 +306,7 @@ public class EditAddressActivity extends AppCompatActivity {
                 districtAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 districtSpinner.setAdapter(districtAdapter);
             } else {
-                Toast.makeText(EditAddressActivity.this, "Không thể lấy danh sách quận/huyện!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditAddressActivity.this, "Cannot get districts data!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -344,7 +350,7 @@ public class EditAddressActivity extends AppCompatActivity {
                 wardAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 wardSpinner.setAdapter(wardAdapter);
             } else {
-                Toast.makeText(EditAddressActivity.this, "Không thể lấy danh sách phường/xã!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditAddressActivity.this, "Cannot get wards data!", Toast.LENGTH_SHORT).show();
             }
         }
     }

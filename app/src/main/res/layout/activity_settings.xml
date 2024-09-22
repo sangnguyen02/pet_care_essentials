@@ -5,7 +5,7 @@
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/bg_grey">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_setting_app_bar"
@@ -75,7 +75,7 @@
                 android:layout_height="60dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 app:rippleColor="@color/ripple_color"
                 android:backgroundTint="@color/white"

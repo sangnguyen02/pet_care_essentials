@@ -1,20 +1,28 @@
 package com.example.uiux.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.OptIn;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uiux.Activities.User.Profile.EditAddressActivity;
 import com.example.uiux.Model.Account_Address;
 import com.example.uiux.R;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
+import com.google.android.material.badge.ExperimentalBadgeUtils;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
@@ -48,58 +56,76 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
     }
 
     class AddressViewHolder extends RecyclerView.ViewHolder {
-        TextView txtAddress;
-        Button btnEdit, btnDelete;
+        TextView txtAddress, txtDefault;
 
         public AddressViewHolder(@NonNull View itemView) {
             super(itemView);
 
             txtAddress = itemView.findViewById(R.id.txtAddress);
-            btnEdit = itemView.findViewById(R.id.btnEdit);
-            btnDelete = itemView.findViewById(R.id.btndelete);
+            txtDefault = itemView.findViewById(R.id.txtDefault);
 
-            // Chức năng sửa địa chỉ
-            btnEdit.setOnClickListener(v -> {
-                int position = getAdapterPosition();
-                Account_Address address = addressList.get(position);
-                String[] Province = address.getProvince().split("\\+");
-                String[] District = address.getDistrict().split("\\+");
-                String[] Ward = address.getWard().split("\\+");
-                Intent intent = new Intent(context, EditAddressActivity.class);
-                intent.putExtra("address_id", address.getAccount_address_id());
-                intent.putExtra("province_id", Province[0]);
-                intent.putExtra("district_id", District[0]);
-                intent.putExtra("ward_id", Ward[0]);
-                intent.putExtra("isDefault", address.getIs_default());
-                context.startActivity(intent);
-            });
-
-            // Chức năng xóa địa chỉ
-            // Chức năng xóa địa chỉ
-            btnDelete.setOnClickListener(v -> {
+            itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 Account_Address address = addressList.get(position);
 
-                // Thực hiện xóa trên database (nếu có)
-                deleteAddressFromDatabase(address.getAccount_address_id());
+                // Tạo một AlertDialog với 2 lựa chọn: Edit và Delete
+                new AlertDialog.Builder(context)
+                        .setItems(new CharSequence[]{"Edit", "Delete"}, (dialog, which) -> {
+                            if (which == 0) {
+                                // Nếu người dùng chọn "Sửa"
+                                String[] Province = address.getProvince().split("\\+");
+                                String[] District = address.getDistrict().split("\\+");
+                                String[] Ward = address.getWard().split("\\+");
+                                Intent intent = new Intent(context, EditAddressActivity.class);
+                                intent.putExtra("address_id", address.getAccount_address_id());
+                                intent.putExtra("province_id", Province[0]);
+                                intent.putExtra("district_id", District[0]);
+                                intent.putExtra("ward_id", Ward[0]);
+                                intent.putExtra("isDefault", address.getIs_default());
+                                context.startActivity(intent);
 
-                // Xóa địa chỉ khỏi danh sách và cập nhật giao diện
-                addressList.remove(position); // Loại bỏ địa chỉ khỏi danh sách
-                notifyItemRemoved(position);  // Thông báo cho RecyclerView item bị xóa
-                notifyItemRangeChanged(position, addressList.size()); // Cập nhật range các item khác
+                            } else if (which == 1) {
+                                // Nếu người dùng chọn "Xóa"
+                                new AlertDialog.Builder(context)
+                                        .setTitle("Confirm")
+                                        .setMessage("Are you sure")
+                                        .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+                                            // Thực hiện xóa địa chỉ khỏi cơ sở dữ liệu
+                                            deleteAddressFromDatabase(address.getAccount_address_id());
 
-                // Thông báo người dùng
-                Toast.makeText(context, "Đã xóa địa chỉ thành công", Toast.LENGTH_SHORT).show();
+                                            // Xóa địa chỉ khỏi danh sách và cập nhật giao diện
+                                            addressList.remove(position); // Loại bỏ địa chỉ khỏi danh sách
+                                            notifyItemRemoved(position);  // Thông báo cho RecyclerView item bị xóa
+                                            notifyItemRangeChanged(position, addressList.size()); // Cập nhật range các item khác
+
+                                            // Thông báo người dùng
+                                            Toast.makeText(context, "Delete address successfully", Toast.LENGTH_SHORT).show();
+                                        })
+                                        .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
+                                            // Nếu người dùng chọn "Không", đóng dialog
+                                            confirmDialog.dismiss();
+                                        })
+                                        .show();
+                            }
+                        })
+                        .show();
             });
 
         }
 
+        @OptIn(markerClass = ExperimentalBadgeUtils.class)
         public void bind(Account_Address address) {
             String[] Province = address.getProvince().split("\\+");
             String[] District = address.getDistrict().split("\\+");
             String[] Ward = address.getWard().split("\\+");
 
-            txtAddress.setText(address.getAddress_details() + ", " + Province[1] + ", " + District[1] + ", " + Ward[1]);
+            txtAddress.setText(address.getAddress_details() + ", " + Ward[1] + ", " + District[1] + ", " + Province[1]);
+            if (address.getIs_default()) {
+                txtDefault.setVisibility(View.VISIBLE);
+            } else {
+                txtDefault.setVisibility(View.GONE);
+            }
+
         }
     }
 

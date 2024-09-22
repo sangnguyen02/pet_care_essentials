@@ -33,22 +33,12 @@ public class SettingsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         accountId = intent.getStringExtra("account_id");
 
-        img_back_settings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent_setting = new Intent(SettingsActivity.this, AddressActivity.class);
-                intent_setting.putExtra("account_id", accountId);
-                startActivity(intent_setting);
-            }
-        });
+        img_back_settings.setOnClickListener(view -> finish());
 
-        mcv_address_setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent gotoAddress= new Intent(SettingsActivity.this, AddressActivity.class);
-                gotoAddress.putExtra("account_id",accountId);
-                startActivity(gotoAddress);
-            }
+        mcv_address_setting.setOnClickListener(view -> {
+            Intent gotoAddress= new Intent(SettingsActivity.this, UpdateAddressActivity.class);
+            gotoAddress.putExtra("account_id",accountId);
+            startActivity(gotoAddress);
         });
 
     }
