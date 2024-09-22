@@ -1,4 +1,4 @@
-package com.example.uiux.Activities.User;
+package com.example.uiux.Activities.User.Profile;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,16 +7,12 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uiux.Adapters.AddressAdapter;
 import com.example.uiux.Model.Account_Address;
 import com.example.uiux.R;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

@@ -11,6 +11,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="64dp"
+        app:cardBackgroundColor="@color/white"
         app:cardElevation="10dp"
         >
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,8 +20,8 @@
 
             <ImageView
                 android:id="@+id/img_back"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_marginStart="16dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/back"
@@ -41,7 +42,7 @@
                 android:text="Edit Profile"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="22sp"
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="@+id/img_back"
                 app:layout_constraintStart_toEndOf="@+id/img_back"
                 app:layout_constraintTop_toTopOf="@+id/img_back"
@@ -71,9 +72,11 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="240dp"
-        android:layout_marginTop="4dp"
-        android:backgroundTint="@color/primary"
+        android:layout_height="200dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        app:cardBackgroundColor="@color/primary"
         app:cardElevation="10dp"
         app:cardCornerRadius="16dp">
 
@@ -108,72 +111,148 @@
 
     </androidx.cardview.widget.CardView>
 
-    <EditText
-        android:id="@+id/edt_fullname2"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Họ và tên"
-        android:inputType="textPersonName"/>
-    <EditText
-        android:id="@+id/edt_gender2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Gioi tinh"
-        android:inputType="textPersonName"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <EditText
-            android:id="@+id/edt_phone2"
+        android:layout_height="@dimen/edt_height"
+        android:hint="Fullname"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        app:shapeAppearanceOverlay="@style/Button4"
+        app:hintTextColor="@color/text_input"
+        app:boxStrokeColor="@color/text_input"
+        app:boxStrokeWidth="1dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        tools:ignore="HardcodedText">
+
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Số điện thoại"
-            android:inputType="phone"/>
+            android:layout_height="match_parent"
+            android:inputType="textPersonName"
+            android:id="@+id/edt_fullname2"
+            android:ems="10"
+            android:textSize="@dimen/text_size"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_flex"
 
-    </LinearLayout>
-    <EditText
-        android:id="@+id/edt_email2"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/edt_height"
+        android:hint="Gender"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        app:shapeAppearanceOverlay="@style/Button4"
+        app:hintTextColor="@color/text_input"
+        app:boxStrokeColor="@color/text_input"
+        app:boxStrokeWidth="1dp"
+        android:clickable="true"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        tools:ignore="HardcodedText">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textPersonName"
+            android:id="@+id/edt_gender2"
+            android:ems="10"
+            android:textSize="@dimen/text_size"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_flex"
+            android:focusable="false"
+            android:clickable="true"
+            android:cursorVisible="false"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edt_height"
+        android:hint="Phone"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        app:shapeAppearanceOverlay="@style/Button4"
+        app:hintTextColor="@color/text_input"
+        app:boxStrokeColor="@color/text_input"
+        app:boxStrokeWidth="1dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        tools:ignore="HardcodedText">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="number|phone"
+            android:id="@+id/edt_phone2"
+            android:ems="10"
+            android:textSize="@dimen/text_size"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_flex"
+            android:enabled="false"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/edt_height"
         android:hint="Email"
-        android:inputType="textEmailAddress"/>
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        app:shapeAppearanceOverlay="@style/Button4"
+        app:hintTextColor="@color/text_input"
+        app:boxStrokeColor="@color/text_input"
+        app:boxStrokeWidth="1dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        tools:ignore="HardcodedText">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textEmailAddress"
+            android:id="@+id/edt_email2"
+            android:ems="10"
+            android:textSize="@dimen/text_size"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_flex"
+            android:enabled="false"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Chọn ngày sinh -->
-    <Button
-        android:id="@+id/btn_birthday2"
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Chọn ngày sinh"/>
+        android:layout_height="@dimen/edt_height"
+        android:hint="Birthday"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        app:shapeAppearanceOverlay="@style/Button4"
+        app:hintTextColor="@color/text_input"
+        app:boxStrokeColor="@color/text_input"
+        app:boxStrokeWidth="1dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        tools:ignore="HardcodedText">
 
-    <!-- TextView để hiển thị ngày sinh sau khi chọn -->
-    <TextView
-        android:id="@+id/tv_birthday2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ngày sinh chưa chọn"
-        android:paddingTop="10dp"/>
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="text"
+            android:id="@+id/edt_birthday2"
+            android:ems="10"
+            android:textSize="@dimen/text_size"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_flex"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:clickable="true"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Chọn ảnh đại diện và các nút khác -->
-<!--    <ImageView-->
-<!--        android:id="@+id/img_avatar2"-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:layout_gravity="center"-->
-<!--        />-->
-
-    <Button
-        android:id="@+id/btn_choose_image2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Chọn ảnh đại diện"
-        android:layout_gravity="center"/>
-
-    <Button
-        android:id="@+id/btn_update2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cập nhật thông tin"/>
     <Button
         android:id="@+id/btn_addess"
         android:layout_width="match_parent"

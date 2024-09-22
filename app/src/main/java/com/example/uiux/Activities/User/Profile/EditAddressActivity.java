@@ -1,4 +1,4 @@
-package com.example.uiux.Activities.User;
+package com.example.uiux.Activities.User.Profile;
 
 import android.os.AsyncTask;
 import android.os.Bundle;

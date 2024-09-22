@@ -13,13 +13,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
-import com.example.uiux.Activities.User.Sent_OTPActivity;
+import com.example.uiux.Activities.Sent_OTPActivity;
 import com.example.uiux.R;
 import com.example.uiux.Utils.PhoneNumberValidator;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.FirebaseException;

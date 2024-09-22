@@ -5,7 +5,8 @@
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.User.AddressActivity">
+    android:background="@color/white"
+    tools:context=".Activities.User.Profile.AddressActivity">
 
     <Spinner
         android:id="@+id/provinceSpinner"

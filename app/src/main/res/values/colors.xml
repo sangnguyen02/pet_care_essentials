@@ -2,6 +2,8 @@
 <resources>
     <color name="white">#FDF1F5</color>
     <color name="black">#232023</color>
+    <color name="ripple_color">#E0E0E0</color>
+
     <color name="grey">#9C9C9C</color>
     <color name="light_grey">#D8DCD6</color>
     <color name="text_input">#4E4A4A</color>
