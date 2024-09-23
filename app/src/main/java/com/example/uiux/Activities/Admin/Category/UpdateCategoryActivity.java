@@ -45,7 +45,6 @@ public class UpdateCategoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_update_category);
         recyclerView = findViewById(R.id.recyclerViewCategory);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
         categoryAdminAdapter = new CategoryAdminAdapter(categoryList, this);
         recyclerView.setAdapter(categoryAdminAdapter);
         loadCategory();
