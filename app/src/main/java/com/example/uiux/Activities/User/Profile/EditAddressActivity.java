@@ -2,6 +2,7 @@ package com.example.uiux.Activities.User.Profile;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -174,6 +175,7 @@ public class EditAddressActivity extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), "Select ward: " + selectedWard.getWardName(), Toast.LENGTH_SHORT).show();
                 accountAddress.setWard(selectedWard.getWardId()+"+"+ selectedWard.getWardName());
+
             }
 
             @Override
@@ -204,6 +206,16 @@ public class EditAddressActivity extends AppCompatActivity {
     private void ProvinceSelection() {
 
         new FetchProvincesTask().execute("https://vapi.vnappmob.com/api/province/");
+        provinceSpinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    removeInvalidItems(provinceAdapter); // Gọi phương thức xóa các mục không hợp lệ
+                    provinceAdapter.notifyDataSetChanged(); // Cập nhật adapter
+                }
+                return false; // Trả về false để cho p
+            }
+        });
         // Xử lý sự kiện chọn tỉnh
         provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -222,6 +234,21 @@ public class EditAddressActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void removeInvalidItems(ArrayAdapter<Province> provinceAdapter) {
+        // Duyệt qua adapter từ cuối đến đầu
+        for (int i = provinceAdapter.getCount() - 1; i >= 0; i--) {
+            Province province = provinceAdapter.getItem(i);
+            // Kiểm tra nếu provinceId là "-1"
+            if (province != null && province.getProvinceId().equals("-1")) {
+                // Xóa mục không hợp lệ
+                provinceAdapter.remove(province);
+            }
+        }
+    }
+
+
+
     // AsyncTask để lấy danh sách tỉnh từ API
     private class FetchProvincesTask extends AsyncTask<String, Void, List<Province>> {
 
