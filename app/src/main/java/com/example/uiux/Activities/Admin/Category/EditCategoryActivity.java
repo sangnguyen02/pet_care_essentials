@@ -12,6 +12,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
@@ -22,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.example.uiux.Model.Account_Address;
 import com.example.uiux.Model.Category;
 import com.example.uiux.R;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -30,14 +33,17 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.Objects;
+
 public class EditCategoryActivity extends AppCompatActivity {
-    private EditText categoryName;
-    private ImageView img_category;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private TextInputEditText edtCategoryName;
+    private ImageView img_editCategory, imgv_back;;
     private Button choose_Img, saveBtn;
     private Spinner status;
     private String category_id;
     private DatabaseReference categoryRef;
-    private Uri selectedImageUri; // Biến lưu ảnh đã chọn
+    private Uri selectedImageUri;
     private static final int PICK_IMAGE_REQUEST = 100;
     private FirebaseStorage storage; // Dùng Firebase Storage để lưu trữ ảnh
 
@@ -46,12 +52,16 @@ public class EditCategoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_edit_category);
-
-        categoryName = findViewById(R.id.edtCategoryName);
-        img_category = findViewById(R.id.img_cate);
-        choose_Img = findViewById(R.id.btn_choose_image);
+        edtCategoryName = findViewById(R.id.edt_edit_category);
+        imgv_back = findViewById(R.id.img_back_edit_category);
+        img_editCategory = findViewById(R.id.img_editCategory);
         saveBtn = findViewById(R.id.btnSaveCategory);
-        status = findViewById(R.id.spinnerCategoryStatus);
+        status = findViewById(R.id.spinnerCategoryStatus_edit);
+
+        imgv_back.setOnClickListener(view -> {
+            finish();
+        });
+
         String[] statusArray = getResources().getStringArray(R.array.category_status_array);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statusArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -65,21 +75,19 @@ public class EditCategoryActivity extends AppCompatActivity {
 
         loadCategoryData();
 
-        // Chọn ảnh
-        choose_Img.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                chooseImage();
+        // Khởi tạo ActivityResultLauncher
+        pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null && result.getData().getData() != null) {
+                selectedImageUri = result.getData().getData();
+                img_editCategory.setImageURI(selectedImageUri);
             }
         });
 
+        // Chọn ảnh
+        img_editCategory.setOnClickListener(view -> chooseImage());
+
         // Lưu danh mục
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveCategoryData();
-            }
-        });
+        saveBtn.setOnClickListener(view -> saveCategoryData());
     }
 
     // Phương thức tải dữ liệu hiện tại từ Firebase
@@ -89,10 +97,10 @@ public class EditCategoryActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     Category category = snapshot.getValue(Category.class);
-                    categoryName.setText(category.getName());
+                    edtCategoryName.setText(category.getName());
 
                     if (category.getImageUrl() != null && !category.getImageUrl().isEmpty()) {
-                        Glide.with(EditCategoryActivity.this).load(category.getImageUrl()).into(img_category);
+                        Glide.with(EditCategoryActivity.this).load(category.getImageUrl()).into(img_editCategory);
                     }
                     int statusValue = category.getStatus();
                     status.setSelection(statusValue);
@@ -111,7 +119,7 @@ public class EditCategoryActivity extends AppCompatActivity {
     private void chooseImage() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        pickImageLauncher.launch(intent);
     }
 
     @Override
@@ -119,13 +127,13 @@ public class EditCategoryActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             selectedImageUri = data.getData();
-            Glide.with(this).load(selectedImageUri).into(img_category); // Hiển thị ảnh đã chọn
+            img_editCategory.setImageURI(selectedImageUri);
         }
     }
 
     // Phương thức lưu dữ liệu sau khi chỉnh sửa
     private void saveCategoryData() {
-        String updatedName = categoryName.getText().toString().trim();
+        String updatedName = Objects.requireNonNull(edtCategoryName.getText()).toString().trim();
         int updatedStatus = status.getSelectedItemPosition();
 
         // Cập nhật dữ liệu cơ bản của danh mục (trừ ảnh)

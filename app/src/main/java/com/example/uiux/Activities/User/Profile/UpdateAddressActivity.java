@@ -57,13 +57,10 @@ public class UpdateAddressActivity extends AppCompatActivity {
 
         loadAddresses();
 
-        mcv_add_address.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent gotoAdd=new Intent(UpdateAddressActivity.this,AddressActivity.class);
-                gotoAdd.putExtra("account_id",accountId);
-                startActivity(gotoAdd);
-            }
+        mcv_add_address.setOnClickListener(view -> {
+            Intent gotoAdd=new Intent(UpdateAddressActivity.this,AddressActivity.class);
+            gotoAdd.putExtra("account_id",accountId);
+            startActivity(gotoAdd);
         });
 
     }

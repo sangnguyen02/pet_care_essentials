@@ -1,5 +1,6 @@
 package com.example.uiux.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.Admin.Category.EditCategoryActivity;
+import com.example.uiux.Activities.User.Profile.EditAddressActivity;
+import com.example.uiux.Model.Account_Address;
 import com.example.uiux.Model.Category;
 import com.example.uiux.R;
 import com.google.firebase.database.FirebaseDatabase;
@@ -50,37 +53,71 @@ public class CategoryAdminAdapter extends RecyclerView.Adapter<CategoryAdminAdap
 
     class CategoryAdminViewHolder extends RecyclerView.ViewHolder {
         TextView txtName, txtStatus;
-        Button btnEdit, btnDelete;
         ImageView image;
 
         public CategoryAdminViewHolder(@NonNull View itemView) {
             super(itemView);
             txtName = itemView.findViewById(R.id.txtName);
             txtStatus = itemView.findViewById(R.id.txtStatus);
-            btnEdit = itemView.findViewById(R.id.btnEditCategory);
-            btnDelete = itemView.findViewById(R.id.btndeleteCategory);
             image = itemView.findViewById(R.id.img_icon);
 
-            btnEdit.setOnClickListener(view -> {
+            itemView.setOnClickListener(v -> {
                 int position = getAdapterPosition();
                 Category category = categoryList.get(position);
-                Intent intent = new Intent(context, EditCategoryActivity.class);
-                intent.putExtra("category_id", category.getCategory_id());
-                intent.putExtra("category_name", category.getName());
-                intent.putExtra("category_image", category.getImageUrl());
-                intent.putExtra("category_status", category.getStatus());
-                context.startActivity(intent);
+
+                // Tạo một AlertDialog với 2 lựa chọn: Edit và Delete
+                new AlertDialog.Builder(context)
+                        .setItems(new CharSequence[]{"Edit", "Delete"}, (dialog, which) -> {
+                            if (which == 0) {
+                                Intent intent = new Intent(context, EditCategoryActivity.class);
+                                intent.putExtra("category_id", category.getCategory_id());
+                                intent.putExtra("category_name", category.getName());
+                                intent.putExtra("category_image", category.getImageUrl());
+                                intent.putExtra("category_status", category.getStatus());
+                                context.startActivity(intent);
+
+                            } else if (which == 1) {
+                                // Nếu người dùng chọn "Xóa"
+                                new AlertDialog.Builder(context)
+                                        .setTitle("Confirm")
+                                        .setMessage("Are you sure")
+                                        .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+                                            deleteCategoryFromDatabase(category.getCategory_id());
+                                            categoryList.remove(position);
+                                            notifyItemRemoved(position);
+                                            notifyItemRangeChanged(position, categoryList.size());
+                                            Toast.makeText(context, "Đã xóa danh mục thành công", Toast.LENGTH_SHORT).show();
+                                        })
+                                        .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
+                                            // Nếu người dùng chọn "Không", đóng dialog
+                                            confirmDialog.dismiss();
+                                        })
+                                        .show();
+                            }
+                        })
+                        .show();
             });
 
-            btnDelete.setOnClickListener(view -> {
-                int position = getAdapterPosition();
-                Category category = categoryList.get(position);
-                deleteCategoryFromDatabase(category.getCategory_id());
-                categoryList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, categoryList.size());
-                Toast.makeText(context, "Đã xóa danh mục thành công", Toast.LENGTH_SHORT).show();
-            });
+//            btnEdit.setOnClickListener(view -> {
+//                int position = getAdapterPosition();
+//                Category category = categoryList.get(position);
+//                Intent intent = new Intent(context, EditCategoryActivity.class);
+//                intent.putExtra("category_id", category.getCategory_id());
+//                intent.putExtra("category_name", category.getName());
+//                intent.putExtra("category_image", category.getImageUrl());
+//                intent.putExtra("category_status", category.getStatus());
+//                context.startActivity(intent);
+//            });
+//
+//            btnDelete.setOnClickListener(view -> {
+//                int position = getAdapterPosition();
+//                Category category = categoryList.get(position);
+//                deleteCategoryFromDatabase(category.getCategory_id());
+//                categoryList.remove(position);
+//                notifyItemRemoved(position);
+//                notifyItemRangeChanged(position, categoryList.size());
+//                Toast.makeText(context, "Đã xóa danh mục thành công", Toast.LENGTH_SHORT).show();
+//            });
         }
 
         public void bind(Category category) {

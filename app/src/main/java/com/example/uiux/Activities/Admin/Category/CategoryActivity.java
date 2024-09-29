@@ -13,28 +13,34 @@ import android.widget.Spinner;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.uiux.Model.Category;
 import com.example.uiux.R;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public class CategoryActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
-
-    private EditText edtCategoryName;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private TextInputEditText edtCategoryName;
     private Spinner spinnerCategoryStatus;
-    private ImageView imgAvatar;
-    private Button btnChooseImage, btnAddCategory,btnUpdateCategory;
+    private ImageView img_addCategory, imgv_back;
+    private MaterialButton btnAddCategory;
     private Uri imageUri;
     private ProgressDialog progressDialog;
 
@@ -46,15 +52,14 @@ public class CategoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_category);
-
         // Ánh xạ các view
-        edtCategoryName = findViewById(R.id.edtCategoryName);
+        edtCategoryName = findViewById(R.id.edt_new_category);
         spinnerCategoryStatus = findViewById(R.id.spinnerCategoryStatus);
-        imgAvatar = findViewById(R.id.img_avatar);
-        btnChooseImage = findViewById(R.id.btn_choose_image);
+        imgv_back = findViewById(R.id.img_back_new_category);
+        img_addCategory = findViewById(R.id.img_addCategory);
         btnAddCategory = findViewById(R.id.btnAddCategory);
-        btnUpdateCategory=findViewById(R.id.btnUpdateCategory);
 
         // Khởi tạo Firebase
         storage = FirebaseStorage.getInstance();
@@ -65,47 +70,52 @@ public class CategoryActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
 
+        imgv_back.setOnClickListener(view -> {
+            finish();
+        });
+
         // Spinner cho trạng thái Category
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.category_status_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategoryStatus.setAdapter(adapter);
 
+        // Khởi tạo ActivityResultLauncher
+        pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null && result.getData().getData() != null) {
+                imageUri = result.getData().getData();
+                img_addCategory.setImageURI(imageUri);
+            }
+        });
+
+
+
         // Sự kiện chọn hình ảnh
-        btnChooseImage.setOnClickListener(v -> openImageChooser());
+        img_addCategory.setOnClickListener(v -> openImageChooser());
 
         // Sự kiện thêm Category
         btnAddCategory.setOnClickListener(v -> {
-            if (imageUri != null && !edtCategoryName.getText().toString().isEmpty()) {
+            if (imageUri != null && !Objects.requireNonNull(edtCategoryName.getText()).toString().isEmpty()) {
                 uploadImageAndAddCategory();
             } else {
                 Toast.makeText(CategoryActivity.this, "Please select an image and enter a category name", Toast.LENGTH_SHORT).show();
-            }
-        });
-        btnUpdateCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(CategoryActivity.this, UpdateCategoryActivity.class);
-                startActivity(intent);
             }
         });
     }
 
     // Mở Intent để chọn hình ảnh từ thư viện
     private void openImageChooser() {
-        Intent intent = new Intent();
+        Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        pickImageLauncher.launch(intent);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             imageUri = data.getData();
-            imgAvatar.setImageURI(imageUri);  // Hiển thị ảnh đã chọn
+            img_addCategory.setImageURI(imageUri);
         }
     }
 
@@ -131,7 +141,7 @@ public class CategoryActivity extends AppCompatActivity {
     // Hàm lưu Category vào Firebase Realtime Database
     private void addCategoryToDatabase(String imageUrl) {
         String categoryId = categoryDatabase.push().getKey();  // Tạo ID danh mục
-        String categoryName = edtCategoryName.getText().toString();
+        String categoryName = Objects.requireNonNull(edtCategoryName.getText()).toString();
         int status = spinnerCategoryStatus.getSelectedItemPosition();  // Lấy trạng thái từ Spinner
 
         // Tạo đối tượng Category
@@ -144,7 +154,7 @@ public class CategoryActivity extends AppCompatActivity {
                 Toast.makeText(CategoryActivity.this, "Category added successfully", Toast.LENGTH_SHORT).show();
                 // Reset giao diện sau khi thêm thành công
                 edtCategoryName.setText("");
-                imgAvatar.setImageResource(0);  // Xóa ảnh
+                img_addCategory.setImageResource(0);  // Xóa ảnh
             } else {
                 Toast.makeText(CategoryActivity.this, "Failed to add category", Toast.LENGTH_SHORT).show();
             }
