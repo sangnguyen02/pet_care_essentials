@@ -1,4 +1,4 @@
-package com.example.uiux.Activities.Admin.Supplies;
+package com.example.uiux.Activities.Admin.Type;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uiux.Activities.Admin.Category.UpdateCategoryActivity;
 import com.example.uiux.Adapters.CategoryAdminAdapter;
-import com.example.uiux.Adapters.SuppliesAdapter;
+import com.example.uiux.Adapters.TypeAdapter;
 import com.example.uiux.Model.Category;
-import com.example.uiux.Model.Supplies;
+import com.example.uiux.Model.Type;
 import com.example.uiux.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,41 +28,41 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UpdateSuppliesActivity extends AppCompatActivity {
+public class UpdateTypeActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private SuppliesAdapter suppliesAdapter;
-    private List<Supplies> suppliesList = new ArrayList<>();
+    private TypeAdapter typeAdapter;
+    private List<Type> typeList = new ArrayList<>();
     private DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_update_supplies);
-        recyclerView = findViewById(R.id.recyclerViewSupplies);
+        setContentView(R.layout.activity_update_type);
+        recyclerView = findViewById(R.id.recyclerViewType);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        suppliesAdapter = new SuppliesAdapter(suppliesList, this);
-        recyclerView.setAdapter(suppliesAdapter);
-        loadSupplies();
+        typeAdapter = new TypeAdapter(typeList, this);
+        recyclerView.setAdapter(typeAdapter);
+        loadType();
     }
 
-    private void loadSupplies() {
-        databaseReference = FirebaseDatabase.getInstance().getReference("Supplies");
+    private void loadType() {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Type");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                suppliesList.clear();
-                for (DataSnapshot suppSnapshot : snapshot.getChildren()) {
-                    Supplies supplies = suppSnapshot.getValue(Supplies.class);
-                    suppliesList.add(supplies);
-                    Log.e("Supplies add",supplies.getName());
+                typeList.clear();
+                for (DataSnapshot typeSnapshot : snapshot.getChildren()) {
+                    Type type = typeSnapshot.getValue(Type.class);
+                    typeList.add(type);
+                    Log.e("Type add",type.getType());
                 }
-                suppliesAdapter.notifyDataSetChanged();
+                typeAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(UpdateSuppliesActivity.this, "Failed to load category.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UpdateTypeActivity.this, "Failed to load type.", Toast.LENGTH_SHORT).show();
             }
         });
     }

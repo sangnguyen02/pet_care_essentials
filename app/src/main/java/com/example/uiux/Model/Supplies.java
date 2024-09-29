@@ -1,5 +1,7 @@
 package com.example.uiux.Model;
 
+import java.util.List;
+
 public class Supplies {
     private String supplies_id;
     private  String name;
@@ -9,15 +11,14 @@ public class Supplies {
     private String description;
     private  int status;
     private  int quantity;
-    private  String category_id;
-    private  String type_id;
+    private  String category;
+    private  String type;
+    private List<String> imageUrls;
 
     public Supplies() {
     }
 
-    public Supplies(String supplies_id, String name,
-                    double sell_price, double cost_price, String size, String description,
-                    int status, int quantity, String category_id, String type_id) {
+    public Supplies(String supplies_id, String name, double sell_price, double cost_price, String size, String description, int status, int quantity, String category, String type, List<String> imageUrls) {
         this.supplies_id = supplies_id;
         this.name = name;
         this.sell_price = sell_price;
@@ -26,8 +27,9 @@ public class Supplies {
         this.description = description;
         this.status = status;
         this.quantity = quantity;
-        this.category_id = category_id;
-        this.type_id = type_id;
+        this.category = category;
+        this.type = type;
+        this.imageUrls = imageUrls;
     }
 
     public String getSupplies_id() {
@@ -94,19 +96,27 @@ public class Supplies {
         this.quantity = quantity;
     }
 
-    public String getCategory_id() {
-        return category_id;
+    public String getCategory() {
+        return category;
     }
 
-    public void setCategory_id(String category_id) {
-        this.category_id = category_id;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
-    public String getType_id() {
-        return type_id;
+    public String getType() {
+        return type;
     }
 
-    public void setType_id(String type_id) {
-        this.type_id = type_id;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<String> getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }

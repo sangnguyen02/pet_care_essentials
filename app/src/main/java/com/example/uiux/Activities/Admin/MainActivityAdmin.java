@@ -13,6 +13,8 @@ import com.example.uiux.Activities.Admin.Category.UpdateCategoryActivity;
 import com.example.uiux.Activities.Admin.Supplies.SuppliesActivity;
 import com.example.uiux.Activities.Admin.Supplies.UpdateSuppliesActivity;
 import com.example.uiux.Activities.MainActivity;
+import com.example.uiux.Activities.Admin.Supplies.SuppliesActivity;
+import com.example.uiux.Activities.Admin.Type.TypeActivity;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Image;
 import com.example.uiux.Model.Supplies_Import;
@@ -28,7 +30,7 @@ import java.util.UUID;
 
 public class MainActivityAdmin extends AppCompatActivity {
 
-    MaterialButton postSupply_btn,category_btn, supplies_btn;
+    MaterialButton postSupply_btn,category_btn,type_btn,supplies_btn;
     DatabaseReference suppliesRef;
     DatabaseReference suppliesImageRef;
     DatabaseReference suppliesImportRef;
@@ -51,11 +53,12 @@ public class MainActivityAdmin extends AppCompatActivity {
 
         // postSupply_btn = findViewById(R.id.post_supply);
         category_btn=findViewById(R.id.category);
-        supplies_btn = findViewById(R.id.supplies);
-//        postSupply_btn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                // Tạo dữ liệu mẫu cho Supplies
+        type_btn=findViewById(R.id.type);
+        supplies_btn=findViewById(R.id.supplies);
+        postSupply_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Tạo dữ liệu mẫu cho Supplies
 //                String suppliesId = UUID.randomUUID().toString();
 //                Supplies sampleSupply = new Supplies(
 //                        suppliesId,
@@ -130,11 +133,27 @@ public class MainActivityAdmin extends AppCompatActivity {
         category_btn.setOnClickListener(view -> {
             Intent intent=new Intent(MainActivityAdmin.this, UpdateCategoryActivity.class);
             startActivity(intent);
+            }
         });
 
         supplies_btn.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivityAdmin.this, UpdateSuppliesActivity.class);
             startActivity(intent);
+        });
+        type_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivityAdmin.this, TypeActivity.class);
+                startActivity(intent);
+
+            }
+        });
+        supplies_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivityAdmin.this, SuppliesActivity.class);
+                startActivity(intent);
+            }
         });
     }
 }
