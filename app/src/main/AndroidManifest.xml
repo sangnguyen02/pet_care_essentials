@@ -23,6 +23,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.Admin.Supplies.UpdateSuppliesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.Admin.Supplies.EditSuppliesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.Admin.Supplies.SuppliesActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.Admin.Category.EditCategoryActivity"
             android:exported="false" />
         <activity
