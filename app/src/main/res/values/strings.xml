@@ -46,4 +46,15 @@
         <item>Active</item>
         <item>Inactive</item>
     </string-array>
+    <string-array name="size_array">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+    </string-array>
+    <string-array name="suplies_status">
+        <item>Hết hàng</item>
+        <item>Tạm ngưng</item>
+        <item>Mới về</item>
+        <item>Còn hàng</item>
+    </string-array>
 </resources>
