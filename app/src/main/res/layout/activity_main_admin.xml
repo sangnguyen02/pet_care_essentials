@@ -34,7 +34,14 @@
         android:id="@+id/supplies"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Type"
+        android:text="supplies"
+        android:layout_gravity="center"
+        tools:ignore="HardcodedText" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/supplies_import"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="supplies_import"
         android:layout_gravity="center"
         tools:ignore="HardcodedText" />
 

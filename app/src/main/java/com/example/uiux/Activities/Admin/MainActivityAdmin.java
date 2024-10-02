@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.uiux.Activities.Admin.Category.CategoryActivity;
 import com.example.uiux.Activities.Admin.Supplies.SuppliesActivity;
+import com.example.uiux.Activities.Admin.Supplies.SuppliesImportActivity;
 import com.example.uiux.Activities.Admin.Type.TypeActivity;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Image;
@@ -25,7 +26,7 @@ import java.util.UUID;
 
 public class MainActivityAdmin extends AppCompatActivity {
 
-    MaterialButton postSupply_btn,category_btn,type_btn,supplies_btn;
+    MaterialButton postSupply_btn,category_btn,type_btn,supplies_btn,supplies_import;
     DatabaseReference suppliesRef;
     DatabaseReference suppliesImageRef;
     DatabaseReference suppliesImportRef;
@@ -49,6 +50,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         category_btn=findViewById(R.id.category);
         type_btn=findViewById(R.id.type);
         supplies_btn=findViewById(R.id.supplies);
+        supplies_import=findViewById(R.id.supplies_import);
         postSupply_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -144,6 +146,14 @@ public class MainActivityAdmin extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent=new Intent(MainActivityAdmin.this, SuppliesActivity.class);
                 startActivity(intent);
+            }
+        });
+        supplies_import.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivityAdmin.this, SuppliesImportActivity.class);
+                startActivity(intent);
+
             }
         });
     }
