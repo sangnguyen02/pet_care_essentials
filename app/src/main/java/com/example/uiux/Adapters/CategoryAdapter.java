@@ -1,5 +1,6 @@
 package com.example.uiux.Adapters;
 
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.uiux.Model.Category;
 import com.example.uiux.R;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
@@ -38,7 +40,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             return;
         }
 
-        holder.tvCategoryName.setText(category.getName());
         Glide.with(holder.itemView.getContext())
                 .load(category.getImageUrl()).fitCenter().override(64,64)
                 .into(holder.imgCategory);
@@ -50,13 +51,17 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
     }
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
-        private CircleImageView imgCategory;
-        private TextView tvCategoryName;
+        private MaterialCardView mcv_category;
+        private ImageView imgCategory;
 
         public CategoryViewHolder(@NonNull View itemView) {
             super(itemView);
+            mcv_category = itemView.findViewById(R.id.mcv_category_item);
             imgCategory = itemView.findViewById(R.id.img_category);
-            tvCategoryName = itemView.findViewById(R.id.tv_category_name);
+
+            mcv_category.setOnClickListener(view -> {
+
+            });
         }
     }
 }

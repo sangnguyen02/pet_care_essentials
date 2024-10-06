@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="white">#FDF1F5</color>
+    <color name="white">#FFFFFF</color>
+    <color name="light_white">#FFFBFF</color>
     <color name="black">#232023</color>
     <color name="ripple_color">#E0E0E0</color>
     <color name="bg_grey">#80E0E0E0</color>
@@ -8,7 +9,7 @@
     <color name="light_grey">#D8DCD6</color>
     <color name="text_input">#4E4A4A</color>
     <color name="light_primary">#90E0EF</color>
-    <color name="primary">#0077B6</color>
+    <color name="primary">#83D0E9</color>
     <color name="dark_primary">#0A5A8C</color>
     <color name="textOnPrimary">#EE8E46</color>
     <color name="editText_background">#EE8E46</color>

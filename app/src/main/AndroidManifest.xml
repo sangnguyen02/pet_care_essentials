@@ -50,9 +50,6 @@
             android:name=".Activities.Admin.Category.UpdateCategoryActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.Admin.Category.DisplayCategoriesActivity"
-            android:exported="false" />
-        <activity
             android:name=".Activities.Admin.Category.CategoryActivity"
             android:exported="false" />
         <activity
@@ -81,9 +78,11 @@
             android:exported="false" />
         <activity
             android:name=".Activities.EntryActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".Activities.User.MainActivityUser"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
         <activity
             android:name=".Activities.SplashActivity"

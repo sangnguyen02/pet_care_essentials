@@ -55,6 +55,7 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.BannerView
         public BannerViewHolder(@NonNull View itemView) {
             super(itemView);
             imgBanner = itemView.findViewById(R.id.img_banner);
+            imgBanner.setScaleType(ImageView.ScaleType.FIT_CENTER);
         }
     }
 }

@@ -37,44 +37,9 @@ public class BestSellerAdapter extends RecyclerView.Adapter<BestSellerAdapter.Be
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BestSellerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BestSellerAdapter.BestSellerViewHolder holder, int position) {
         Supplies supplies = suppliesList.get(position);
-
-        // Load image from drawable
-        int imageResId = R.drawable.product_sample; // Default drawable resource ID
-        // You can map the supplies ID to drawable resources if needed
-        switch (supplies.getSupplies_id()) {
-            case "supply1":
-                imageResId = R.drawable.product_sample;
-                break;
-            case "supply2":
-                imageResId = R.drawable.product_sample;
-                break;
-            // Add more cases as needed
-            default:
-                imageResId = R.drawable.product_sample;
-                break;
-        }
-
-        Glide.with(context)
-                .load(imageResId)
-                .placeholder(R.drawable.product_sample) // Placeholder image while loading
-                .error(R.drawable.product_sample) // Error image if loading fails
-                .into(holder.imgBestSeller);
-
-        holder.tvTitle.setText(supplies.getName());
-        holder.tvPrice.setText(String.format("₫ %.2f", supplies.getSell_price()));
-        // Set rating
-        Supplies_Review review = findReviewForSupply(supplies.getSupplies_id());
-        if (review != null) {
-            holder.tvRating.setText(String.valueOf(review.getRating()));
-        } else {
-            holder.tvRating.setText("No rating");
-        }
-
-        // Set star image resource
-//        holder.imgStar.setImageResource(R.drawable.star);
-
+        holder.bind(supplies);
     }
 
     @Override
@@ -94,6 +59,29 @@ public class BestSellerAdapter extends RecyclerView.Adapter<BestSellerAdapter.Be
             tvRating = itemView.findViewById(R.id.tv_rating);
 //            imgStar = itemView.findViewById(R.id.imgv_star);
         }
+
+        public void bind(Supplies supplies) {
+            tvTitle.setText(supplies.getName() != null ? supplies.getName() : "N/A");
+            tvPrice.setText(String.valueOf(supplies.getSell_price()));
+            tvRating.setText("5");
+
+            List<String> imageUrls = supplies.getImageUrls();
+            if (imageUrls != null && !imageUrls.isEmpty()) {
+                // Load the first image
+                if (imageUrls.size() > 0) {
+                    Glide.with(itemView.getContext())
+                            .load(imageUrls.get(0))
+                            .placeholder(R.drawable.banner1)
+                            .error(R.drawable.guest)
+                            .into(imgBestSeller);
+                }
+
+
+            } else {
+                // Set placeholders if no images are available
+                imgBestSeller.setImageResource(R.drawable.product_sample);
+            }
+        }
     }
 
     // Method to find review for a given supply
@@ -105,4 +93,5 @@ public class BestSellerAdapter extends RecyclerView.Adapter<BestSellerAdapter.Be
         }
         return null;
     }
+
 }

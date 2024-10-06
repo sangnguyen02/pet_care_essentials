@@ -4,9 +4,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.OptIn;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
@@ -26,6 +29,7 @@ import com.example.uiux.Model.Supplies_Image;
 import com.example.uiux.Model.Supplies_Review;
 import com.example.uiux.R;
 import com.google.android.material.badge.ExperimentalBadgeUtils;
+import com.google.android.material.carousel.CarouselLayoutManager;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -66,6 +70,9 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView =  inflater.inflate(R.layout.fragment_home, container, false);
+        if (getActivity() != null) {
+            getActivity().getWindow().setStatusBarColor(ContextCompat.getColor(getActivity(), R.color.white));
+        }
         initWidget();
 
         return rootView;
@@ -79,12 +86,12 @@ public class HomeFragment extends Fragment {
         mViewPager2 = rootView.findViewById(R.id.viewPager2);
         dotsIndicator = rootView.findViewById(R.id.dot_indicators);
         rcv_category = rootView.findViewById(R.id.rcv_categories);
-        rcv_category.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-//        rcv_best_seller = rootView.findViewById(R.id.rcv_bestSeller);
-//        rcv_best_seller.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+        rcv_category.setLayoutManager(new GridLayoutManager(getContext(), 1, LinearLayoutManager.HORIZONTAL, false));
+        rcv_best_seller = rootView.findViewById(R.id.rcv_bestSeller);
+        rcv_best_seller.setLayoutManager(new GridLayoutManager(getContext(), 3, LinearLayoutManager.VERTICAL, false));
         getBannerImages();
         getCategoryImages();
-        //getBestSellerItems();
+        getBestSellerItems();
         mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -167,7 +174,7 @@ public class HomeFragment extends Fragment {
                 DatabaseReference reviewsRef = FirebaseDatabase.getInstance().getReference("Supplies_Review");
                 reviewsRef.addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         List<Supplies_Review> reviewList = new ArrayList<>();
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                             Supplies_Review review = snapshot.getValue(Supplies_Review.class);
@@ -180,14 +187,14 @@ public class HomeFragment extends Fragment {
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
                         // Handle possible errors
                     }
                 });
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle possible errors
             }
         });

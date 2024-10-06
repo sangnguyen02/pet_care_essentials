@@ -9,19 +9,30 @@
     android:layout_height="match_parent"
     tools:context=".Activities.EntryActivity">
 
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="112dp"
+        android:layout_height="112dp"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="80dp"
+        android:src="@drawable/logo_main"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/tv_welcome_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:fontFamily="@font/adlam_display"
         android:text="@string/welcome"
-        android:textColor="@color/white"
-        android:textSize="25sp"
         android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="32sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/mcv"/>
+        app:layout_constraintTop_toBottomOf="@+id/logo" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/mcv"
@@ -29,14 +40,14 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
-        app:cardUseCompatPadding="true"
         app:cardCornerRadius="8dp"
-        app:cardElevation="10dp"
-        app:strokeWidth="0dp"
+        app:cardElevation="20dp"
+        app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_welcome_title">
+        app:layout_constraintTop_toBottomOf="@id/tv_welcome_title"
+        app:strokeWidth="0dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -81,53 +92,53 @@
                 android:id="@+id/fab_btns"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tab_view_pager"
-                app:layout_constraintBottom_toBottomOf="parent"
                 tools:ignore="ContentDescription">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/fab_guest"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/edt_height"
-                    android:text="Sign in as Guest"
-                    android:textColor="@color/black"
                     android:fontFamily="@font/roboto_bold"
+                    android:text="Sign in as Guest"
                     android:textAlignment="center"
-                    app:rippleColor="@color/text_input"
+                    android:textColor="@color/black"
                     app:backgroundTint="@color/white"
-                    app:strokeWidth="2dp"
-                    app:strokeColor="@color/text_input"
                     app:icon="@drawable/guest"
-                    app:iconTint="@color/black"
-                    app:iconSize="20dp"
                     app:iconGravity="textStart"
+                    app:iconSize="20dp"
+                    app:iconTint="@color/black"
+                    app:rippleColor="@color/text_input"
                     app:shapeAppearanceOverlay="@style/Button5"
+                    app:strokeColor="@color/text_input"
+                    app:strokeWidth="2dp"
                     tools:ignore="HardcodedText" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/fab_google"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/edt_height"
-                    android:text="Sign in as Google"
-                    android:textColor="@color/black"
                     android:fontFamily="@font/roboto_bold"
+                    android:text="Sign in as Google"
                     android:textAlignment="center"
-                    app:rippleColor="@color/text_input"
+                    android:textColor="@color/black"
                     app:backgroundTint="@color/white"
-                    app:strokeWidth="2dp"
-                    app:strokeColor="@color/text_input"
                     app:icon="@drawable/google"
-                    app:iconTint="@color/black"
-                    app:iconSize="25dp"
                     app:iconGravity="textStart"
+                    app:iconSize="25dp"
+                    app:iconTint="@color/black"
+                    app:rippleColor="@color/text_input"
                     app:shapeAppearanceOverlay="@style/Button5"
+                    app:strokeColor="@color/text_input"
+                    app:strokeWidth="2dp"
                     tools:ignore="HardcodedText" />
 
             </LinearLayout>

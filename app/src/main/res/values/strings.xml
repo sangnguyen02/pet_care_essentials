@@ -5,7 +5,7 @@
     <string name="login_background">login_background</string>
     <string name="fab_google">Google Login</string>
     <string name="fab_guest">Guest Login</string>
-    <string name="welcome">Welcome to PetCare Essential</string>
+    <string name="welcome">PetCare Essential</string>
     <string name="hint_phone_number">Phone Number</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>

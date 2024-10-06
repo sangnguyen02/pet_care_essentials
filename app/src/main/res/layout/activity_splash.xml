@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Activities.SplashActivity"
-    android:background="@color/primary">
+    android:background="@color/white">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/animation"
@@ -23,7 +23,8 @@
         app:lottie_autoPlay="true"
         app:lottie_loop="false"
         app:lottie_rawRes="@raw/splash2"
-        app:lottie_speed="1" />
+        app:lottie_speed="1"
+        android:elevation="10dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -34,8 +35,8 @@
         android:fontFamily="@font/adlam_display"
         android:text="@string/app_name"
         android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="35sp"
+        android:textColor="@color/primary"
+        android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
