@@ -4,18 +4,18 @@ import java.util.Date;
 
 public class Supplies_Import {
     private String supplies_import_id;
-    private String supplies_id;
+    private String supplies_name;
     private  int quantity;
     private int remaining_quantity;
     private  double import_price;
-    private Date import_date;
+    private String import_date;
 
     public Supplies_Import() {
     }
 
-    public Supplies_Import(String supplies_import_id, String supplies_id, int quantity, int remaining_quantity, double import_price, Date import_date) {
+    public Supplies_Import(String supplies_import_id, String supplies_name, int quantity, int remaining_quantity, double import_price, String import_date) {
         this.supplies_import_id = supplies_import_id;
-        this.supplies_id = supplies_id;
+        this.supplies_name = supplies_name;
         this.quantity = quantity;
         this.remaining_quantity = remaining_quantity;
         this.import_price = import_price;
@@ -30,12 +30,12 @@ public class Supplies_Import {
         this.supplies_import_id = supplies_import_id;
     }
 
-    public String getSupplies_id() {
-        return supplies_id;
+    public String getSupplies_name() {
+        return supplies_name;
     }
 
-    public void setSupplies_id(String supplies_id) {
-        this.supplies_id = supplies_id;
+    public void setSupplies_name(String supplies_name) {
+        this.supplies_name = supplies_name;
     }
 
     public int getQuantity() {
@@ -62,11 +62,11 @@ public class Supplies_Import {
         this.import_price = import_price;
     }
 
-    public Date getImport_date() {
+    public String getImport_date() {
         return import_date;
     }
 
-    public void setImport_date(Date import_date) {
+    public void setImport_date(String import_date) {
         this.import_date = import_date;
     }
 }
