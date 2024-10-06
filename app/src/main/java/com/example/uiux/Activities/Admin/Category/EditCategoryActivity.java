@@ -101,6 +101,7 @@ public class EditCategoryActivity extends AppCompatActivity {
                 if (snapshot.exists()) {
                     Category category = snapshot.getValue(Category.class);
                     edtCategoryName.setText(category.getName());
+                    status.setSelection(category.getStatus());
 
                     if (category.getImageUrl() != null && !category.getImageUrl().isEmpty()) {
                         Glide.with(EditCategoryActivity.this).load(category.getImageUrl()).into(img_editCategory);

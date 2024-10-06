@@ -242,7 +242,7 @@ public class ServiceActivity extends AppCompatActivity {
 
     private void FectchSpinnerStatus() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ServiceActivity.this,
-                R.array.suplies_status, android.R.layout.simple_spinner_item);
+                R.array.service_status, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         service_Status.setAdapter(adapter);
     }

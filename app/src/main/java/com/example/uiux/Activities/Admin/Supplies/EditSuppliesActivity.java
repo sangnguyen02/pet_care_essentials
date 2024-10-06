@@ -32,6 +32,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -175,23 +176,31 @@ public class EditSuppliesActivity extends AppCompatActivity {
         return count;
     }
 
-
     private void loadSuppliesData( ) {
      suppliesRef.addListenerForSingleValueEvent(new ValueEventListener() {
          @Override
          public void onDataChange(@NonNull DataSnapshot snapshot) {
              if (snapshot.exists()) {
                  Supplies supplies = snapshot.getValue(Supplies.class);
+                 DecimalFormat df = new DecimalFormat("0");
 
                  suppName.setText(supplies.getName());
-                 suppSellPrice.setText(String.valueOf(supplies.getSell_price()));
-                 suppCostPrice.setText(String.valueOf(supplies.getCost_price()));
+                 suppSellPrice.setText(String.valueOf(df.format(supplies.getSell_price())));
+                 suppCostPrice.setText(String.valueOf(df.format(supplies.getCost_price())));
                  suppQuantity.setText(String.valueOf(supplies.getQuantity()));
                  suppDescription.setText(supplies.getDescription());
-//                 setSpinnerValue(suppSize, supplies.getSize());
-//                 setSpinnerValue(suppStatus, String.valueOf(supplies.getStatus()));
-//                 setSpinnerValue(suppCate, supplies.getCategory());
-//                 setSpinnerValue(suppType, supplies.getType());
+                 int status = supplies.getStatus();
+                 suppStatus.setSelection(status);
+                 // Khi load dữ liệu từ Firebase
+                 String sizeFromDb = supplies.getSize(); // Giả sử lấy được giá trị "small"
+                 setSpinnerValue(suppSize, sizeFromDb);
+                 String categoryFromDb = supplies.getCategory(); // Giả sử lấy được tên danh mục từ Firebase
+                 int index=getPositionByName(suppCate,categoryFromDb);
+                 suppCate.setSelection(index);
+                 String typeFromDb = supplies.getType();
+                 int index2=getPositionByName(suppType,typeFromDb);
+                 suppType.setSelection(index2);
+
                  if (supplies.getImageUrls()!=null)
                  {
                      if(supplies.getImageUrls().get(0)!=null)
@@ -227,6 +236,17 @@ public class EditSuppliesActivity extends AppCompatActivity {
         ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
         int position = adapter.getPosition(value);
         spinner.setSelection(position);
+    }
+    private int getPositionByName(Spinner spinner,String name) {
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner.getAdapter();
+        if (adapter != null) {
+            for (int i = 0; i < adapter.getCount(); i++) {
+                if (adapter.getItem(i).equals(name)) {
+                    return i; // Return the position if a match is found
+                }
+            }
+        }
+        return -1; // Return -1 if the item is not found
     }
 
 

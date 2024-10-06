@@ -35,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -81,7 +82,6 @@ public class EditServiceActivity extends AppCompatActivity {
         img2.setOnClickListener(view -> openImageChooser(1));
         img3.setOnClickListener(view -> openImageChooser(2));
         img4.setOnClickListener(view -> openImageChooser(3));
-
         service_id = getIntent().getStringExtra("service_id");
         serviceRef = FirebaseDatabase.getInstance().getReference("Service").child(service_id);
         storage = FirebaseStorage.getInstance();
@@ -169,13 +169,23 @@ public class EditServiceActivity extends AppCompatActivity {
                     Service service = snapshot.getValue(Service.class);
 
                     serviceName.setText(service.getName());
-                    serviceSellPrice.setText(String.valueOf(service.getSell_price()));
+                    DecimalFormat df = new DecimalFormat("0");
+                    serviceSellPrice.setText(String.valueOf(df.format(service.getSell_price())));
                     serviceTime.setText(String.valueOf(service.getTime_estimate()));
                     serviceDescription.setText(service.getDescription());
-//                 setSpinnerValue(suppSize, supplies.getSize());
-//                 setSpinnerValue(suppStatus, String.valueOf(supplies.getStatus()));
-//                 setSpinnerValue(suppCate, supplies.getCategory());
-//                 setSpinnerValue(suppType, supplies.getType());
+                    int status = service.getStatus();  // Giả sử status trả về là 0 hoặc 1
+                    serviceStatus.setSelection(status);
+                    // Khi load dữ liệu từ Firebase
+                    String sizeFromDb = service.getSize(); // Giả sử lấy được giá trị "small"
+                    setSpinnerValue(serviceSize, sizeFromDb);
+                    String categoryFromDb = service.getCategory(); // Giả sử lấy được tên danh mục từ Firebase
+                    int index=getPositionByName(serviceCate,categoryFromDb);
+                    serviceCate.setSelection(index);
+                    String typeFromDb = service.getType();
+                    int index2=getPositionByName(serviceType,typeFromDb);
+                    serviceType.setSelection(index2);
+
+
                     if (service.getImageUrls()!=null)
                     {
                         if(service.getImageUrls().get(0)!=null)
@@ -206,6 +216,28 @@ public class EditServiceActivity extends AppCompatActivity {
             }
         });
     }
+    private void setSpinnerValue(Spinner spinner, String value) {
+        ArrayAdapter<CharSequence> adapter = (ArrayAdapter<CharSequence>) spinner.getAdapter();
+        int position = adapter.getPosition(value); // Tìm vị trí của giá trị trong adapter
+        if (position >= 0) {
+            spinner.setSelection(position); // Set giá trị vào Spinner
+        }
+    }
+
+    private int getPositionByName(Spinner spinner,String name) {
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner.getAdapter();
+        if (adapter != null) {
+            for (int i = 0; i < adapter.getCount(); i++) {
+                if (adapter.getItem(i).equals(name)) {
+                    return i; // Return the position if a match is found
+                }
+            }
+        }
+        return -1; // Return -1 if the item is not found
+    }
+
+
+
     private void openImageChooser(int index) {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -247,7 +279,7 @@ public class EditServiceActivity extends AppCompatActivity {
 
     private void FectchSpinnerStatus() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditServiceActivity.this,
-                R.array.suplies_status, android.R.layout.simple_spinner_item);
+                R.array.service_status, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         serviceStatus.setAdapter(adapter);
     }

@@ -35,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -137,23 +138,15 @@ public class SuppliesActivity extends AppCompatActivity {
 
     private void addSuppliesToDatabase(List<String> imageUrls) {
         String supplyId = suppliesDatabase.push().getKey(); // Generate unique ID
-//        HashMap<String, Object> supplyData = new HashMap<>();
-//        supplyData.put("name", suppName.getText().toString());
-//        supplyData.put("sellPrice", suppSellPrice.getText().toString());
-//        supplyData.put("costPrice", suppCostPrice.getText().toString());
-//        supplyData.put("quantity", suppQuantity.getText().toString());
-//        supplyData.put("description", suppDescription.getText().toString());
-//        supplyData.put("size", suppSize.getSelectedItem().toString());
-//        supplyData.put("status", suppStatus.getSelectedItem().toString());
-//        supplyData.put("category", suppCate.getSelectedItem().toString());
-//        supplyData.put("type", suppType.getSelectedItem().toString());
-//        supplyData.put("images", imageUrls); // Store the list of image URLs
-
+        DecimalFormat df = new DecimalFormat("0");
         Supplies supplies= new Supplies();
         supplies.setSupplies_id(supplyId);
         supplies.setName( Objects.requireNonNull(suppName.getText()).toString());
-        supplies.setSell_price( Double.valueOf(Objects.requireNonNull(suppSellPrice.getText()).toString()));
-        supplies.setCost_price(Double.valueOf(Objects.requireNonNull(suppCostPrice.getText()).toString()));
+        double sellPrice = Double.valueOf(Objects.requireNonNull(suppSellPrice.getText()).toString());
+        double costPrice = Double.valueOf(Objects.requireNonNull(suppCostPrice.getText()).toString());
+// Format to no decimal places using DecimalFormat
+        supplies.setSell_price(Double.valueOf(df.format(sellPrice)));
+        supplies.setCost_price(Double.valueOf(df.format(costPrice)));
         supplies.setQuantity(Integer.valueOf(Objects.requireNonNull(suppQuantity.getText()).toString()));
         supplies.setDescription(Objects.requireNonNull(suppDescription.getText()).toString());
         supplies.setSize( suppSize.getSelectedItem().toString());
