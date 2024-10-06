@@ -4,10 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -23,7 +25,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class TypeActivity extends AppCompatActivity {
-    private MaterialButton addType,updateType;
+    private ImageView img_back_new_type;
+    private MaterialButton addType;
     private TextInputEditText typeName;
     private DatabaseReference typeDatabase;
     private ProgressDialog progressDialog;
@@ -32,9 +35,11 @@ public class TypeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         setContentView(R.layout.activity_type);
+        img_back_new_type = findViewById(R.id.img_back_new_type);
+        img_back_new_type.setOnClickListener(view -> finish());
         addType=findViewById(R.id.btnAddType);
-        updateType=findViewById(R.id.btnUpdateType);
         typeName=findViewById(R.id.edt_type);
         typeDatabase = FirebaseDatabase.getInstance().getReference("Type");
         progressDialog = new ProgressDialog(this);
@@ -45,20 +50,11 @@ public class TypeActivity extends AppCompatActivity {
                 if (typeName.getText() != null ) {
                     AddTypeToFireBase();
                 } else {
-                    Toast.makeText(TypeActivity.this, "Please select  enter a type name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TypeActivity.this, "Please select enter a type name", Toast.LENGTH_SHORT).show();
                 }
 
             }
         });
-        updateType.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(TypeActivity.this, UpdateTypeActivity.class);
-                startActivity(intent);
-
-            }
-        });
-
     }
 
     private void AddTypeToFireBase() {

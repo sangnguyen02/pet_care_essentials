@@ -1,44 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:layout_height="40dp"
+    android:layout_margin="8dp"
+    android:backgroundTint="@color/white"
+    app:cardCornerRadius="4dp"
+    app:strokeWidth="0dp"
+    app:rippleColor="@color/ripple_color">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/tv_type"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Type"
-        android:layout_marginBottom="16dp">
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:text="sample"
+        android:textSize="20sp"
+        android:fontFamily="@font/roboto_bold"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:fontFamily="@font/roboto_flex"
-            android:inputType="text"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnEditType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Edit Type"
-        android:layout_marginBottom="16dp"
-        style="@style/Widget.MaterialComponents.Button" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnDeleteType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Delete Type"
-        style="@style/Widget.MaterialComponents.Button" />
-</LinearLayout>
+</com.google.android.material.card.MaterialCardView>

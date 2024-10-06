@@ -1,184 +1,149 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp">
-
-    <LinearLayout
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="8dp"
+    android:backgroundTint="@color/white"
+    app:rippleColor="@color/ripple_color"
+    app:cardCornerRadius="4dp"
+    app:strokeWidth="0dp">
+    
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <!-- Image Upload Fields (4 images in 2 rows) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Images"
-            android:layout_marginTop="8dp"
-            android:textSize="16sp" />
+        <ImageView
+            android:id="@+id/img1"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_margin="10dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
 
         <GridLayout
-            android:layout_width="match_parent"
+            android:id="@+id/name_layout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:columnCount="4"
-            android:rowCount="1"
-            android:layout_margin="5dp">
+            android:layout_marginStart="16dp"
+            android:columnCount="2"
+            android:rowCount="8"
+            app:layout_constraintBottom_toBottomOf="@+id/img1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/img1"
+            app:layout_constraintTop_toTopOf="@+id/img1">
 
-            <!-- First Image -->
-            <ImageView
-                android:id="@+id/img1"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="5dp"
-                android:scaleType="centerCrop"
-                android:background="@color/grey" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Name: "
+                android:textSize="12sp" />
 
-            <!-- Second Image -->
-            <ImageView
-                android:id="@+id/img2"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="5dp"
-                android:scaleType="centerCrop"
-                android:background="@color/grey" />
+            <TextView
+                android:id="@+id/tv_supply_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_flex"
+                android:text="sample"
+                android:textSize="11sp" />
 
-            <!-- Third Image -->
-            <ImageView
-                android:id="@+id/img3"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="5dp"
-                android:scaleType="centerCrop"
-                android:background="@color/grey" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Sell Price: "
+                android:textSize="12sp" />
 
-            <!-- Fourth Image -->
-            <ImageView
-                android:id="@+id/img4"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="5dp"
-                android:scaleType="centerCrop"
-                android:background="@color/grey" />
+            <TextView
+                android:id="@+id/tv_supply_sell_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_flex"
+                android:text="sample"
+                android:textSize="11sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Size:"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_supply_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_flex"
+                android:text="sample"
+                android:textSize="11sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Category:"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_supply_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_flex"
+                android:text="sample"
+                android:textSize="11sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Type:"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_supply_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_flex"
+                android:text="sample"
+                android:textSize="11sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Quantity:"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_supply_quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_flex"
+                android:text="sample"
+                android:textSize="11sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Status:"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_supply_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_flex"
+                android:text="sample"
+                android:textSize="11sp" />
+
         </GridLayout>
 
-        <!-- Name -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Name">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Sell Price -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Sell Price">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_sell_price"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <!-- Size (Spinner) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Size"
-            android:layout_marginTop="8dp"
-            android:textSize="16sp" />
-        <Spinner
-            android:id="@+id/spinner_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Description -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Description">
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Status (Spinner) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Status"
-            android:layout_marginTop="8dp"
-            android:textSize="16sp" />
-        <Spinner
-            android:id="@+id/spinner_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Quantity -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Quantity">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_quantity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Category (Spinner) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Category"
-            android:layout_marginTop="8dp"
-            android:textSize="16sp" />
-        <Spinner
-            android:id="@+id/spinner_category"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Type (Spinner) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Type"
-            android:layout_marginTop="8dp"
-            android:textSize="16sp" />
-        <Spinner
-            android:id="@+id/spinner_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Submit Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEdit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Edit"
-            style="@style/Widget.MaterialComponents.Button" />
-
-        <!-- Update Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnDelete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete"
-            style="@style/Widget.MaterialComponents.Button" />
-
-    </LinearLayout>
-
-</ScrollView>
+</com.google.android.material.card.MaterialCardView>

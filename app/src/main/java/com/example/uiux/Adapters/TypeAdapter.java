@@ -1,5 +1,6 @@
 package com.example.uiux.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.Admin.Category.EditCategoryActivity;
+import com.example.uiux.Activities.Admin.Supplies.EditSuppliesActivity;
 import com.example.uiux.Activities.Admin.Type.EditTypeActivity;
 import com.example.uiux.Model.Category;
 import com.example.uiux.Model.Type;
@@ -53,45 +56,50 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.TypeViewHolder
     }
 
     public  class TypeViewHolder extends RecyclerView.ViewHolder {
-       private TextInputEditText edt_type;
-        MaterialButton btnEdit, btnDelete;
+       private TextView tv_type;
 
         public TypeViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            edt_type = itemView.findViewById(R.id.edt_type);
-            btnEdit=itemView.findViewById(R.id.btnEditType);
-            btnDelete=itemView.findViewById(R.id.btnDeleteType);
-            btnEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    Type type = mListType.get(position);
-                    Intent intent = new Intent(context, EditTypeActivity.class);
-                    intent.putExtra("type_id",type.getType_id());
-                    intent.putExtra("type_name",type.getType());
+            tv_type = itemView.findViewById(R.id.tv_type);
+            itemView.setOnClickListener(view -> {
+                int position = getAdapterPosition();
+                Type type = mListType.get(position);
 
-                    context.startActivity(intent);
+                // Tạo một AlertDialog với 2 lựa chọn: Edit và Delete
+                new AlertDialog.Builder(context)
+                        .setItems(new CharSequence[]{"Edit", "Delete"}, (dialog, which) -> {
+                            if (which == 0) {
+                                Intent intent = new Intent(context, EditTypeActivity.class);
+                                intent.putExtra("type_id",type.getType_id());
+                                intent.putExtra("type_name",type.getType());
 
-                }
+                                context.startActivity(intent);
+
+                            } else if (which == 1) {
+                                // Nếu người dùng chọn "Xóa"
+                                new AlertDialog.Builder(context)
+                                        .setTitle("Confirm")
+                                        .setMessage("Are you sure")
+                                        .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+                                            deleteTypeFromDatabase(type.getType_id());
+                                            mListType.remove(position);
+                                            notifyItemRemoved(position);
+                                            notifyItemRangeChanged(position, mListType.size());
+                                            Toast.makeText(context, "Đã xóa loai thành công", Toast.LENGTH_SHORT).show();
+                                        })
+                                        .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
+                                            // Nếu người dùng chọn "Không", đóng dialog
+                                            confirmDialog.dismiss();
+                                        })
+                                        .show();
+                            }
+                        })
+                        .show();
             });
-            btnDelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    Type type = mListType.get(position);
-                    deleteTypeFromDatabase(type.getType_id());
-                    mListType.remove(position);
-                    notifyItemRemoved(position);
-                    notifyItemRangeChanged(position, mListType.size());
-                    Toast.makeText(context, "Đã xóa loai thành công", Toast.LENGTH_SHORT).show();
-
-                }
-            });
-
         }
         public void bind(Type type) {
-            edt_type.setText(type.getType());
+            tv_type.setText(type.getType());
         }
 
         private void deleteTypeFromDatabase(String categoryId) {

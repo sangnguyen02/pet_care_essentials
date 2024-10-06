@@ -14,6 +14,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -38,14 +39,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class SuppliesActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView img1, img2, img3, img4;
+    private ImageView img1, img2, img3, img4, img_back_add_supply;
     private TextInputEditText suppName, suppSellPrice, suppCostPrice, suppQuantity, suppDescription;
     private Spinner suppSize, suppStatus, suppCate, suppType;
-    private MaterialButton suppSubmit, suppUpdate;
+    private MaterialButton suppSubmit;
 
     private ProgressDialog progressDialog;
     private Uri[] imageUris = new Uri[4]; // Array to hold image URIs
@@ -58,14 +60,15 @@ public class SuppliesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         setContentView(R.layout.activity_supplies);
         suppName = findViewById(R.id.edt_name);
         suppSellPrice = findViewById(R.id.edt_sell_price);
         suppCostPrice = findViewById(R.id.edt_cost_price);
         suppQuantity = findViewById(R.id.edt_quantity);
         suppSubmit = findViewById(R.id.btnSubmit);
-        suppUpdate = findViewById(R.id.btnUpdate);
         suppDescription = findViewById(R.id.edt_description);
+        img_back_add_supply = findViewById(R.id.img_back_add_supply);
         img1 = findViewById(R.id.img1);
         img2 = findViewById(R.id.img2);
         img3 = findViewById(R.id.img3);
@@ -83,27 +86,18 @@ public class SuppliesActivity extends AppCompatActivity {
         FectchSpinnerSize();
         FectchSpinnerStatus();
         FetchSpinnerType();
+        img_back_add_supply.setOnClickListener(view -> {finish();});
         img1.setOnClickListener(view -> openImageChooser(0));
         img2.setOnClickListener(view -> openImageChooser(1));
         img3.setOnClickListener(view -> openImageChooser(2));
         img4.setOnClickListener(view -> openImageChooser(3));
-        suppUpdate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(SuppliesActivity.this, UpdateSuppliesActivity.class);
-                startActivity(intent);
 
-            }
-        });
-        suppSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (imageUris != null && !suppName.getText().toString().isEmpty()&& !suppCostPrice.getText().toString().isEmpty()&& !suppQuantity.getText().toString().isEmpty()
-                        && !suppDescription.getText().toString().isEmpty()&& !suppSellPrice.getText().toString().isEmpty()) {
-                    uploadImageAndAddSupplies();
-                } else {
-                    Toast.makeText(SuppliesActivity.this, "Please select correct", Toast.LENGTH_SHORT).show();
-                }
+        suppSubmit.setOnClickListener(view -> {
+            if (imageUris != null && !Objects.requireNonNull(suppName.getText()).toString().isEmpty()&& !Objects.requireNonNull(suppCostPrice.getText()).toString().isEmpty()&& !Objects.requireNonNull(suppQuantity.getText()).toString().isEmpty()
+                    && !Objects.requireNonNull(suppDescription.getText()).toString().isEmpty()&& !Objects.requireNonNull(suppSellPrice.getText()).toString().isEmpty()) {
+                uploadImageAndAddSupplies();
+            } else {
+                Toast.makeText(SuppliesActivity.this, "Please select correct", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -157,11 +151,11 @@ public class SuppliesActivity extends AppCompatActivity {
 
         Supplies supplies= new Supplies();
         supplies.setSupplies_id(supplyId);
-        supplies.setName( suppName.getText().toString());
-        supplies.setSell_price( Double.valueOf(suppSellPrice.getText().toString()));
-        supplies.setCost_price(Double.valueOf(suppCostPrice.getText().toString()));
-        supplies.setQuantity(Integer.valueOf(suppQuantity.getText().toString()));
-        supplies.setDescription(suppDescription.getText().toString());
+        supplies.setName( Objects.requireNonNull(suppName.getText()).toString());
+        supplies.setSell_price( Double.valueOf(Objects.requireNonNull(suppSellPrice.getText()).toString()));
+        supplies.setCost_price(Double.valueOf(Objects.requireNonNull(suppCostPrice.getText()).toString()));
+        supplies.setQuantity(Integer.valueOf(Objects.requireNonNull(suppQuantity.getText()).toString()));
+        supplies.setDescription(Objects.requireNonNull(suppDescription.getText()).toString());
         supplies.setSize( suppSize.getSelectedItem().toString());
         supplies.setStatus( suppStatus.getSelectedItemPosition());
         supplies.setCategory(suppCate.getSelectedItem().toString());
@@ -175,7 +169,7 @@ public class SuppliesActivity extends AppCompatActivity {
                 Toast.makeText(SuppliesActivity.this, "Supply added successfully!", Toast.LENGTH_SHORT).show();
                 clearInputFields(); // Optional: clear the input fields after successful upload
             } else {
-                Toast.makeText(SuppliesActivity.this, "Failed to add supply: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SuppliesActivity.this, "Failed to add supply: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

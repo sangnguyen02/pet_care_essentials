@@ -14,6 +14,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.Admin.Category.EditCategoryActivity;
@@ -39,7 +40,7 @@ import java.util.UUID;
 
 public class EditSuppliesActivity extends AppCompatActivity {
 
-    private ImageView img1, img2, img3, img4;
+    private ImageView img1, img2, img3, img4, img_back_edit_supply;
     private TextInputEditText suppName, suppSellPrice, suppCostPrice, suppQuantity, suppDescription;
     private Spinner suppSize, suppStatus, suppCate, suppType;
     private MaterialButton suppSave;
@@ -53,6 +54,7 @@ public class EditSuppliesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         setContentView(R.layout.activity_edit_supplies);
 
         suppName = findViewById(R.id.edt_name);
@@ -61,6 +63,7 @@ public class EditSuppliesActivity extends AppCompatActivity {
         suppQuantity = findViewById(R.id.edt_quantity);
         suppSave = findViewById(R.id.btnSave);
         suppDescription = findViewById(R.id.edt_description);
+        img_back_edit_supply = findViewById(R.id.img_back_edit_supply);
         img1 = findViewById(R.id.img1);
         img2 = findViewById(R.id.img2);
         img3 = findViewById(R.id.img3);
@@ -75,7 +78,7 @@ public class EditSuppliesActivity extends AppCompatActivity {
         FectchSpinnerSize();
         FectchSpinnerStatus();
         FetchSpinnerType();
-
+        img_back_edit_supply.setOnClickListener(view -> {finish();});
         img1.setOnClickListener(view -> openImageChooser(0));
         img2.setOnClickListener(view -> openImageChooser(1));
         img3.setOnClickListener(view -> openImageChooser(2));

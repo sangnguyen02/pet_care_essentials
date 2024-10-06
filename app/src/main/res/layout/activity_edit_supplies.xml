@@ -1,198 +1,338 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:background="@color/bg_grey">
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_edit_supply_app_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="64dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardElevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Image Upload Fields (4 images in 2 rows) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Images"
-            android:layout_marginTop="8dp"
-            android:textSize="16sp" />
-
-        <GridLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="2"
-            android:rowCount="2"
-            android:layout_margin="8dp">
+            android:layout_height="match_parent">
 
-            <!-- First Image -->
             <ImageView
-                android:id="@+id/img1"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_margin="8dp"
-                android:scaleType="centerCrop"
-                android:background="@color/grey" />
+                android:id="@+id/img_back_edit_supply"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/ripple_effect"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
-            <!-- Second Image -->
-            <ImageView
-                android:id="@+id/img2"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_margin="8dp"
-                android:scaleType="centerCrop"
-                android:background="@color/grey" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Edit Supply"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back_edit_supply"
+                app:layout_constraintStart_toEndOf="@+id/img_back_edit_supply"
+                app:layout_constraintTop_toTopOf="@+id/img_back_edit_supply"
+                tools:ignore="HardcodedText" />
 
-            <!-- Third Image -->
-            <ImageView
-                android:id="@+id/img3"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_margin="8dp"
-                android:scaleType="centerCrop"
-                android:background="@color/grey" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Fourth Image -->
-            <ImageView
-                android:id="@+id/img4"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_margin="8dp"
-                android:scaleType="centerCrop"
-                android:background="@color/grey" />
-        </GridLayout>
+    </androidx.cardview.widget.CardView>
 
-        <!-- Name -->
-        <com.google.android.material.textfield.TextInputLayout
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cv_edit_supply_app_bar">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_name"
+            android:padding="10dp"
+            android:orientation="vertical">
+
+
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:columnCount="2"
+                android:rowCount="2">
+
+                <!-- First Image -->
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/grey"
+                    android:scaleType="centerCrop" />
+
+                <!-- Second Image -->
+                <ImageView
+                    android:id="@+id/img2"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/grey"
+                    android:scaleType="centerCrop" />
+
+                <!-- Third Image -->
+                <ImageView
+                    android:id="@+id/img3"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/grey"
+                    android:scaleType="centerCrop" />
+
+                <!-- Fourth Image -->
+                <ImageView
+                    android:id="@+id/img4"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/grey"
+                    android:scaleType="centerCrop" />
+            </GridLayout>
+
+            <!-- Name -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edt_height"
+                android:hint="Name"
+                app:boxStrokeColor="@color/text_input"
+                app:boxStrokeWidth="1dp"
+                app:hintTextColor="@color/text_input"
+                app:shapeAppearanceOverlay="@style/Button4">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Sell Price -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edt_height"
+                android:hint="Sell Price"
+                app:boxStrokeColor="@color/text_input"
+                app:boxStrokeWidth="1dp"
+                app:hintTextColor="@color/text_input"
+                app:shapeAppearanceOverlay="@style/Button4">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_sell_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Cost Price -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edt_height"
+                android:hint="Cost Price"
+                app:boxStrokeColor="@color/text_input"
+                app:boxStrokeWidth="1dp"
+                app:hintTextColor="@color/text_input"
+                app:shapeAppearanceOverlay="@style/Button4">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_cost_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Quantity -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/edt_height"
+                android:hint="Quantity"
+                app:boxStrokeColor="@color/text_input"
+                app:boxStrokeWidth="1dp"
+                app:hintTextColor="@color/text_input"
+                app:shapeAppearanceOverlay="@style/Button4">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_margin="4dp"
+                android:columnCount="2"
+                android:rowCount="2">
 
-        <!-- Sell Price -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Sell Price">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_sell_price"
+                <LinearLayout
+                    android:layout_width="180dp"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    >
+                    <!-- Size (Spinner) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Size: "
+                        android:fontFamily="@font/roboto_bold"
+                        android:textSize="16sp" />
+                    <Spinner
+                        android:id="@+id/spinner_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="200dp"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+
+                    >
+                    <!-- Category (Spinner) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Category: "
+                        android:fontFamily="@font/roboto_bold"
+                        android:textSize="16sp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_category"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="180dp"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    >
+                    <!-- Type (Spinner) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Type: "
+                        android:fontFamily="@font/roboto_bold"
+                        android:textSize="16sp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_type"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                       />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="200dp"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    >
+                    <!-- Status (Spinner) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Status: "
+                        android:fontFamily="@font/roboto_bold"
+                        android:textSize="16sp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical" />
+
+                </LinearLayout>
+
+            </GridLayout>
+
+            <!-- Description -->
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:hint="Description"
+                app:boxStrokeColor="@color/text_input"
+                app:boxStrokeWidth="1dp"
+                app:hintTextColor="@color/text_input"
+                app:shapeAppearanceOverlay="@style/Button4">
 
-        <!-- Cost Price -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Cost Price">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_cost_price"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size"
+                    android:minLines="3"
+                    android:maxLines="10"
+                    android:scrollbars="vertical"
+                    android:gravity="top|start"
+                    android:overScrollMode="always" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.button.MaterialButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:layout_marginTop="8dp"
+                android:id="@+id/btnSave"
+                android:text="SAVE"
+                android:textSize="16sp"
+                android:fontFamily="@font/roboto_bold"
+                android:textAllCaps="false"
+                android:elevation="15dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                app:shapeAppearanceOverlay="@style/Button5"
+                app:backgroundTint="@color/tabLayout_background"
+                />
 
-        <!-- Size (Spinner) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Size"
-            android:layout_marginTop="8dp"
-            android:textSize="16sp" />
-        <Spinner
-            android:id="@+id/spinner_size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
+        </LinearLayout>
 
-        <!-- Description -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Description">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
+    </ScrollView>
 
-        <!-- Status (Spinner) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Status"
-            android:layout_marginTop="8dp"
-            android:textSize="16sp" />
-        <Spinner
-            android:id="@+id/spinner_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Quantity -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Quantity">
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_quantity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="number"
-                android:textColor="@color/black"
-                android:textSize="16sp" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Category (Spinner) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Category"
-            android:layout_marginTop="8dp"
-            android:textSize="16sp" />
-        <Spinner
-            android:id="@+id/spinner_category"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Type (Spinner) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Type"
-            android:layout_marginTop="8dp"
-            android:textSize="16sp" />
-        <Spinner
-            android:id="@+id/spinner_type"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Submit Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnSave"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            style="@style/Widget.MaterialComponents.Button" />
-
-
-
-    </LinearLayout>
-
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

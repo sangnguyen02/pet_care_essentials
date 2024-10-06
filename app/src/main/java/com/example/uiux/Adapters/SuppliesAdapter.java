@@ -1,5 +1,6 @@
 package com.example.uiux.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -61,163 +63,116 @@ public class SuppliesAdapter  extends RecyclerView.Adapter<SuppliesAdapter.Suppl
     class SuppliesViewHolder extends RecyclerView.ViewHolder
     {
         private ImageView img1,img2,img3,img4;
-        private TextInputEditText suppName,suppPrice,suppQuantity;
-        private Spinner suppSize,suppStatus,suppCate,suppType;
-        private MaterialButton suppEdit,suppDelete;
+        private TextView suppName,suppSellPrice,suppQuantity, suppCate, suppType, suppSize, suppStatus;
 
         public SuppliesViewHolder(@NonNull View itemView) {
             super(itemView);
-            suppName = itemView.findViewById(R.id.edt_name);
-            suppPrice = itemView.findViewById(R.id.edt_sell_price);
-            suppQuantity=itemView.findViewById(R.id.edt_quantity);
-            suppEdit = itemView.findViewById(R.id.btnEdit);
-            suppDelete = itemView.findViewById(R.id.btnDelete);
+            suppName = itemView.findViewById(R.id.tv_supply_name);
+            suppSellPrice = itemView.findViewById(R.id.tv_supply_sell_price);
+            suppQuantity=itemView.findViewById(R.id.tv_supply_quantity);
+            suppCate = itemView.findViewById(R.id.tv_supply_category);
+            suppType = itemView.findViewById(R.id.tv_supply_type);
+            suppSize = itemView.findViewById(R.id.tv_supply_size);
+            suppStatus = itemView.findViewById(R.id.tv_supply_status);
             img1 = itemView.findViewById(R.id.img1);
-            img2 = itemView.findViewById(R.id.img2);
-            img3 = itemView.findViewById(R.id.img3);
-            img4 = itemView.findViewById(R.id.img4);
-            suppSize=itemView.findViewById(R.id.spinner_size);
-            suppStatus=itemView.findViewById(R.id.spinner_status);
-            suppCate=itemView.findViewById(R.id.spinner_category);
-            suppType=itemView.findViewById(R.id.spinner_type);
-            suppEdit.setOnClickListener(view -> {
-                int position = getAdapterPosition();
-                Supplies supp = suppliesList.get(position);
-                Intent intent = new Intent(context, EditSuppliesActivity.class);
-                intent.putExtra("supplies_id", supp.getSupplies_id());
-               //intent.putExtra("imageUris", supp.getImageUrls());
-//                intent.putExtra("category_image", category.getImageUrl());
-//                intent.putExtra("category_status", category.getStatus());
-                context.startActivity(intent);
-            });
+//            img2 = itemView.findViewById(R.id.img2);
+//            img3 = itemView.findViewById(R.id.img3);
+//            img4 = itemView.findViewById(R.id.img4);
 
-            suppDelete.setOnClickListener(view -> {
+
+
+            itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 Supplies supp = suppliesList.get(position);
-                deleteSuppliesFromDatabase(supp.getSupplies_id());
-                suppliesList.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, suppliesList.size());
-                Toast.makeText(context, "Đã xóa san pham thành công", Toast.LENGTH_SHORT).show();
+
+                // Tạo một AlertDialog với 2 lựa chọn: Edit và Delete
+                new AlertDialog.Builder(context)
+                        .setItems(new CharSequence[]{"Edit", "Delete"}, (dialog, which) -> {
+                            if (which == 0) {
+                                Intent intent = new Intent(context, EditSuppliesActivity.class);
+                                intent.putExtra("supplies_id", supp.getSupplies_id());
+                                context.startActivity(intent);
+
+                            } else if (which == 1) {
+                                // Nếu người dùng chọn "Xóa"
+                                new AlertDialog.Builder(context)
+                                        .setTitle("Confirm")
+                                        .setMessage("Are you sure")
+                                        .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+                                            deleteSuppliesFromDatabase(supp.getSupplies_id());
+                                            suppliesList.remove(position);
+                                            notifyItemRemoved(position);
+                                            notifyItemRangeChanged(position, suppliesList.size());
+                                            Toast.makeText(context, "Đã xóa sản phẩm thành công", Toast.LENGTH_SHORT).show();
+                                        })
+                                        .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
+                                            // Nếu người dùng chọn "Không", đóng dialog
+                                            confirmDialog.dismiss();
+                                        })
+                                        .show();
+                            }
+                        })
+                        .show();
             });
         }
         public void bind(Supplies supplies) {
             suppName.setText(supplies.getName() != null ? supplies.getName() : "N/A");
-            suppPrice.setText(String.valueOf(supplies.getSell_price()));
+            suppSellPrice.setText(String.valueOf(supplies.getSell_price()));
             suppQuantity.setText(String.valueOf(supplies.getQuantity()));
-            FectchSpinnerSize();
-            FectchSpinnerStatus();
-            FetchSpinnerType();
-            FetchSpinnerCategory();
+            suppCate.setText(supplies.getCategory() != null ? supplies.getCategory() : "N/A");
+            suppType.setText(supplies.getType() != null ? supplies.getType() : "N/A");
+            suppSize.setText(supplies.getSize() != null ? supplies.getSize() : "N/A");
+            suppStatus.setText(String.valueOf(supplies.getStatus()));
+
+
             List<String> imageUrls = supplies.getImageUrls();
             if (imageUrls != null && !imageUrls.isEmpty()) {
                 // Load the first image
-                Glide.with(itemView.getContext())
-                        .load(imageUrls.get(0)) // Use .get(0) to retrieve the first URL
-                        .placeholder(R.drawable.banner1)
-                        .error(R.drawable.guest)
-                        .into(img1);
-            }
-            // Load the second image if it exists
-            if (imageUrls.size() > 1) {
-                Glide.with(itemView.getContext())
-                        .load(imageUrls.get(1))
-                        .placeholder(R.drawable.banner1)
-                        .error(R.drawable.guest)
-                        .into(img2);
-            }
-            // Load the third image if it exists
-            if (imageUrls.size() > 2) {
-                Glide.with(itemView.getContext())
-                        .load(imageUrls.get(2))
-                        .placeholder(R.drawable.banner1)
-                        .error(R.drawable.guest)
-                        .into(img3);
-            }
+                if (imageUrls.size() > 0) {
+                    Glide.with(itemView.getContext())
+                            .load(imageUrls.get(0))
+                            .placeholder(R.drawable.banner1)
+                            .error(R.drawable.guest)
+                            .into(img1);
+                }
 
-            // Load the fourth image if it exists
-            if (imageUrls.size() > 3) {
-                Glide.with(itemView.getContext())
-                        .load(imageUrls.get(3))
-                        .placeholder(R.drawable.banner1)
-                        .error(R.drawable.guest)
-                        .into(img4);
+//                // Load the second image if it exists
+//                if (imageUrls.size() > 1) {
+//                    Glide.with(itemView.getContext())
+//                            .load(imageUrls.get(1))
+//                            .placeholder(R.drawable.banner1)
+//                            .error(R.drawable.guest)
+//                            .into(img2);
+//                }
+//
+//                // Load the third image if it exists
+//                if (imageUrls.size() > 2) {
+//                    Glide.with(itemView.getContext())
+//                            .load(imageUrls.get(2))
+//                            .placeholder(R.drawable.banner1)
+//                            .error(R.drawable.guest)
+//                            .into(img3);
+//                }
+//
+//                // Load the fourth image if it exists
+//                if (imageUrls.size() > 3) {
+//                    Glide.with(itemView.getContext())
+//                            .load(imageUrls.get(3))
+//                            .placeholder(R.drawable.banner1)
+//                            .error(R.drawable.guest)
+//                            .into(img4);
+//                }
+            } else {
+                // Set placeholders if no images are available
+                img1.setImageResource(R.drawable.product_sample);
+//                img2.setImageResource(R.drawable.guest);
+//                img3.setImageResource(R.drawable.guest);
+//                img4.setImageResource(R.drawable.guest);
             }
-
         }
 
         private void deleteSuppliesFromDatabase(String supplies_Id) {
             FirebaseDatabase.getInstance().getReference("Supplies").child(supplies_Id).removeValue();
-        }
-        private void FetchSpinnerType()
-        {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference ref = database.getReference("Type");
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    List<String> typeList = new ArrayList<>(); // Danh sách chứa các "type" từ Firebase
-                    final Map<String, String> typeMap = new HashMap<>(); // Lưu type_id và type
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Type type = snapshot.getValue(Type.class);
-                        if (type != null) {
-                            typeList.add(type.getType()); // Thêm "type" vào danh sách
-                            typeMap.put(type.getType(), type.getType_id()); // Map "type" với "type_id"
-                        }
-                    }
-
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, typeList);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    suppType.setAdapter(adapter);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
-        private void FetchSpinnerCategory()
-        {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference ref = database.getReference("Category");
-            ref.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    List<String> cateList = new ArrayList<>(); // Danh sách chứa các "type" từ Firebase
-                    final Map<String, String> cateMap = new HashMap<>(); // Lưu type_id và type
-                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        Category category = snapshot.getValue(Category.class);
-                        if (category != null&&category.getStatus()==0) {
-                            cateList.add(category.getName());
-                            cateMap.put(category.getName(), category.getCategory_id()); // Map "type" với "type_id"
-                        }
-                    }
-
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, cateList);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    suppCate.setAdapter(adapter);
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-        }
-        private void FectchSpinnerSize()
-        {
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
-                    R.array.size_array, android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            suppSize.setAdapter(adapter);
-        }
-        private void FectchSpinnerStatus()
-        {
-            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
-                    R.array.suplies_status, android.R.layout.simple_spinner_item);
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            suppStatus.setAdapter(adapter);
         }
 
     }

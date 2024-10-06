@@ -2,11 +2,13 @@ package com.example.uiux.Activities.Admin.Type;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -25,6 +27,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class EditTypeActivity extends AppCompatActivity {
+
+    private ImageView img_back_edit_type;
     private MaterialButton saveType;
     private TextInputEditText typeName;
     private DatabaseReference typeRef;
@@ -34,7 +38,10 @@ public class EditTypeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         setContentView(R.layout.activity_edit_type);
+        img_back_edit_type = findViewById(R.id.img_back_edit_type);
+        img_back_edit_type.setOnClickListener(view -> finish());
         saveType=findViewById(R.id.btnSaveType);
         typeName=findViewById(R.id.edt_type);
         type_id = getIntent().getStringExtra("type_id");

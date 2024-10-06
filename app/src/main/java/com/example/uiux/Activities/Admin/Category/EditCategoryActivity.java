@@ -16,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -24,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.example.uiux.Model.Account_Address;
 import com.example.uiux.Model.Category;
 import com.example.uiux.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -39,7 +41,7 @@ public class EditCategoryActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> pickImageLauncher;
     private TextInputEditText edtCategoryName;
     private ImageView img_editCategory, imgv_back;;
-    private Button choose_Img, saveBtn;
+    private MaterialButton saveBtn;
     private Spinner status;
     private String category_id;
     private DatabaseReference categoryRef;
@@ -51,6 +53,7 @@ public class EditCategoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         setContentView(R.layout.activity_edit_category);
         edtCategoryName = findViewById(R.id.edt_edit_category);
         imgv_back = findViewById(R.id.img_back_edit_category);

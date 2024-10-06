@@ -6,7 +6,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
-    android:orientation="vertical"
     android:background="@color/bg_grey">
 
     <androidx.cardview.widget.CardView
@@ -128,6 +127,7 @@
         android:textColor="@color/white"
         android:textSize="16sp"
         app:backgroundTint="@color/tabLayout_background"
+        app:shapeAppearanceOverlay="@style/Button5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spinnerCategoryStatus"
