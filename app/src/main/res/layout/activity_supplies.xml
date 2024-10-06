@@ -117,7 +117,7 @@
             <!-- Name -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/edt_height"
+                android:layout_height="60dp"
                 android:hint="Name"
                 app:boxStrokeColor="@color/text_input"
                 app:boxStrokeWidth="1dp"
@@ -137,7 +137,7 @@
             <!-- Sell Price -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/edt_height"
+                android:layout_height="60dp"
                 android:hint="Sell Price"
                 app:boxStrokeColor="@color/text_input"
                 app:boxStrokeWidth="1dp"
@@ -157,7 +157,7 @@
             <!-- Cost Price -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/edt_height"
+                android:layout_height="60dp"
                 android:hint="Cost Price"
                 app:boxStrokeColor="@color/text_input"
                 app:boxStrokeWidth="1dp"
@@ -177,7 +177,7 @@
             <!-- Quantity -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/edt_height"
+                android:layout_height="60dp"
                 android:hint="Quantity"
                 app:boxStrokeColor="@color/text_input"
                 app:boxStrokeWidth="1dp"
