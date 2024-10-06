@@ -8,6 +8,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.example.uiux.Activities.Admin.Category.CategoryActivity;
 import com.example.uiux.Activities.Admin.Category.UpdateCategoryActivity;
 import com.example.uiux.Activities.Admin.Supplies.UpdateSuppliesActivity;
 import com.example.uiux.Activities.Admin.Supplies.SuppliesActivity;
@@ -26,7 +27,7 @@ import java.util.UUID;
 
 public class MainActivityAdmin extends AppCompatActivity {
 
-    MaterialButton postSupply_btn,category_btn,type_btn,supplies_btn,supplies_import;
+    MaterialCardView category_btn,type_btn,supplies_btn,supplies_import;
     DatabaseReference suppliesRef;
     DatabaseReference suppliesImageRef;
     DatabaseReference suppliesImportRef;
@@ -47,86 +48,11 @@ public class MainActivityAdmin extends AppCompatActivity {
         suppliesPriceRef = FirebaseDatabase.getInstance().getReference("Supplies_Price");
         suppliesReviewRef = FirebaseDatabase.getInstance().getReference("Supplies_Review");
 
-        postSupply_btn = findViewById(R.id.post_supply);
         category_btn=findViewById(R.id.category);
         type_btn=findViewById(R.id.type);
         supplies_btn=findViewById(R.id.supplies);
         supplies_import=findViewById(R.id.supplies_import);
-        postSupply_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Tạo dữ liệu mẫu cho Supplies
-//                String suppliesId = UUID.randomUUID().toString();
-//                Supplies sampleSupply = new Supplies(
-//                        suppliesId,
-//                        "Sample Supply",
-//                        50.0,
-//                        30.0,
-//                        "Medium",
-//                        "This is a sample supply.",
-//                        1,
-//                        100,
-//                        "category123",
-//                        "typeABC"
-//                );
-//
-//                // Tạo dữ liệu mẫu cho Supplies_Image
-//                String suppliesImageId = UUID.randomUUID().toString();
-//                Supplies_Image sampleImage = new Supplies_Image(
-//                        suppliesImageId,
-//                        suppliesId,
-//                        "https://example.com/sample-image.jpg"
-//                );
-//
-//                // Tạo dữ liệu mẫu cho Supplies_Import
-//                String suppliesImportId = UUID.randomUUID().toString();
-//                Supplies_Import sampleImport = new Supplies_Import(
-//                        suppliesImportId,
-//                        suppliesId,
-//                        100,
-//                        100,
-//                        25.0,
-//                        new Date()
-//                );
-//
-//                // Tạo dữ liệu mẫu cho Supplies_Price
-//                String suppliesPriceId = UUID.randomUUID().toString();
-//                Supplies_Price samplePrice = new Supplies_Price(
-//                        suppliesPriceId,
-//                        suppliesId,
-//                        50.0,
-//                        new Date()
-//                );
-//
-//                // Tạo dữ liệu mẫu cho Supplies_Review
-//                String suppliesReviewId = UUID.randomUUID().toString();
-//                Supplies_Review sampleReview = new Supplies_Review(
-//                        suppliesReviewId,
-//                        "account123",
-//                        suppliesId,
-//                        5, // rating
-//                        "Great product!",
-//                        new Date(),
-//                        true,
-//                        true
-//                );
-//
-//                // Lưu tất cả các model vào Firebase
-//                suppliesRef.child(suppliesId).setValue(sampleSupply)
-//                        .addOnSuccessListener(aVoid -> {
-//                            // Lưu các thông tin liên quan sau khi lưu Supplies thành công
-//                            suppliesImageRef.child(suppliesImageId).setValue(sampleImage);
-//                            suppliesImportRef.child(suppliesImportId).setValue(sampleImport);
-//                            suppliesPriceRef.child(suppliesPriceId).setValue(samplePrice);
-//                            suppliesReviewRef.child(suppliesReviewId).setValue(sampleReview);
-//
-//                            Toast.makeText(MainActivityAdmin.this, "All data posted successfully", Toast.LENGTH_SHORT).show();
-//                        })
-//                        .addOnFailureListener(e -> {
-//                            Toast.makeText(MainActivityAdmin.this, "Failed to post supply: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-//                        });
-            }
-        });
+
         category_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,14 +60,14 @@ public class MainActivityAdmin extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        type_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(MainActivityAdmin.this, TypeActivity.class);
-                startActivity(intent);
+        type_btn.setOnClickListener(view -> {
+            Intent intent=new Intent(MainActivityAdmin.this, TypeActivity.class);
+            startActivity(intent);
+        });
 
 
-        category_btn.setOnClickListener(view -> {
+
+        category_btn.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivityAdmin.this, UpdateCategoryActivity.class);
             startActivity(intent);
         });
@@ -155,13 +81,11 @@ public class MainActivityAdmin extends AppCompatActivity {
             Intent intent = new Intent(MainActivityAdmin.this, UpdateTypeActivity.class);
             startActivity(intent);
         });
-        supplies_import.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent=new Intent(MainActivityAdmin.this, SuppliesImportActivity.class);
-                startActivity(intent);
+        supplies_import.setOnClickListener(view -> {
+            Intent intent=new Intent(MainActivityAdmin.this, SuppliesImportActivity.class);
+            startActivity(intent);
 
-            }
         });
     }
 }
+

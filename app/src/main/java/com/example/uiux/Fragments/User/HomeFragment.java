@@ -80,11 +80,11 @@ public class HomeFragment extends Fragment {
         dotsIndicator = rootView.findViewById(R.id.dot_indicators);
         rcv_category = rootView.findViewById(R.id.rcv_categories);
         rcv_category.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        rcv_best_seller = rootView.findViewById(R.id.rcv_bestSeller);
-        rcv_best_seller.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+//        rcv_best_seller = rootView.findViewById(R.id.rcv_bestSeller);
+//        rcv_best_seller.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         getBannerImages();
         getCategoryImages();
-        getBestSellerItems();
+        //getBestSellerItems();
         mViewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -123,27 +123,32 @@ public class HomeFragment extends Fragment {
 
     private void getCategoryImages() {
         progressBar_category.setVisibility(View.VISIBLE);
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference().child("Categories");
 
-        storageRef.listAll().addOnSuccessListener(listResult -> {
-            List<Category> categoryList = new ArrayList<>();
-            for (StorageReference fileRef : listResult.getItems()) {
-                fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    String imageName = fileRef.getName().split("\\.")[0]; // Assuming the file name without extension is the category name
-                    categoryList.add(new Category(uri.toString(), imageName));
+        // Lấy dữ liệu từ Firebase Realtime Database
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Category");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                List<Category> categoryList = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    // Lấy dữ liệu Category từ Firebase
+                    Category category = snapshot.getValue(Category.class);
 
-                    // Check if all categories are loaded before updating the adapter
-                    if (categoryList.size() == listResult.getItems().size()) {
-                        progressBar_category.setVisibility(View.GONE);
-                        mListCategory = categoryList;
-                        CategoryAdapter adapter = new CategoryAdapter(mListCategory);
-                        rcv_category.setAdapter(adapter);
-                    }
-                });
+                    // Thêm category vào danh sách
+                    categoryList.add(category);
+                }
+
+                // Khi tất cả các category được tải xong thì cập nhật adapter
+                progressBar_category.setVisibility(View.GONE);
+                mListCategory = categoryList;
+                CategoryAdapter adapter = new CategoryAdapter(mListCategory);
+                rcv_category.setAdapter(adapter);
             }
-        }).addOnFailureListener(exception -> {
-            // Handle errors
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Xử lý lỗi
+            }
         });
     }
     private void getBestSellerItems() {
