@@ -8,12 +8,12 @@ public class Supplies_Import {
     private  int quantity;
     private int remaining_quantity;
     private  double import_price;
-    private Date import_date;
+    private String import_date;
 
     public Supplies_Import() {
     }
 
-    public Supplies_Import(String supplies_import_id, String supplies_name, int quantity, int remaining_quantity, double import_price, Date import_date) {
+    public Supplies_Import(String supplies_import_id, String supplies_name, int quantity, int remaining_quantity, double import_price, String import_date) {
         this.supplies_import_id = supplies_import_id;
         this.supplies_name = supplies_name;
         this.quantity = quantity;
@@ -62,11 +62,11 @@ public class Supplies_Import {
         this.import_price = import_price;
     }
 
-    public Date getImport_date() {
+    public String getImport_date() {
         return import_date;
     }
 
-    public void setImport_date(Date import_date) {
+    public void setImport_date(String import_date) {
         this.import_date = import_date;
     }
 }

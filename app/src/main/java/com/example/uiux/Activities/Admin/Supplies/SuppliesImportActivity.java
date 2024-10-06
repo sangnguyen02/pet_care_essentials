@@ -24,10 +24,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class SuppliesImportActivity extends AppCompatActivity {
@@ -82,13 +84,22 @@ public class SuppliesImportActivity extends AppCompatActivity {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
                 this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
-                    // Cập nhật ngày vào EditText
-                    edtImportDate.setText(selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear);
+                    // Tạo Calendar để cập nhật thời gian hiện tại
+                    Calendar selectedDate = Calendar.getInstance();
+                    selectedDate.set(selectedYear, selectedMonth, selectedDay);
+
+                    // Định dạng ngày với SimpleDateFormat
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy", Locale.getDefault());
+                    String formattedDate = dateFormat.format(selectedDate.getTime());
+
+                    // Hiển thị ngày đã chọn lên EditText
+                    edtImportDate.setText(formattedDate);
                 },
                 year, month, day);
 
         datePickerDialog.show();
     }
+
 
     private void loadRemainingQuantity(String selectedSupply) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Supplies");
@@ -122,9 +133,9 @@ public class SuppliesImportActivity extends AppCompatActivity {
         String quantityStr = edtQuantity.getText().toString();
         String remainingQuantityStr = edtRemainingQuantity.getText().toString();
         String importPriceStr = edtImportPrice.getText().toString();
-        String importDate = edtImportDate.getText().toString();
+        String importDateStr = edtImportDate.getText().toString();
 
-        if (quantityStr.isEmpty() || remainingQuantityStr.isEmpty() || importPriceStr.isEmpty() || importDate.isEmpty()) {
+        if (quantityStr.isEmpty() || remainingQuantityStr.isEmpty() || importPriceStr.isEmpty() || importDateStr.isEmpty()) {
             Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -148,7 +159,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
                 quantity,
                 remainingQuantity,
                 Double.parseDouble(importPriceStr),
-                Calendar.getInstance().getTime() // Lấy ngày hiện tại làm ngày import
+                importDateStr // Lưu ngày đã được format
         );
 
         importsRef.child(importId).setValue(suppliesImport)
@@ -158,6 +169,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> Toast.makeText(SuppliesImportActivity.this, "Failed to import product", Toast.LENGTH_SHORT).show());
     }
+
 
     private void updateSupplyQuantity(String selectedSupply, int newQuantity) {
         databaseReference.orderByChild("name").equalTo(selectedSupply).addListenerForSingleValueEvent(new ValueEventListener() {
