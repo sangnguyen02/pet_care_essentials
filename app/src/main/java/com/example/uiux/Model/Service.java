@@ -1,5 +1,7 @@
 package com.example.uiux.Model;
 
+import java.util.List;
+
 public class Service {
     private String service_id;
     private String name;
@@ -8,18 +10,14 @@ public class Service {
     private  String description;
     private  int status;
     private int time_estimate;
-    private  String category_id;
+    private  String category;
+    private  String type;
+    private List<String> imageUrls;
 
     public Service() {
     }
 
-
-
-    public void setCategory_id(String category_id) {
-        this.category_id = category_id;
-    }
-
-    public Service(String service_id, String name, double sell_price, String size, String description, int status, int time_estimate, String category_id ) {
+    public Service(String service_id, String name, double sell_price, String size, String description, int status, int time_estimate, String category, String type, List<String> imageUrls) {
         this.service_id = service_id;
         this.name = name;
         this.sell_price = sell_price;
@@ -27,7 +25,9 @@ public class Service {
         this.description = description;
         this.status = status;
         this.time_estimate = time_estimate;
-        this.category_id=category_id;
+        this.category = category;
+        this.type = type;
+        this.imageUrls = imageUrls;
     }
 
     public String getService_id() {
@@ -85,7 +85,28 @@ public class Service {
     public void setTime_estimate(int time_estimate) {
         this.time_estimate = time_estimate;
     }
-    public String getCategory_id() {
-        return category_id;
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public List<String> getImageUrls() {
+        return imageUrls;
+    }
+
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
     }
 }
