@@ -1,10 +1,9 @@
-package com.example.uiux.Activities.Admin.Supplies;
+package com.example.uiux.Activities.Admin.Services;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -14,14 +13,13 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.example.uiux.Activities.Admin.Category.CategoryActivity;
-import com.example.uiux.Activities.Admin.Category.UpdateCategoryActivity;
+import com.example.uiux.Activities.Admin.Supplies.SuppliesActivity;
 import com.example.uiux.Model.Category;
+import com.example.uiux.Model.Service;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Type;
 import com.example.uiux.R;
@@ -35,7 +33,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,11 +40,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class SuppliesActivity extends AppCompatActivity {
+public class ServiceActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView img1, img2, img3, img4, img_back_add_supply;
-    private TextInputEditText suppName, suppSellPrice, suppCostPrice, suppQuantity, suppDescription;
-    private Spinner suppSize, suppStatus, suppCate, suppType;
+    private ImageView img1, img2, img3, img4, img_back_add_service;
+    private TextInputEditText service_name, service_SellPrice,  service_time, service_Description;
+    private Spinner service_Size, service_Status, service_Cate, service_Type;
     private MaterialButton suppSubmit;
 
     private ProgressDialog progressDialog;
@@ -55,56 +52,53 @@ public class SuppliesActivity extends AppCompatActivity {
     // Firebase
     private FirebaseStorage storage;
     private StorageReference storageReference;
-    private DatabaseReference suppliesDatabase;
+    private DatabaseReference serviceDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
-        setContentView(R.layout.activity_supplies);
-        suppName = findViewById(R.id.edt_name);
-        suppSellPrice = findViewById(R.id.edt_sell_price);
-        suppCostPrice = findViewById(R.id.edt_cost_price);
-        suppQuantity = findViewById(R.id.edt_quantity);
+        setContentView(R.layout.activity_service);
+        service_name = findViewById(R.id.edt_name);
+        service_SellPrice = findViewById(R.id.edt_sell_price);
+        service_time = findViewById(R.id.edt_time);
         suppSubmit = findViewById(R.id.btnSubmit);
-        suppDescription = findViewById(R.id.edt_description);
-        img_back_add_supply = findViewById(R.id.img_back_add_supply);
+        service_Description = findViewById(R.id.edt_description);
+        img_back_add_service = findViewById(R.id.img_back_add_supply);
         img1 = findViewById(R.id.img1);
         img2 = findViewById(R.id.img2);
         img3 = findViewById(R.id.img3);
         img4 = findViewById(R.id.img4);
-        suppSize = findViewById(R.id.spinner_size);
-        suppStatus = findViewById(R.id.spinner_status);
-        suppCate = findViewById(R.id.spinner_category);
-        suppType = findViewById(R.id.spinner_type);
+        service_Size = findViewById(R.id.spinner_size);
+        service_Status = findViewById(R.id.spinner_status);
+        service_Cate = findViewById(R.id.spinner_category);
+        service_Type = findViewById(R.id.spinner_type);
         storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference("Supplies_Image/");
-        suppliesDatabase = FirebaseDatabase.getInstance().getReference("Supplies");
+        storageReference = storage.getReference("Service_Image/");
+        serviceDatabase = FirebaseDatabase.getInstance().getReference("Service");
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
         FetchSpinnerCategory();
         FectchSpinnerSize();
         FectchSpinnerStatus();
         FetchSpinnerType();
-        img_back_add_supply.setOnClickListener(view -> {finish();});
+        img_back_add_service.setOnClickListener(view -> {finish();});
         img1.setOnClickListener(view -> openImageChooser(0));
         img2.setOnClickListener(view -> openImageChooser(1));
         img3.setOnClickListener(view -> openImageChooser(2));
         img4.setOnClickListener(view -> openImageChooser(3));
 
         suppSubmit.setOnClickListener(view -> {
-            if (imageUris != null && !Objects.requireNonNull(suppName.getText()).toString().isEmpty()&& !Objects.requireNonNull(suppCostPrice.getText()).toString().isEmpty()&& !Objects.requireNonNull(suppQuantity.getText()).toString().isEmpty()
-                    && !Objects.requireNonNull(suppDescription.getText()).toString().isEmpty()&& !Objects.requireNonNull(suppSellPrice.getText()).toString().isEmpty()) {
-                uploadImageAndAddSupplies();
+            if (imageUris != null && !Objects.requireNonNull(service_name.getText()).toString().isEmpty()&& !Objects.requireNonNull(service_SellPrice.getText()).toString().isEmpty()&& !Objects.requireNonNull(service_time.getText()).toString().isEmpty()
+                    && !Objects.requireNonNull(service_Description.getText()).toString().isEmpty()) {
+                uploadImageAndAddService();
             } else {
-                Toast.makeText(SuppliesActivity.this, "Please select correct", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ServiceActivity.this, "Please select correct", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
-
-    private void uploadImageAndAddSupplies() {
+    private void uploadImageAndAddService() {
         progressDialog.show();
         List<String> imageUrls = new ArrayList<>();
 
@@ -117,17 +111,16 @@ public class SuppliesActivity extends AppCompatActivity {
                         imageUrls.add(uri.toString()); // Collect image URLs
                         // Check if all images are uploaded
                         if (imageUrls.size() == countNonNullImageUris()) {
-                            addSuppliesToDatabase(imageUrls); // Call method to save supplies data
+                            addServiceToDatabase(imageUrls); // Call method to save supplies data
                         }
                     });
                 }).addOnFailureListener(e -> {
                     progressDialog.dismiss();
-                    Toast.makeText(SuppliesActivity.this, "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ServiceActivity.this, "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
             }
         }
     }
-
     private int countNonNullImageUris() {
         int count = 0;
         for (Uri uri : imageUris) {
@@ -135,44 +128,37 @@ public class SuppliesActivity extends AppCompatActivity {
         }
         return count;
     }
+    private void addServiceToDatabase(List<String> imageUrls) {
+        String service_Id = serviceDatabase.push().getKey(); // Generate unique ID
 
-    private void addSuppliesToDatabase(List<String> imageUrls) {
-        String supplyId = suppliesDatabase.push().getKey(); // Generate unique ID
-        DecimalFormat df = new DecimalFormat("0");
-        Supplies supplies= new Supplies();
-        supplies.setSupplies_id(supplyId);
-        supplies.setName( Objects.requireNonNull(suppName.getText()).toString());
-        double sellPrice = Double.valueOf(Objects.requireNonNull(suppSellPrice.getText()).toString());
-        double costPrice = Double.valueOf(Objects.requireNonNull(suppCostPrice.getText()).toString());
-// Format to no decimal places using DecimalFormat
-        supplies.setSell_price(Double.valueOf(df.format(sellPrice)));
-        supplies.setCost_price(Double.valueOf(df.format(costPrice)));
-        supplies.setQuantity(Integer.valueOf(Objects.requireNonNull(suppQuantity.getText()).toString()));
-        supplies.setDescription(Objects.requireNonNull(suppDescription.getText()).toString());
-        supplies.setSize( suppSize.getSelectedItem().toString());
-        supplies.setStatus( suppStatus.getSelectedItemPosition());
-        supplies.setCategory(suppCate.getSelectedItem().toString());
-        supplies.setType( suppType.getSelectedItem().toString());
-        supplies.setImageUrls(imageUrls);
+        Service service= new Service();
+        service.setService_id(service_Id);
+        service.setName( Objects.requireNonNull(service_name.getText()).toString());
+        service.setSell_price( Double.valueOf(Objects.requireNonNull(service_SellPrice.getText()).toString()));
+        service.setTime_estimate(Integer.valueOf(Objects.requireNonNull(service_time.getText()).toString()));
+        service.setDescription(Objects.requireNonNull(service_Description.getText()).toString());
+        service.setSize( service_Size.getSelectedItem().toString());
+        service.setStatus( service_Status.getSelectedItemPosition());
+        service.setCategory(service_Cate.getSelectedItem().toString());
+        service.setType( service_Type.getSelectedItem().toString());
+        service.setImageUrls(imageUrls);
 
 
-        suppliesDatabase.child(supplyId).setValue(supplies).addOnCompleteListener(task -> {
+        serviceDatabase.child(service_Id).setValue(service).addOnCompleteListener(task -> {
             progressDialog.dismiss();
             if (task.isSuccessful()) {
-                Toast.makeText(SuppliesActivity.this, "Supply added successfully!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ServiceActivity.this, "Service added successfully!", Toast.LENGTH_SHORT).show();
                 clearInputFields(); // Optional: clear the input fields after successful upload
             } else {
-                Toast.makeText(SuppliesActivity.this, "Failed to add supply: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(ServiceActivity.this, "Failed to add Service: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
-
     private void clearInputFields() {
-        suppName.setText("");
-        suppSellPrice.setText("");
-        suppCostPrice.setText("");
-        suppQuantity.setText("");
-        suppDescription.setText("");
+        service_name.setText("");
+        service_SellPrice.setText("");
+        service_time.setText("");
+        service_Description.setText("");
         for (int i = 0; i < imageUris.length; i++) {
             imageUris[i] = null; // Clear image URIs
             switch (i) {
@@ -207,9 +193,9 @@ public class SuppliesActivity extends AppCompatActivity {
                     }
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(SuppliesActivity.this, android.R.layout.simple_spinner_item, typeList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(ServiceActivity.this, android.R.layout.simple_spinner_item, typeList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                suppType.setAdapter(adapter);
+                service_Type.setAdapter(adapter);
             }
 
             @Override
@@ -235,9 +221,9 @@ public class SuppliesActivity extends AppCompatActivity {
                     }
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(SuppliesActivity.this, android.R.layout.simple_spinner_item, cateList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(ServiceActivity.this, android.R.layout.simple_spinner_item, cateList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                suppCate.setAdapter(adapter);
+                service_Cate.setAdapter(adapter);
             }
 
             @Override
@@ -248,26 +234,24 @@ public class SuppliesActivity extends AppCompatActivity {
     }
 
     private void FectchSpinnerSize() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(SuppliesActivity.this,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ServiceActivity.this,
                 R.array.size_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        suppSize.setAdapter(adapter);
+        service_Size.setAdapter(adapter);
     }
 
     private void FectchSpinnerStatus() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(SuppliesActivity.this,
-                R.array.suplies_status, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(ServiceActivity.this,
+                R.array.service_status, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        suppStatus.setAdapter(adapter);
+        service_Status.setAdapter(adapter);
     }
-
     private void openImageChooser(int index) {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST + index);
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -294,5 +278,4 @@ public class SuppliesActivity extends AppCompatActivity {
             }
         }
     }
-
 }

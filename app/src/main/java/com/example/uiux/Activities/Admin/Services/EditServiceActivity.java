@@ -1,4 +1,4 @@
-package com.example.uiux.Activities.Admin.Supplies;
+package com.example.uiux.Activities.Admin.Services;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -14,11 +14,14 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
-import com.example.uiux.Activities.Admin.Category.EditCategoryActivity;
+import com.example.uiux.Activities.Admin.Supplies.EditSuppliesActivity;
 import com.example.uiux.Model.Category;
+import com.example.uiux.Model.Service;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Type;
 import com.example.uiux.R;
@@ -37,95 +40,80 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
-public class EditSuppliesActivity extends AppCompatActivity {
-
-    private ImageView img1, img2, img3, img4, img_back_edit_supply;
-    private TextInputEditText suppName, suppSellPrice, suppCostPrice, suppQuantity, suppDescription;
-    private Spinner suppSize, suppStatus, suppCate, suppType;
-    private MaterialButton suppSave;
+public class EditServiceActivity extends AppCompatActivity {
+    private ImageView img1, img2, img3, img4, img_back_edit_service;
+    private TextInputEditText serviceName, serviceSellPrice,  serviceTime, serviceDescription;
+    private Spinner serviceSize, serviceStatus, serviceCate, serviceType;
+    private MaterialButton serviceSave;
     private static final int PICK_IMAGE_REQUEST = 100;
-    private String supplies_id;
+    private String service_id;
     private FirebaseStorage storage;
-    private DatabaseReference suppliesRef;
+    private DatabaseReference serviceRef;
     private Uri[] imageUris = new Uri[4];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
-        setContentView(R.layout.activity_edit_supplies);
-
-        suppName = findViewById(R.id.edt_name);
-        suppSellPrice = findViewById(R.id.edt_sell_price);
-        suppCostPrice = findViewById(R.id.edt_cost_price);
-        suppQuantity = findViewById(R.id.edt_quantity);
-        suppSave = findViewById(R.id.btnSave);
-        suppDescription = findViewById(R.id.edt_description);
-        img_back_edit_supply = findViewById(R.id.img_back_edit_supply);
+        setContentView(R.layout.activity_edit_service);
+        serviceName = findViewById(R.id.edt_name);
+        serviceSellPrice = findViewById(R.id.edt_sell_price);
+        serviceTime = findViewById(R.id.edt_time);
+        serviceSave = findViewById(R.id.btnSubmit);
+        serviceDescription = findViewById(R.id.edt_description);
+        img_back_edit_service = findViewById(R.id.img_back_edit_service);
         img1 = findViewById(R.id.img1);
         img2 = findViewById(R.id.img2);
         img3 = findViewById(R.id.img3);
         img4 = findViewById(R.id.img4);
-        suppSize = findViewById(R.id.spinner_size);
-        suppStatus = findViewById(R.id.spinner_status);
-        suppCate = findViewById(R.id.spinner_category);
-        suppType = findViewById(R.id.spinner_type);
+        serviceSize = findViewById(R.id.spinner_size);
+        serviceStatus = findViewById(R.id.spinner_status);
+        serviceCate = findViewById(R.id.spinner_category);
+        serviceType = findViewById(R.id.spinner_type);
 
         // Load spinners
         FetchSpinnerCategory();
         FectchSpinnerSize();
         FectchSpinnerStatus();
         FetchSpinnerType();
-        img_back_edit_supply.setOnClickListener(view -> {finish();});
+        img_back_edit_service.setOnClickListener(view -> {finish();});
         img1.setOnClickListener(view -> openImageChooser(0));
         img2.setOnClickListener(view -> openImageChooser(1));
         img3.setOnClickListener(view -> openImageChooser(2));
         img4.setOnClickListener(view -> openImageChooser(3));
-
-        supplies_id = getIntent().getStringExtra("supplies_id");
-        Log.e("supplies ID",supplies_id);
-        suppliesRef = FirebaseDatabase.getInstance().getReference("Supplies").child(supplies_id);
+        service_id = getIntent().getStringExtra("service_id");
+        serviceRef = FirebaseDatabase.getInstance().getReference("Service").child(service_id);
         storage = FirebaseStorage.getInstance();
-        loadSuppliesData();
+        loadServiceData();
 
-       suppSave.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               saveSuppliesData();
-           }
-       });
+        serviceSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveServiceData();
+            }
+        });
+
     }
+    private void saveServiceData() {
+        String updatedName = serviceName.getText().toString().trim();
+        Double updateSellPrice= Double.valueOf(serviceSellPrice.getText().toString().trim());
+        Integer updateTime = Integer.valueOf(serviceTime.getText().toString().trim());
+        String updateDescription =serviceDescription.getText().toString().trim();
 
-    private void saveSuppliesData() {
-        String updatedName = suppName.getText().toString().trim();
-        Double updateSellPrice= Double.valueOf(suppSellPrice.getText().toString().trim());
-        Double updateCostPrice= Double.valueOf(suppCostPrice.getText().toString().trim());
-        Integer updateQuantity = Integer.valueOf(suppQuantity.getText().toString().trim());
-        String updateDescription =suppDescription.getText().toString().trim();
-
-//        supplies.setSize( suppSize.getSelectedItem().toString());
-//        supplies.setStatus( suppStatus.getSelectedItemPosition());
-//        supplies.setCategory(suppCate.getSelectedItem().toString());
-//        supplies.setType( suppType.getSelectedItem().toString());
-//        supplies.setImageUrls(imageUrls);
         // Cập nhật dữ liệu cơ bản của danh mục (trừ ảnh)
-        suppliesRef.child("name").setValue(updatedName);
-        suppliesRef.child("status").setValue(suppStatus.getSelectedItemPosition());
-        suppliesRef.child("category").setValue(suppCate.getSelectedItem().toString());
-        suppliesRef.child("cost_price").setValue(updateCostPrice);
-        suppliesRef.child("description").setValue(updateDescription);
-       // suppliesRef.child("imageUrls").setValue(updateDescription);
-        suppliesRef.child("quantity").setValue(updateQuantity);
-        suppliesRef.child("sell_price").setValue(updateSellPrice);
-        suppliesRef.child("size ").setValue( suppSize.getSelectedItem().toString());
-        suppliesRef.child("type ").setValue(suppType.getSelectedItem().toString());
+        serviceRef.child("name").setValue(updatedName);
+        serviceRef.child("status").setValue(serviceStatus.getSelectedItemPosition());
+        serviceRef.child("category").setValue(serviceCate.getSelectedItem().toString());
+        serviceRef.child("description").setValue(updateDescription);
+        // suppliesRef.child("imageUrls").setValue(updateDescription);
+        serviceRef.child("time_estimate").setValue(updateTime);
+        serviceRef.child("sell_price").setValue(updateSellPrice);
+        serviceRef.child("size").setValue( serviceSize.getSelectedItem().toString());
+        serviceRef.child("type").setValue(serviceType.getSelectedItem().toString());
 
         uploadImageToStorage();
     }
-
     private void uploadImageToStorage() {
         // Tạo danh sách các URL ảnh mới
         List<String> newImageUrls = new ArrayList<>();
@@ -135,8 +123,8 @@ public class EditSuppliesActivity extends AppCompatActivity {
             Uri selectedImageUri = imageUris[i];
             if (selectedImageUri != null) {
                 // Tạo một StorageReference cho mỗi ảnh
-                String imageName = "supplies_" + supplies_id + "_" + i + ".jpg";
-                StorageReference storageRef = storage.getReference().child("supplies/" + imageName);
+                String imageName = "service_" + service_id + "_" + i + ".jpg";
+                StorageReference storageRef = storage.getReference().child("service/" + imageName);
 
                 // Upload từng ảnh và lấy URL
                 int finalI = i; // Biến cuối cùng để sử dụng trong inner class
@@ -149,23 +137,21 @@ public class EditSuppliesActivity extends AppCompatActivity {
                                 // Kiểm tra nếu tất cả các hình ảnh đã được tải lên
                                 if (newImageUrls.size() == countSelectedImages()) {
                                     // Lưu danh sách URL vào Firebase
-                                    suppliesRef.child("imageUrls").setValue(newImageUrls)
+                                    serviceRef.child("imageUrls").setValue(newImageUrls)
                                             .addOnCompleteListener(task -> {
                                                 if (task.isSuccessful()) {
-                                                    Toast.makeText(EditSuppliesActivity.this, "Supplies updated successfully", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(EditServiceActivity.this, "Service updated successfully", Toast.LENGTH_SHORT).show();
                                                 } else {
-                                                    Toast.makeText(EditSuppliesActivity.this, "Failed to update image URLs", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(EditServiceActivity.this, "Failed to update image URLs", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                 }
                             });
                         })
-                        .addOnFailureListener(e -> Toast.makeText(EditSuppliesActivity.this, "Failed to upload image " + (finalI + 1), Toast.LENGTH_SHORT).show());
+                        .addOnFailureListener(e -> Toast.makeText(EditServiceActivity.this, "Failed to upload image " + (finalI + 1), Toast.LENGTH_SHORT).show());
             }
         }
     }
-
-    // Đếm số ảnh đã chọn
     private int countSelectedImages() {
         int count = 0;
         for (Uri imageUri : imageUris) {
@@ -175,68 +161,69 @@ public class EditSuppliesActivity extends AppCompatActivity {
         }
         return count;
     }
+    private void loadServiceData( ) {
+        serviceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Service service = snapshot.getValue(Service.class);
 
-    private void loadSuppliesData( ) {
-     suppliesRef.addListenerForSingleValueEvent(new ValueEventListener() {
-         @Override
-         public void onDataChange(@NonNull DataSnapshot snapshot) {
-             if (snapshot.exists()) {
-                 Supplies supplies = snapshot.getValue(Supplies.class);
-                 DecimalFormat df = new DecimalFormat("0");
-
-                 suppName.setText(supplies.getName());
-                 suppSellPrice.setText(String.valueOf(df.format(supplies.getSell_price())));
-                 suppCostPrice.setText(String.valueOf(df.format(supplies.getCost_price())));
-                 suppQuantity.setText(String.valueOf(supplies.getQuantity()));
-                 suppDescription.setText(supplies.getDescription());
-                 int status = supplies.getStatus();
-                 suppStatus.setSelection(status);
-                 // Khi load dữ liệu từ Firebase
-                 String sizeFromDb = supplies.getSize(); // Giả sử lấy được giá trị "small"
-                 setSpinnerValue(suppSize, sizeFromDb);
-                 String categoryFromDb = supplies.getCategory(); // Giả sử lấy được tên danh mục từ Firebase
-                 int index=getPositionByName(suppCate,categoryFromDb);
-                 suppCate.setSelection(index);
-                 String typeFromDb = supplies.getType();
-                 int index2=getPositionByName(suppType,typeFromDb);
-                 suppType.setSelection(index2);
-
-                 if (supplies.getImageUrls()!=null)
-                 {
-                     if(supplies.getImageUrls().get(0)!=null)
-                     {
-                         Glide.with(EditSuppliesActivity.this).load(supplies.getImageUrls().get(0)).into(img1);
-                     }
-                     if(supplies.getImageUrls().get(1)!=null)
-                     {
-                         Glide.with(EditSuppliesActivity.this).load(supplies.getImageUrls().get(1)).into(img2);
-                     }
-                     if(supplies.getImageUrls().get(2)!=null)
-                     {
-                         Glide.with(EditSuppliesActivity.this).load(supplies.getImageUrls().get(2)).into(img3);
-                     }
-                     if(supplies.getImageUrls().get(3)!=null)
-                     {
-                         Glide.with(EditSuppliesActivity.this).load(supplies.getImageUrls().get(3)).into(img4);
-                     }
-                 }
+                    serviceName.setText(service.getName());
+                    DecimalFormat df = new DecimalFormat("0");
+                    serviceSellPrice.setText(String.valueOf(df.format(service.getSell_price())));
+                    serviceTime.setText(String.valueOf(service.getTime_estimate()));
+                    serviceDescription.setText(service.getDescription());
+                    int status = service.getStatus();  // Giả sử status trả về là 0 hoặc 1
+                    serviceStatus.setSelection(status);
+                    // Khi load dữ liệu từ Firebase
+                    String sizeFromDb = service.getSize(); // Giả sử lấy được giá trị "small"
+                    setSpinnerValue(serviceSize, sizeFromDb);
+                    String categoryFromDb = service.getCategory(); // Giả sử lấy được tên danh mục từ Firebase
+                    int index=getPositionByName(serviceCate,categoryFromDb);
+                    serviceCate.setSelection(index);
+                    String typeFromDb = service.getType();
+                    int index2=getPositionByName(serviceType,typeFromDb);
+                    serviceType.setSelection(index2);
 
 
-             }
-         }
+                    if (service.getImageUrls()!=null)
+                    {
+                        if(service.getImageUrls().get(0)!=null)
+                        {
+                            Glide.with(EditServiceActivity.this).load(service.getImageUrls().get(0)).into(img1);
+                        }
+                        if(service.getImageUrls().get(1)!=null)
+                        {
+                            Glide.with(EditServiceActivity.this).load(service.getImageUrls().get(1)).into(img2);
+                        }
+                        if(service.getImageUrls().get(2)!=null)
+                        {
+                            Glide.with(EditServiceActivity.this).load(service.getImageUrls().get(2)).into(img3);
+                        }
+                        if(service.getImageUrls().get(3)!=null)
+                        {
+                            Glide.with(EditServiceActivity.this).load(service.getImageUrls().get(3)).into(img4);
+                        }
+                    }
 
-         @Override
-         public void onCancelled(@NonNull DatabaseError error) {
 
-         }
-     });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
-
     private void setSpinnerValue(Spinner spinner, String value) {
-        ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
-        int position = adapter.getPosition(value);
-        spinner.setSelection(position);
+        ArrayAdapter<CharSequence> adapter = (ArrayAdapter<CharSequence>) spinner.getAdapter();
+        int position = adapter.getPosition(value); // Tìm vị trí của giá trị trong adapter
+        if (position >= 0) {
+            spinner.setSelection(position); // Set giá trị vào Spinner
+        }
     }
+
     private int getPositionByName(Spinner spinner,String name) {
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner.getAdapter();
         if (adapter != null) {
@@ -248,6 +235,7 @@ public class EditSuppliesActivity extends AppCompatActivity {
         }
         return -1; // Return -1 if the item is not found
     }
+
 
 
     private void openImageChooser(int index) {
@@ -283,17 +271,17 @@ public class EditSuppliesActivity extends AppCompatActivity {
         }
     }
     private void FectchSpinnerSize() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditSuppliesActivity.this,
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditServiceActivity.this,
                 R.array.size_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        suppSize.setAdapter(adapter);
+        serviceSize.setAdapter(adapter);
     }
 
     private void FectchSpinnerStatus() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditSuppliesActivity.this,
-                R.array.suplies_status, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditServiceActivity.this,
+                R.array.service_status, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        suppStatus.setAdapter(adapter);
+        serviceStatus.setAdapter(adapter);
     }
     private void FetchSpinnerType() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -311,9 +299,9 @@ public class EditSuppliesActivity extends AppCompatActivity {
                     }
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(EditSuppliesActivity.this, android.R.layout.simple_spinner_item, typeList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(EditServiceActivity.this, android.R.layout.simple_spinner_item, typeList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                suppType.setAdapter(adapter);
+                serviceType.setAdapter(adapter);
             }
 
             @Override
@@ -339,9 +327,9 @@ public class EditSuppliesActivity extends AppCompatActivity {
                     }
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(EditSuppliesActivity.this, android.R.layout.simple_spinner_item, cateList);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(EditServiceActivity.this, android.R.layout.simple_spinner_item, cateList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                suppCate.setAdapter(adapter);
+                serviceCate.setAdapter(adapter);
             }
 
             @Override
@@ -350,6 +338,4 @@ public class EditSuppliesActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }

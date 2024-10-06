@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -129,11 +130,17 @@ public class SuppliesImportActivity extends AppCompatActivity {
     }
 
     private void submitProductImport() {
+        DecimalFormat df = new DecimalFormat("0");
         String selectedSupply = spinnerSupplies.getSelectedItem().toString();
         String quantityStr = edtQuantity.getText().toString();
         String remainingQuantityStr = edtRemainingQuantity.getText().toString();
         String importPriceStr = edtImportPrice.getText().toString();
         String importDateStr = edtImportDate.getText().toString();
+        double importPrice = Double.parseDouble(importPriceStr);
+        String formattedImportPrice = df.format(importPrice); // Format the import price
+
+// Convert formatted price back to Double for storage
+        double formattedPriceValue = Double.valueOf(formattedImportPrice);
 
         if (quantityStr.isEmpty() || remainingQuantityStr.isEmpty() || importPriceStr.isEmpty() || importDateStr.isEmpty()) {
             Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
@@ -158,7 +165,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
                 selectedSupply,
                 quantity,
                 remainingQuantity,
-                Double.parseDouble(importPriceStr),
+                formattedPriceValue,
                 importDateStr // Lưu ngày đã được format
         );
 

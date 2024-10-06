@@ -10,6 +10,8 @@ import androidx.core.content.ContextCompat;
 
 import com.example.uiux.Activities.Admin.Category.CategoryActivity;
 import com.example.uiux.Activities.Admin.Category.UpdateCategoryActivity;
+import com.example.uiux.Activities.Admin.Services.ServiceActivity;
+import com.example.uiux.Activities.Admin.Services.UpdateServiceActivity;
 import com.example.uiux.Activities.Admin.Supplies.UpdateSuppliesActivity;
 import com.example.uiux.Activities.Admin.Supplies.SuppliesActivity;
 import com.example.uiux.Activities.Admin.Supplies.SuppliesImportActivity;
@@ -27,7 +29,7 @@ import java.util.UUID;
 
 public class MainActivityAdmin extends AppCompatActivity {
 
-    MaterialCardView category_btn,type_btn,supplies_btn,supplies_import;
+    MaterialCardView category_btn,type_btn,supplies_btn,supplies_import,service_btn;
     DatabaseReference suppliesRef;
     DatabaseReference suppliesImageRef;
     DatabaseReference suppliesImportRef;
@@ -52,6 +54,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         type_btn=findViewById(R.id.type);
         supplies_btn=findViewById(R.id.supplies);
         supplies_import=findViewById(R.id.supplies_import);
+        service_btn=findViewById(R.id.service);
 
         category_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +88,13 @@ public class MainActivityAdmin extends AppCompatActivity {
             Intent intent=new Intent(MainActivityAdmin.this, SuppliesImportActivity.class);
             startActivity(intent);
 
+        });
+        service_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivityAdmin.this, UpdateServiceActivity.class);
+                startActivity(intent);
+            }
         });
     }
 }

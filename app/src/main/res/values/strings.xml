@@ -59,4 +59,8 @@
         <item>Mới về</item>
         <item>Còn hàng</item>
     </string-array>
+    <string-array name="service_status">
+        <item>Đang cung cấp</item>
+        <item>Ngừng cung cấp</item>
+    </string-array>
 </resources>
