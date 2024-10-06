@@ -54,6 +54,7 @@
         <item>Large</item>
     </string-array>
     <string-array name="suplies_status">
+        <item>Ngừng kinh doanh</item>
         <item>Hết hàng</item>
         <item>Tạm ngưng</item>
         <item>Mới về</item>

@@ -211,7 +211,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
                 final Map<String, String> suppMap = new HashMap<>(); // Lưu type_id và type
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Supplies supplies = snapshot.getValue(Supplies.class);
-                    if (supplies != null && supplies.getStatus() == 0) {
+                    if (supplies != null && supplies.getStatus() != 0 ) {
                         suppList.add(supplies.getName());
                         suppMap.put(supplies.getName(), supplies.getSupplies_id());
                     }
