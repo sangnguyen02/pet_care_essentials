@@ -169,6 +169,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
+                    android:text="0"
+                    android:enabled="false"
                     android:inputType="numberDecimal"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size" />
@@ -188,7 +190,9 @@
                     android:id="@+id/edt_quantity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="0"
                     android:inputType="number"
+                    android:enabled="false"
                     android:textColor="@color/black"
                     android:textSize="@dimen/text_size" />
             </com.google.android.material.textfield.TextInputLayout>

@@ -41,6 +41,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapterSupplies;
     private ArrayList<String> suppliesList;
     private DatabaseReference databaseReference;
+    private  String suppliesId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +63,6 @@ public class SuppliesImportActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String selectedSupply = suppliesList.get(position);
-                Log.e("Selected ", selectedSupply);
                 loadRemainingQuantity(selectedSupply);
             }
 
@@ -112,7 +112,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
                         Supplies supply = dataSnapshot.getValue(Supplies.class);
                         if (supply != null) {
                             int remainingQuantity = supply.getQuantity(); // Lấy số lượng còn lại
-                            Log.e("Remaining Quantity ", String.valueOf(remainingQuantity));
+                            suppliesId=supply.getSupplies_id();
                             edtRemainingQuantity.setText(String.valueOf(remainingQuantity)); // Hiển thị số lượng còn lại
                         }
                     }
@@ -150,11 +150,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
         int quantity = Integer.parseInt(quantityStr);
         int remainingQuantity = Integer.parseInt(remainingQuantityStr);
 
-        // Kiểm tra xem số lượng nhập vào có hợp lệ không
-        if (quantity > remainingQuantity) {
-            Toast.makeText(this, "Quantity cannot exceed remaining quantity", Toast.LENGTH_SHORT).show();
-            return;
-        }
+
 
         // Lưu dữ liệu nhập vào Firebase
         DatabaseReference importsRef = FirebaseDatabase.getInstance().getReference("Supplies_Imports");
@@ -162,6 +158,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
 
         Supplies_Import suppliesImport = new Supplies_Import(
                 importId,
+                suppliesId,
                 selectedSupply,
                 quantity,
                 remainingQuantity,
@@ -172,21 +169,26 @@ public class SuppliesImportActivity extends AppCompatActivity {
         importsRef.child(importId).setValue(suppliesImport)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(SuppliesImportActivity.this, "Product imported successfully", Toast.LENGTH_SHORT).show();
-                    updateSupplyQuantity(selectedSupply, remainingQuantity + quantity); // Cập nhật số lượng sản phẩm
+                    updateSupplyQuantityAndCostPrice(selectedSupply, remainingQuantity + quantity, formattedPriceValue); // Cập nhật số lượng và giá cost price
                 })
                 .addOnFailureListener(e -> Toast.makeText(SuppliesImportActivity.this, "Failed to import product", Toast.LENGTH_SHORT).show());
+
     }
 
 
-    private void updateSupplyQuantity(String selectedSupply, int newQuantity) {
+    private void updateSupplyQuantityAndCostPrice(String selectedSupply, int newQuantity, double importPrice) {
         databaseReference.orderByChild("name").equalTo(selectedSupply).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        dataSnapshot.getRef().child("quantity").setValue(newQuantity)
-                                .addOnSuccessListener(aVoid -> Log.e("Firebase", "Supply quantity updated successfully"))
-                                .addOnFailureListener(e -> Log.e("Firebase", "Failed to update supply quantity"));
+                        Map<String, Object> updates = new HashMap<>();
+                        updates.put("quantity", newQuantity);
+                        updates.put("cost_price", importPrice); // Cập nhật giá cost price với giá import price
+
+                        dataSnapshot.getRef().updateChildren(updates)
+                                .addOnSuccessListener(aVoid -> Log.e("Firebase", "Supply quantity and cost price updated successfully"))
+                                .addOnFailureListener(e -> Log.e("Firebase", "Failed to update supply quantity or cost price"));
                     }
                 } else {
                     Log.e("Firebase", "Supply not found.");
@@ -199,6 +201,8 @@ public class SuppliesImportActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private void FetchSpinnerSupplies() {
         suppliesList = new ArrayList<>(); // Khởi tạo suppliesList

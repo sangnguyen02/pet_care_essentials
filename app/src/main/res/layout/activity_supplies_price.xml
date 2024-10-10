@@ -1,0 +1,35 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+
+    <Spinner
+        android:id="@+id/spinner_size"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        />
+
+    <EditText
+        android:id="@+id/edt_sell_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:hint="Sell Price"/>
+
+    <EditText
+        android:id="@+id/edt_effective_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Effective Date (yyyy-mm-dd)"/>
+
+    <Button
+        android:id="@+id/btn_add_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Price"/>
+
+</LinearLayout>

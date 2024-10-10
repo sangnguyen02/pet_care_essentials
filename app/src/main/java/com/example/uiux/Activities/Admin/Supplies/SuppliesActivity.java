@@ -23,6 +23,7 @@ import com.example.uiux.Activities.Admin.Category.CategoryActivity;
 import com.example.uiux.Activities.Admin.Category.UpdateCategoryActivity;
 import com.example.uiux.Model.Category;
 import com.example.uiux.Model.Supplies;
+import com.example.uiux.Model.Supplies_Price;
 import com.example.uiux.Model.Type;
 import com.example.uiux.R;
 import com.google.android.material.button.MaterialButton;
@@ -36,7 +37,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +59,7 @@ public class SuppliesActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private DatabaseReference suppliesDatabase;
+    private double supply_sell_price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -136,36 +140,95 @@ public class SuppliesActivity extends AppCompatActivity {
         return count;
     }
 
-    private void addSuppliesToDatabase(List<String> imageUrls) {
-        String supplyId = suppliesDatabase.push().getKey(); // Generate unique ID
-        DecimalFormat df = new DecimalFormat("0");
-        Supplies supplies= new Supplies();
-        supplies.setSupplies_id(supplyId);
-        supplies.setName( Objects.requireNonNull(suppName.getText()).toString());
-        double sellPrice = Double.valueOf(Objects.requireNonNull(suppSellPrice.getText()).toString());
-        double costPrice = Double.valueOf(Objects.requireNonNull(suppCostPrice.getText()).toString());
-// Format to no decimal places using DecimalFormat
-        supplies.setSell_price(Double.valueOf(df.format(sellPrice)));
-        supplies.setCost_price(Double.valueOf(df.format(costPrice)));
-        supplies.setQuantity(Integer.valueOf(Objects.requireNonNull(suppQuantity.getText()).toString()));
-        supplies.setDescription(Objects.requireNonNull(suppDescription.getText()).toString());
-        supplies.setSize( suppSize.getSelectedItem().toString());
-        supplies.setStatus( suppStatus.getSelectedItemPosition());
-        supplies.setCategory(suppCate.getSelectedItem().toString());
-        supplies.setType( suppType.getSelectedItem().toString());
-        supplies.setImageUrls(imageUrls);
+//    private void addSuppliesToDatabase(List<String> imageUrls) {
+//        String supplyId = suppliesDatabase.push().getKey(); // Generate unique ID
+//        DecimalFormat df = new DecimalFormat("0");
+//        Supplies supplies= new Supplies();
+//        supplies.setSupplies_id(supplyId);
+//        supplies.setName( Objects.requireNonNull(suppName.getText()).toString());
+//        double sellPrice = Double.valueOf(Objects.requireNonNull(suppSellPrice.getText()).toString());
+//        double costPrice = Double.valueOf(Objects.requireNonNull(suppCostPrice.getText()).toString());
+//// Format to no decimal places using DecimalFormat
+//        supplies.setSell_price(Double.valueOf(df.format(sellPrice)));
+//        supplies.setCost_price(Double.valueOf(df.format(costPrice)));
+//        supplies.setQuantity(Integer.valueOf(Objects.requireNonNull(suppQuantity.getText()).toString()));
+//        supplies.setDescription(Objects.requireNonNull(suppDescription.getText()).toString());
+//        supplies.setSize( suppSize.getSelectedItem().toString());
+//        supplies.setStatus( suppStatus.getSelectedItemPosition());
+//        supplies.setCategory(suppCate.getSelectedItem().toString());
+//        supplies.setType( suppType.getSelectedItem().toString());
+//        supplies.setImageUrls(imageUrls);
+//
+//
+//        suppliesDatabase.child(supplyId).setValue(supplies).addOnCompleteListener(task -> {
+//            progressDialog.dismiss();
+//            if (task.isSuccessful()) {
+//                Toast.makeText(SuppliesActivity.this, "Supply added successfully!", Toast.LENGTH_SHORT).show();
+//                clearInputFields(); // Optional: clear the input fields after successful upload
+//            } else {
+//                Toast.makeText(SuppliesActivity.this, "Failed to add supply: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+private void addSuppliesToDatabase(List<String> imageUrls) {
+    String supplyId = suppliesDatabase.push().getKey(); // Generate unique ID
+    DecimalFormat df = new DecimalFormat("0");
+    Supplies supplies= new Supplies();
+    supplies.setSupplies_id(supplyId);
+    supplies.setName( Objects.requireNonNull(suppName.getText()).toString());
+    double sellPrice = Double.valueOf(Objects.requireNonNull(suppSellPrice.getText()).toString());
+    double costPrice = Double.valueOf(Objects.requireNonNull(suppCostPrice.getText()).toString());
+    // Format to no decimal places using DecimalFormat
+    supplies.setSell_price(Double.valueOf(df.format(sellPrice)));
+    supplies.setCost_price(Double.valueOf(df.format(costPrice)));
+    supplies.setQuantity(Integer.valueOf(Objects.requireNonNull(suppQuantity.getText()).toString()));
+    supplies.setDescription(Objects.requireNonNull(suppDescription.getText()).toString());
+    supplies.setSize( suppSize.getSelectedItem().toString());
+    supplies.setStatus( suppStatus.getSelectedItemPosition());
+    supplies.setCategory(suppCate.getSelectedItem().toString());
+    supplies.setType( suppType.getSelectedItem().toString());
+    supplies.setImageUrls(imageUrls);
 
+    suppliesDatabase.child(supplyId).setValue(supplies).addOnCompleteListener(task -> {
+        progressDialog.dismiss();
+        if (task.isSuccessful()) {
+            Toast.makeText(SuppliesActivity.this, "Supply added successfully!", Toast.LENGTH_SHORT).show();
+            // Sau khi thêm sản phẩm thành công, thêm giá của sản phẩm vào bảng Supplies_Price
+            addSuppliesPriceToDatabase(supplyId, sellPrice);
 
-        suppliesDatabase.child(supplyId).setValue(supplies).addOnCompleteListener(task -> {
-            progressDialog.dismiss();
+            clearInputFields(); // Optional: clear the input fields after successful upload
+        } else {
+            Toast.makeText(SuppliesActivity.this, "Failed to add supply: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    });
+}
+    private void addSuppliesPriceToDatabase(String supplyId, double sellPrice) {
+        DatabaseReference suppliesPriceDatabase = FirebaseDatabase.getInstance().getReference("Supplies_Price");
+        String suppliesPriceId = suppliesPriceDatabase.push().getKey(); // Tạo ID duy nhất cho bảng Supplies_Price
+
+        // Tạo đối tượng Supplies_Price
+        Supplies_Price suppliesPrice = new Supplies_Price();
+        suppliesPrice.setSupplies_price_id(suppliesPriceId);
+        suppliesPrice.setSupplies_id(supplyId);
+        suppliesPrice.setSupply(Objects.requireNonNull(suppName.getText()).toString());
+        suppliesPrice.setSell_price(sellPrice);
+
+        // Bạn có thể lấy ngày hiện tại để làm ngày hiệu lực
+        // Định dạng ngày hiện tại theo hh:mm dd/MM/yyyy
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+        String formattedDate = dateFormat.format(new Date()); // Lấy ngày hiện tại và format
+        suppliesPrice.setEffective_date(formattedDate); // Lưu ngày định dạng
+
+        // Lưu vào Firebase Database
+        suppliesPriceDatabase.child(suppliesPriceId).setValue(suppliesPrice).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Toast.makeText(SuppliesActivity.this, "Supply added successfully!", Toast.LENGTH_SHORT).show();
-                clearInputFields(); // Optional: clear the input fields after successful upload
+                Toast.makeText(SuppliesActivity.this, "Supplies price added successfully!", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(SuppliesActivity.this, "Failed to add supply: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SuppliesActivity.this, "Failed to add supplies price: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
     private void clearInputFields() {
         suppName.setText("");

@@ -23,6 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.Admin.Supplies.SuppliesPriceActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.Admin.Services.UpdateServiceActivity"
             android:exported="false" />
         <activity
@@ -87,12 +90,12 @@
             android:exported="false" />
         <activity
             android:name=".Activities.EntryActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activities.User.MainActivityUser"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".Activities.SplashActivity"
             android:exported="true"
