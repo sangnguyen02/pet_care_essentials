@@ -1,25 +1,24 @@
 package com.example.uiux.Model;
 
-import java.util.Date;
+import java.util.List;
 
 public class Supplies_Import {
     private String supplies_import_id;
     private String supplies_name;
-    private  int quantity;
-    private int remaining_quantity;
-    private  double import_price;
+//    private  int quantity;
+//    private int remaining_quantity;
+//    private String import_price;
     private String import_date;
+    private List<Supplies_Detail> sizes;
 
     public Supplies_Import() {
     }
 
-    public Supplies_Import(String supplies_import_id, String supplies_name, int quantity, int remaining_quantity, double import_price, String import_date) {
+    public Supplies_Import(String supplies_import_id, String supplies_name, String import_date, List<Supplies_Detail> sizes) {
         this.supplies_import_id = supplies_import_id;
         this.supplies_name = supplies_name;
-        this.quantity = quantity;
-        this.remaining_quantity = remaining_quantity;
-        this.import_price = import_price;
         this.import_date = import_date;
+        this.sizes = sizes;
     }
 
     public String getSupplies_import_id() {
@@ -38,35 +37,18 @@ public class Supplies_Import {
         this.supplies_name = supplies_name;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
-    public int getRemaining_quantity() {
-        return remaining_quantity;
-    }
-
-    public void setRemaining_quantity(int remaining_quantity) {
-        this.remaining_quantity = remaining_quantity;
-    }
-
-    public double getImport_price() {
-        return import_price;
-    }
-
-    public void setImport_price(double import_price) {
-        this.import_price = import_price;
-    }
-
     public String getImport_date() {
         return import_date;
     }
 
     public void setImport_date(String import_date) {
         this.import_date = import_date;
+    }
+    public List<Supplies_Detail> getSuppliesDetail() {
+        return sizes;
+    }
+
+    public void setSuppliesDetail(List<Supplies_Detail> sizes) {
+        this.sizes = sizes;
     }
 }

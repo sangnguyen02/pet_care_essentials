@@ -71,21 +71,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"
-                android:text="Size:"
-                android:textSize="12sp" />
-
-            <TextView
-                android:id="@+id/tv_supply_size"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_flex"
-                android:text="sample"
-                android:textSize="11sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_bold"
                 android:text="Category:"
                 android:textSize="12sp" />
 

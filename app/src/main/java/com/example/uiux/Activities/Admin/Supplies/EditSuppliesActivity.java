@@ -42,8 +42,8 @@ import java.util.UUID;
 public class EditSuppliesActivity extends AppCompatActivity {
 
     private ImageView img1, img2, img3, img4, img_back_edit_supply;
-    private TextInputEditText suppName, suppSellPrice, suppCostPrice, suppQuantity, suppDescription;
-    private Spinner suppSize, suppStatus, suppCate, suppType;
+    private TextInputEditText suppName, suppQuantity, suppDescription;
+    private Spinner suppStatus, suppCate, suppType;
     private MaterialButton suppSave;
     private static final int PICK_IMAGE_REQUEST = 100;
     private String supplies_id;
@@ -59,8 +59,6 @@ public class EditSuppliesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_supplies);
 
         suppName = findViewById(R.id.edt_name);
-        suppSellPrice = findViewById(R.id.edt_sell_price);
-        suppCostPrice = findViewById(R.id.edt_cost_price);
         suppQuantity = findViewById(R.id.edt_quantity);
         suppSave = findViewById(R.id.btnSave);
         suppDescription = findViewById(R.id.edt_description);
@@ -69,14 +67,12 @@ public class EditSuppliesActivity extends AppCompatActivity {
         img2 = findViewById(R.id.img2);
         img3 = findViewById(R.id.img3);
         img4 = findViewById(R.id.img4);
-        suppSize = findViewById(R.id.spinner_size);
         suppStatus = findViewById(R.id.spinner_status);
         suppCate = findViewById(R.id.spinner_category);
         suppType = findViewById(R.id.spinner_type);
 
         // Load spinners
         FetchSpinnerCategory();
-        FectchSpinnerSize();
         FectchSpinnerStatus();
         FetchSpinnerType();
         img_back_edit_supply.setOnClickListener(view -> {finish();});
@@ -101,12 +97,9 @@ public class EditSuppliesActivity extends AppCompatActivity {
 
     private void saveSuppliesData() {
         String updatedName = suppName.getText().toString().trim();
-        Double updateSellPrice= Double.valueOf(suppSellPrice.getText().toString().trim());
-        Double updateCostPrice= Double.valueOf(suppCostPrice.getText().toString().trim());
         Integer updateQuantity = Integer.valueOf(suppQuantity.getText().toString().trim());
         String updateDescription =suppDescription.getText().toString().trim();
 
-//        supplies.setSize( suppSize.getSelectedItem().toString());
 //        supplies.setStatus( suppStatus.getSelectedItemPosition());
 //        supplies.setCategory(suppCate.getSelectedItem().toString());
 //        supplies.setType( suppType.getSelectedItem().toString());
@@ -115,12 +108,9 @@ public class EditSuppliesActivity extends AppCompatActivity {
         suppliesRef.child("name").setValue(updatedName);
         suppliesRef.child("status").setValue(suppStatus.getSelectedItemPosition());
         suppliesRef.child("category").setValue(suppCate.getSelectedItem().toString());
-        suppliesRef.child("cost_price").setValue(updateCostPrice);
         suppliesRef.child("description").setValue(updateDescription);
        // suppliesRef.child("imageUrls").setValue(updateDescription);
         suppliesRef.child("quantity").setValue(updateQuantity);
-        suppliesRef.child("sell_price").setValue(updateSellPrice);
-        suppliesRef.child("size ").setValue( suppSize.getSelectedItem().toString());
         suppliesRef.child("type ").setValue(suppType.getSelectedItem().toString());
 
         uploadImageToStorage();
@@ -185,15 +175,11 @@ public class EditSuppliesActivity extends AppCompatActivity {
                  DecimalFormat df = new DecimalFormat("0");
 
                  suppName.setText(supplies.getName());
-                 suppSellPrice.setText(String.valueOf(df.format(supplies.getSell_price())));
-                 suppCostPrice.setText(String.valueOf(df.format(supplies.getCost_price())));
                  suppQuantity.setText(String.valueOf(supplies.getQuantity()));
                  suppDescription.setText(supplies.getDescription());
                  int status = supplies.getStatus();
                  suppStatus.setSelection(status);
                  // Khi load dữ liệu từ Firebase
-                 String sizeFromDb = supplies.getSize(); // Giả sử lấy được giá trị "small"
-                 setSpinnerValue(suppSize, sizeFromDb);
                  String categoryFromDb = supplies.getCategory(); // Giả sử lấy được tên danh mục từ Firebase
                  int index=getPositionByName(suppCate,categoryFromDb);
                  suppCate.setSelection(index);
@@ -281,12 +267,6 @@ public class EditSuppliesActivity extends AppCompatActivity {
                 }
             }
         }
-    }
-    private void FectchSpinnerSize() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(EditSuppliesActivity.this,
-                R.array.size_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        suppSize.setAdapter(adapter);
     }
 
     private void FectchSpinnerStatus() {

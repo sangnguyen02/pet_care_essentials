@@ -7,16 +7,20 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
-
+import android.view.LayoutInflater;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Import;
+import com.example.uiux.Model.Supplies_Detail;
 import com.example.uiux.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,7 +28,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -32,14 +35,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 public class SuppliesImportActivity extends AppCompatActivity {
     private Spinner spinnerSupplies;
-    private TextInputEditText edtQuantity, edtRemainingQuantity, edtImportPrice, edtImportDate;
-    private Button btnSubmit;
-
-    private ArrayAdapter<String> adapterSupplies;
+    private TextInputEditText edtImportDate;
+    private ImageView img_back_import_supply;
+    private MaterialButton btnSubmit, btnAddSize;
+    private LinearLayout sizeQuantityContainer;
     private ArrayList<String> suppliesList;
+    private Map<String, String> suppliesMap;
+    private ArrayList<View> sizeQuantityViews = new ArrayList<>();
     private DatabaseReference databaseReference;
 
     @Override
@@ -47,23 +53,24 @@ public class SuppliesImportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_supplies_import);
-
+        img_back_import_supply = findViewById(R.id.img_back_import_supply);
         spinnerSupplies = findViewById(R.id.spinner_supplies);
-        edtQuantity = findViewById(R.id.edt_quantity);
-        edtRemainingQuantity = findViewById(R.id.edt_remaining_quantity);
-        edtImportPrice = findViewById(R.id.edt_import_price);
         edtImportDate = findViewById(R.id.edt_import_date);
         btnSubmit = findViewById(R.id.btn_submit);
+        btnAddSize = findViewById(R.id.btn_add_size);
+        sizeQuantityContainer = findViewById(R.id.size_quantity_container);
+        suppliesMap = new HashMap<>();
+        btnAddSize.setOnClickListener(v -> addSizeQuantityView());
+        img_back_import_supply.setOnClickListener(view -> finish());
 
         FetchSpinnerSupplies();
-
-        // Lắng nghe sự kiện chọn sản phẩm từ Spinner
         spinnerSupplies.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String selectedSupply = suppliesList.get(position);
-                Log.e("Selected ", selectedSupply);
-                loadRemainingQuantity(selectedSupply);
+                String selectedSupplyId = suppliesMap.get(selectedSupply); // Lấy ID từ suppliesMap
+                Log.e("Selected Supply: ", selectedSupply + " | ID: " + selectedSupplyId);
+                loadSupplyDetails(selectedSupplyId);
             }
 
             @Override
@@ -73,7 +80,16 @@ public class SuppliesImportActivity extends AppCompatActivity {
         });
 
         edtImportDate.setOnClickListener(v -> showDatePickerDialog());
-        btnSubmit.setOnClickListener(v -> submitProductImport());
+        btnSubmit.setOnClickListener(v -> {
+            submitProductImport();
+        });
+    }
+
+    private void addSizeQuantityView() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View sizeQuantityView = inflater.inflate(R.layout.size_quantity_row, sizeQuantityContainer, false);
+        sizeQuantityContainer.addView(sizeQuantityView);
+        sizeQuantityViews.add(sizeQuantityView);
     }
 
     private void showDatePickerDialog() {
@@ -101,93 +117,118 @@ public class SuppliesImportActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-
-    private void loadRemainingQuantity(String selectedSupply) {
-        databaseReference = FirebaseDatabase.getInstance().getReference("Supplies");
-        databaseReference.orderByChild("name").equalTo(selectedSupply).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void loadSupplyDetails(String selectedSupplyId) {
+        databaseReference = FirebaseDatabase.getInstance().getReference("Supplies_Imports");
+        databaseReference.child(selectedSupplyId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                sizeQuantityContainer.removeAllViews();
+                sizeQuantityViews.clear();
+
                 if (snapshot.exists()) {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        Supplies supply = dataSnapshot.getValue(Supplies.class);
-                        if (supply != null) {
-                            int remainingQuantity = supply.getQuantity(); // Lấy số lượng còn lại
-                            Log.e("Remaining Quantity ", String.valueOf(remainingQuantity));
-                            edtRemainingQuantity.setText(String.valueOf(remainingQuantity)); // Hiển thị số lượng còn lại
+                    Supplies_Import suppliesImport = snapshot.getValue(Supplies_Import.class);
+                    if (suppliesImport != null) {
+                        List<Supplies_Detail> sizes = suppliesImport.getSuppliesDetail();
+                        for (Supplies_Detail size : sizes) {
+                            LayoutInflater inflater = LayoutInflater.from(SuppliesImportActivity.this);
+                            View sizeQuantityView = inflater.inflate(R.layout.size_quantity_row, sizeQuantityContainer, false);
+
+                            TextInputEditText edtSize = sizeQuantityView.findViewById(R.id.edt_size_row);
+                            TextInputEditText edtQuantity = sizeQuantityView.findViewById(R.id.edt_quantity_row);
+                            TextInputEditText edtImportPrice = sizeQuantityView.findViewById(R.id.edt_import_price_row);
+                            TextInputEditText edtCostPrice = sizeQuantityView.findViewById(R.id.edt_cost_price_row);
+
+                            edtSize.setText(size.getSize());
+                            edtQuantity.setText(String.valueOf(size.getQuantity()));
+                            edtImportPrice.setText(String.valueOf(size.getImport_price()));
+                            edtCostPrice.setText(String.valueOf(size.getCost_price()));
+
+                            sizeQuantityView.setTag(size.getId());
+
+                            sizeQuantityContainer.addView(sizeQuantityView);
+                            sizeQuantityViews.add(sizeQuantityView);
                         }
+                    } else {
+                        Log.e("Firebase", "No size details found for the selected supply.");
                     }
                 } else {
-                    Log.e("Firebase", "Product not found in database.");
-                    edtRemainingQuantity.setText("0"); // Không có sản phẩm, hiển thị 0
+                    Log.e("Firebase", "No supply details found for the selected product.");
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(SuppliesImportActivity.this, "Failed to load remaining quantity", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SuppliesImportActivity.this, "Failed to load supply details", Toast.LENGTH_SHORT).show();
             }
         });
     }
-
     private void submitProductImport() {
-        DecimalFormat df = new DecimalFormat("0");
         String selectedSupply = spinnerSupplies.getSelectedItem().toString();
-        String quantityStr = edtQuantity.getText().toString();
-        String remainingQuantityStr = edtRemainingQuantity.getText().toString();
-        String importPriceStr = edtImportPrice.getText().toString();
-        String importDateStr = edtImportDate.getText().toString();
-        double importPrice = Double.parseDouble(importPriceStr);
-        String formattedImportPrice = df.format(importPrice); // Format the import price
+        String selectedSupplyId = suppliesMap.get(selectedSupply);
+        String importDateStr = Objects.requireNonNull(edtImportDate.getText()).toString();
+        final int[] totalQuantity = {0};
+        List<Supplies_Detail> sizeList = new ArrayList<>();
 
-// Convert formatted price back to Double for storage
-        double formattedPriceValue = Double.valueOf(formattedImportPrice);
+        for (View view : sizeQuantityViews) {
+            TextInputEditText edtSize = view.findViewById(R.id.edt_size_row);
+            TextInputEditText edtQuantity = view.findViewById(R.id.edt_quantity_row);
+            TextInputEditText edtImportPrice = view.findViewById(R.id.edt_import_price_row);
+            TextInputEditText edtCostPrice = view.findViewById(R.id.edt_cost_price_row);
 
-        if (quantityStr.isEmpty() || remainingQuantityStr.isEmpty() || importPriceStr.isEmpty() || importDateStr.isEmpty()) {
-            Toast.makeText(this, "Please fill all the fields", Toast.LENGTH_SHORT).show();
-            return;
+
+
+
+            String size = edtSize.getText().toString();
+            String quantityStr = edtQuantity.getText().toString();
+            String importPriceStr = edtImportPrice.getText().toString();
+            String costPriceStr = edtCostPrice.getText().toString();
+
+
+            if (size.isEmpty() || quantityStr.isEmpty() || importPriceStr.isEmpty() || costPriceStr.isEmpty()) {
+                Toast.makeText(this, "Please fill in all fields for each size", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            int quantity = Integer.parseInt(quantityStr);
+            totalQuantity[0] += quantity;
+            double importPrice = Double.parseDouble(importPriceStr);
+            double costPrice = Double.parseDouble(costPriceStr);
+
+            String sizeId = (String) view.getTag();
+            Supplies_Detail suppliesSize = new Supplies_Detail(sizeId, size, quantity, importPrice, costPrice);
+            sizeList.add(suppliesSize);
         }
 
-        int quantity = Integer.parseInt(quantityStr);
-        int remainingQuantity = Integer.parseInt(remainingQuantityStr);
-
-        // Kiểm tra xem số lượng nhập vào có hợp lệ không
-        if (quantity > remainingQuantity) {
-            Toast.makeText(this, "Quantity cannot exceed remaining quantity", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Lưu dữ liệu nhập vào Firebase
         DatabaseReference importsRef = FirebaseDatabase.getInstance().getReference("Supplies_Imports");
-        String importId = importsRef.push().getKey(); // Tạo ID cho import mới
 
-        Supplies_Import suppliesImport = new Supplies_Import(
-                importId,
-                selectedSupply,
-                quantity,
-                remainingQuantity,
-                formattedPriceValue,
-                importDateStr // Lưu ngày đã được format
-        );
+        if(selectedSupplyId != null) {
+            Supplies_Import suppliesImport = new Supplies_Import(
+                    selectedSupplyId,
+                    selectedSupply,
+                    importDateStr,
+                    sizeList
+            );
 
-        importsRef.child(importId).setValue(suppliesImport)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(SuppliesImportActivity.this, "Product imported successfully", Toast.LENGTH_SHORT).show();
-                    updateSupplyQuantity(selectedSupply, remainingQuantity + quantity); // Cập nhật số lượng sản phẩm
-                })
-                .addOnFailureListener(e -> Toast.makeText(SuppliesImportActivity.this, "Failed to import product", Toast.LENGTH_SHORT).show());
+            importsRef.child(selectedSupplyId).setValue(suppliesImport)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(SuppliesImportActivity.this, "Product imported successfully", Toast.LENGTH_SHORT).show();
+                        updateSupplyQuantity(selectedSupplyId, totalQuantity[0]);
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(SuppliesImportActivity.this, "Failed to import product", Toast.LENGTH_SHORT).show());
+        }
+
     }
 
 
-    private void updateSupplyQuantity(String selectedSupply, int newQuantity) {
-        databaseReference.orderByChild("name").equalTo(selectedSupply).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void updateSupplyQuantity(String selectedSupplyId, int newQuantity) {
+        DatabaseReference suppliesRef = FirebaseDatabase.getInstance().getReference("Supplies");
+        suppliesRef.child(selectedSupplyId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        dataSnapshot.getRef().child("quantity").setValue(newQuantity)
-                                .addOnSuccessListener(aVoid -> Log.e("Firebase", "Supply quantity updated successfully"))
-                                .addOnFailureListener(e -> Log.e("Firebase", "Failed to update supply quantity"));
-                    }
+                    snapshot.getRef().child("quantity").setValue(newQuantity)
+                            .addOnSuccessListener(aVoid -> Log.e("Firebase", "Supply quantity updated successfully"))
+                            .addOnFailureListener(e -> Log.e("Firebase", "Failed to update supply quantity"));
                 } else {
                     Log.e("Firebase", "Supply not found.");
                 }
@@ -207,17 +248,17 @@ public class SuppliesImportActivity extends AppCompatActivity {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                List<String> suppList = new ArrayList<>(); // Danh sách chứa các "type" từ Firebase
-                final Map<String, String> suppMap = new HashMap<>(); // Lưu type_id và type
+                List<String> suppList = new ArrayList<>();
+                suppliesMap.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Supplies supplies = snapshot.getValue(Supplies.class);
                     if (supplies != null && supplies.getStatus() != 0 ) {
                         suppList.add(supplies.getName());
-                        suppMap.put(supplies.getName(), supplies.getSupplies_id());
+                        suppliesMap.put(supplies.getName(), supplies.getSupplies_id());
                     }
                 }
 
-                suppliesList.addAll(suppList); // Thêm danh sách sản phẩm vào suppliesList
+                suppliesList.addAll(suppList);
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(SuppliesImportActivity.this, android.R.layout.simple_spinner_item, suppList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerSupplies.setAdapter(adapter);

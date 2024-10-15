@@ -8,7 +8,7 @@
     android:background="@color/bg_grey">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_add_supply_app_bar"
+        android:id="@+id/cv_add_service_app_bar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         app:cardBackgroundColor="@color/white"
@@ -22,7 +22,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/img_back_add_supply"
+                android:id="@+id/img_back_add_service"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -46,9 +46,9 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/img_back_add_supply"
-                app:layout_constraintStart_toEndOf="@+id/img_back_add_supply"
-                app:layout_constraintTop_toTopOf="@+id/img_back_add_supply"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back_add_service"
+                app:layout_constraintStart_toEndOf="@+id/img_back_add_service"
+                app:layout_constraintTop_toTopOf="@+id/img_back_add_service"
                 tools:ignore="HardcodedText" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -61,7 +61,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cv_add_supply_app_bar">
+        app:layout_constraintTop_toBottomOf="@id/cv_add_service_app_bar">
 
         <LinearLayout
             android:layout_width="match_parent"

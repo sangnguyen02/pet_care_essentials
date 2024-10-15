@@ -5,10 +5,8 @@ import java.util.List;
 public class Supplies {
     private String supplies_id;
     private  String name;
-    private  double sell_price;
-    private  double cost_price;
-    private  String size;
     private String description;
+    private  double sell_price;
     private  int status;
     private  int quantity;
     private  String category;
@@ -18,12 +16,10 @@ public class Supplies {
     public Supplies() {
     }
 
-    public Supplies(String supplies_id, String name, double sell_price, double cost_price, String size, String description, int status, int quantity, String category, String type, List<String> imageUrls) {
+    public Supplies(String supplies_id, String name, double sell_price, String description, int status, int quantity, String category, String type, List<String> imageUrls) {
         this.supplies_id = supplies_id;
         this.name = name;
         this.sell_price = sell_price;
-        this.cost_price = cost_price;
-        this.size = size;
         this.description = description;
         this.status = status;
         this.quantity = quantity;
@@ -54,22 +50,6 @@ public class Supplies {
 
     public void setSell_price(double sell_price) {
         this.sell_price = sell_price;
-    }
-
-    public double getCost_price() {
-        return cost_price;
-    }
-
-    public void setCost_price(double cost_price) {
-        this.cost_price = cost_price;
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
     }
 
     public String getDescription() {
@@ -119,4 +99,6 @@ public class Supplies {
     public void setImageUrls(List<String> imageUrls) {
         this.imageUrls = imageUrls;
     }
+
+
 }

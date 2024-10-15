@@ -1,6 +1,7 @@
 package com.example.uiux.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.uiux.Activities.SupplyDetailActivity;
+import com.example.uiux.Activities.User.Profile.EditAddressActivity;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Review;
 import com.example.uiux.R;
@@ -47,7 +50,7 @@ public class BestSellerAdapter extends RecyclerView.Adapter<BestSellerAdapter.Be
         return suppliesList.size();
     }
 
-    public static class BestSellerViewHolder extends RecyclerView.ViewHolder {
+     class BestSellerViewHolder extends RecyclerView.ViewHolder {
         ImageView imgBestSeller, imgStar;
         TextView tvTitle, tvPrice, tvRating;
 
@@ -58,6 +61,14 @@ public class BestSellerAdapter extends RecyclerView.Adapter<BestSellerAdapter.Be
             tvPrice = itemView.findViewById(R.id.tv_price);
             tvRating = itemView.findViewById(R.id.tv_rating);
 //            imgStar = itemView.findViewById(R.id.imgv_star);
+
+            itemView.setOnClickListener(view -> {
+                int position = getAdapterPosition();
+                Supplies supplies = suppliesList.get(position);
+                Intent intent = new Intent(context, SupplyDetailActivity.class);
+                intent.putExtra("supply_id", supplies.getSupplies_id());
+                context.startActivity(intent);
+            });
         }
 
         public void bind(Supplies supplies) {

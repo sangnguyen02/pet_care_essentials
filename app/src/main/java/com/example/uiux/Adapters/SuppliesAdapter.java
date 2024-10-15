@@ -62,8 +62,8 @@ public class SuppliesAdapter  extends RecyclerView.Adapter<SuppliesAdapter.Suppl
     }
     class SuppliesViewHolder extends RecyclerView.ViewHolder
     {
-        private ImageView img1,img2,img3,img4;
-        private TextView suppName,suppSellPrice,suppQuantity, suppCate, suppType, suppSize, suppStatus;
+        private ImageView img1;
+        private TextView suppName,suppSellPrice,suppQuantity, suppCate, suppType, suppStatus;
 
         public SuppliesViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -72,12 +72,8 @@ public class SuppliesAdapter  extends RecyclerView.Adapter<SuppliesAdapter.Suppl
             suppQuantity=itemView.findViewById(R.id.tv_supply_quantity);
             suppCate = itemView.findViewById(R.id.tv_supply_category);
             suppType = itemView.findViewById(R.id.tv_supply_type);
-            suppSize = itemView.findViewById(R.id.tv_supply_size);
             suppStatus = itemView.findViewById(R.id.tv_supply_status);
             img1 = itemView.findViewById(R.id.img1);
-//            img2 = itemView.findViewById(R.id.img2);
-//            img3 = itemView.findViewById(R.id.img3);
-//            img4 = itemView.findViewById(R.id.img4);
 
 
 
@@ -121,7 +117,6 @@ public class SuppliesAdapter  extends RecyclerView.Adapter<SuppliesAdapter.Suppl
             suppQuantity.setText(String.valueOf(supplies.getQuantity()));
             suppCate.setText(supplies.getCategory() != null ? supplies.getCategory() : "N/A");
             suppType.setText(supplies.getType() != null ? supplies.getType() : "N/A");
-            suppSize.setText(supplies.getSize() != null ? supplies.getSize() : "N/A");
             suppStatus.setText(String.valueOf(supplies.getStatus()));
 
 
@@ -136,38 +131,9 @@ public class SuppliesAdapter  extends RecyclerView.Adapter<SuppliesAdapter.Suppl
                             .into(img1);
                 }
 
-//                // Load the second image if it exists
-//                if (imageUrls.size() > 1) {
-//                    Glide.with(itemView.getContext())
-//                            .load(imageUrls.get(1))
-//                            .placeholder(R.drawable.banner1)
-//                            .error(R.drawable.guest)
-//                            .into(img2);
-//                }
-//
-//                // Load the third image if it exists
-//                if (imageUrls.size() > 2) {
-//                    Glide.with(itemView.getContext())
-//                            .load(imageUrls.get(2))
-//                            .placeholder(R.drawable.banner1)
-//                            .error(R.drawable.guest)
-//                            .into(img3);
-//                }
-//
-//                // Load the fourth image if it exists
-//                if (imageUrls.size() > 3) {
-//                    Glide.with(itemView.getContext())
-//                            .load(imageUrls.get(3))
-//                            .placeholder(R.drawable.banner1)
-//                            .error(R.drawable.guest)
-//                            .into(img4);
-//                }
             } else {
                 // Set placeholders if no images are available
                 img1.setImageResource(R.drawable.product_sample);
-//                img2.setImageResource(R.drawable.guest);
-//                img3.setImageResource(R.drawable.guest);
-//                img4.setImageResource(R.drawable.guest);
             }
         }
 

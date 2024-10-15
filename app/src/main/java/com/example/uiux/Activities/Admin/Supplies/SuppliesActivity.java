@@ -46,7 +46,7 @@ import java.util.UUID;
 public class SuppliesActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private ImageView img1, img2, img3, img4, img_back_add_supply;
-    private TextInputEditText suppName, suppSellPrice, suppCostPrice, suppQuantity, suppDescription;
+    private TextInputEditText suppName,suppSellPrice, suppQuantity, suppDescription;
     private Spinner suppSize, suppStatus, suppCate, suppType;
     private MaterialButton suppSubmit;
 
@@ -65,7 +65,6 @@ public class SuppliesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_supplies);
         suppName = findViewById(R.id.edt_name);
         suppSellPrice = findViewById(R.id.edt_sell_price);
-        suppCostPrice = findViewById(R.id.edt_cost_price);
         suppQuantity = findViewById(R.id.edt_quantity);
         suppSubmit = findViewById(R.id.btnSubmit);
         suppDescription = findViewById(R.id.edt_description);
@@ -74,7 +73,6 @@ public class SuppliesActivity extends AppCompatActivity {
         img2 = findViewById(R.id.img2);
         img3 = findViewById(R.id.img3);
         img4 = findViewById(R.id.img4);
-        suppSize = findViewById(R.id.spinner_size);
         suppStatus = findViewById(R.id.spinner_status);
         suppCate = findViewById(R.id.spinner_category);
         suppType = findViewById(R.id.spinner_type);
@@ -84,7 +82,6 @@ public class SuppliesActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
         FetchSpinnerCategory();
-        FectchSpinnerSize();
         FectchSpinnerStatus();
         FetchSpinnerType();
         img_back_add_supply.setOnClickListener(view -> {finish();});
@@ -94,8 +91,8 @@ public class SuppliesActivity extends AppCompatActivity {
         img4.setOnClickListener(view -> openImageChooser(3));
 
         suppSubmit.setOnClickListener(view -> {
-            if (imageUris != null && !Objects.requireNonNull(suppName.getText()).toString().isEmpty()&& !Objects.requireNonNull(suppCostPrice.getText()).toString().isEmpty()&& !Objects.requireNonNull(suppQuantity.getText()).toString().isEmpty()
-                    && !Objects.requireNonNull(suppDescription.getText()).toString().isEmpty()&& !Objects.requireNonNull(suppSellPrice.getText()).toString().isEmpty()) {
+            if (imageUris != null && !Objects.requireNonNull(suppName.getText()).toString().isEmpty()&& !Objects.requireNonNull(suppQuantity.getText()).toString().isEmpty()
+                    && !Objects.requireNonNull(suppDescription.getText()).toString().isEmpty() && !Objects.requireNonNull(suppSellPrice.getText()).toString().isEmpty()) {
                 uploadImageAndAddSupplies();
             } else {
                 Toast.makeText(SuppliesActivity.this, "Please select correct", Toast.LENGTH_SHORT).show();
@@ -143,13 +140,9 @@ public class SuppliesActivity extends AppCompatActivity {
         supplies.setSupplies_id(supplyId);
         supplies.setName( Objects.requireNonNull(suppName.getText()).toString());
         double sellPrice = Double.valueOf(Objects.requireNonNull(suppSellPrice.getText()).toString());
-        double costPrice = Double.valueOf(Objects.requireNonNull(suppCostPrice.getText()).toString());
-// Format to no decimal places using DecimalFormat
         supplies.setSell_price(Double.valueOf(df.format(sellPrice)));
-        supplies.setCost_price(Double.valueOf(df.format(costPrice)));
-        supplies.setQuantity(Integer.valueOf(Objects.requireNonNull(suppQuantity.getText()).toString()));
+        supplies.setQuantity(0);
         supplies.setDescription(Objects.requireNonNull(suppDescription.getText()).toString());
-        supplies.setSize( suppSize.getSelectedItem().toString());
         supplies.setStatus( suppStatus.getSelectedItemPosition());
         supplies.setCategory(suppCate.getSelectedItem().toString());
         supplies.setType( suppType.getSelectedItem().toString());
@@ -170,7 +163,6 @@ public class SuppliesActivity extends AppCompatActivity {
     private void clearInputFields() {
         suppName.setText("");
         suppSellPrice.setText("");
-        suppCostPrice.setText("");
         suppQuantity.setText("");
         suppDescription.setText("");
         for (int i = 0; i < imageUris.length; i++) {
@@ -246,14 +238,6 @@ public class SuppliesActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void FectchSpinnerSize() {
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(SuppliesActivity.this,
-                R.array.size_array, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        suppSize.setAdapter(adapter);
-    }
-
     private void FectchSpinnerStatus() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(SuppliesActivity.this,
                 R.array.suplies_status, android.R.layout.simple_spinner_item);

@@ -39,6 +39,7 @@
     <string name="add_new_address">Add New Address</string>
     <string name="add_new_category">Add New Category</string>
     <string name="add_new_type">Add New Type</string>
+    <string name="add_to_cart">Add to Cart</string>
     <string-array name="genders">
         <item>@string/gender_male</item>
         <item>@string/gender_female</item>

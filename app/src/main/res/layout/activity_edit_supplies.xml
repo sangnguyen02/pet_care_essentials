@@ -152,25 +152,6 @@
                     android:textSize="@dimen/text_size" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Cost Price -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:hint="Cost Price"
-                app:boxStrokeColor="@color/text_input"
-                app:boxStrokeWidth="1dp"
-                app:hintTextColor="@color/text_input"
-                app:shapeAppearanceOverlay="@style/Button4">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/edt_cost_price"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="numberDecimal"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size" />
-            </com.google.android.material.textfield.TextInputLayout>
-
             <!-- Quantity -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
@@ -187,7 +168,10 @@
                     android:layout_height="wrap_content"
                     android:inputType="number"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/text_size" />
+                    android:textSize="@dimen/text_size"
+                    android:focusable="false"
+                    android:cursorVisible="false"
+                    android:enabled="false"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <GridLayout
@@ -196,27 +180,6 @@
                 android:layout_margin="4dp"
                 android:columnCount="2"
                 android:rowCount="2">
-
-                <LinearLayout
-                    android:layout_width="180dp"
-                    android:layout_height="60dp"
-                    android:orientation="horizontal"
-                    >
-                    <!-- Size (Spinner) -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:text="Size: "
-                        android:fontFamily="@font/roboto_bold"
-                        android:textSize="16sp" />
-                    <Spinner
-                        android:id="@+id/spinner_size"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        />
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="200dp"

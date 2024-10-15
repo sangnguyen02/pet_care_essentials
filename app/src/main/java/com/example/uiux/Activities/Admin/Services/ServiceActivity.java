@@ -64,7 +64,7 @@ public class ServiceActivity extends AppCompatActivity {
         service_time = findViewById(R.id.edt_time);
         suppSubmit = findViewById(R.id.btnSubmit);
         service_Description = findViewById(R.id.edt_description);
-        img_back_add_service = findViewById(R.id.img_back_add_supply);
+        img_back_add_service = findViewById(R.id.img_back_add_service);
         img1 = findViewById(R.id.img1);
         img2 = findViewById(R.id.img2);
         img3 = findViewById(R.id.img3);
