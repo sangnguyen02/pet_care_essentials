@@ -20,7 +20,8 @@ public class SupplyImageListAdapter extends RecyclerView.Adapter<SupplyImageList
 
     private List<String> imgUrls;
     private Context context;
-    private OnImageClickListener imageClickListener; // Non-static field
+    private OnImageClickListener imageClickListener;
+    private int selectedPosition = -1;
 
     public SupplyImageListAdapter(List<String> imgUrls, Context context) {
         this.imgUrls = imgUrls;
@@ -47,7 +48,7 @@ public class SupplyImageListAdapter extends RecyclerView.Adapter<SupplyImageList
     @Override
     public void onBindViewHolder(@NonNull SupplyImageListAdapter.SupplyImageListViewHolder holder, int position) {
         String supplyImgUrl = imgUrls.get(position);
-        holder.bind(supplyImgUrl);
+        holder.bind(supplyImgUrl, position);
     }
 
     @Override
@@ -65,22 +66,38 @@ public class SupplyImageListAdapter extends RecyclerView.Adapter<SupplyImageList
             mcv_img_child = itemView.findViewById(R.id.mcv_img_child);
         }
 
-        public void bind(String suppliesImgUrl) {
+        public void bind(String suppliesImgUrl, int position) {
             if (suppliesImgUrl != null && !suppliesImgUrl.isEmpty()) {
                 // Load image using Glide
                 Glide.with(itemView.getContext())
                         .load(suppliesImgUrl)
                         .error(R.drawable.guest)
                         .into(img_supply_detail);
+
+                if (position == selectedPosition) {
+                    mcv_img_child.setStrokeColor(ContextCompat.getColor(context, R.color.tabLayout_background));
+                } else {
+                    mcv_img_child.setStrokeColor(ContextCompat.getColor(context, R.color.light_grey));
+                }
             } else {
                 img_supply_detail.setImageResource(R.drawable.product_sample);
+                mcv_img_child.setStrokeColor(ContextCompat.getColor(context, R.color.light_grey));
             }
+
+
 
             // Set OnClickListener to handle image click
             itemView.setOnClickListener(view -> {
-                mcv_img_child.setStrokeColor(ContextCompat.getColor(itemView.getContext(), R.color.tabLayout_background));
-                if (imageClickListener != null) { // Non-static usage of imageClickListener
-                    imageClickListener.onImageClick(suppliesImgUrl); // Trigger the image click event
+                // Update selected position
+                int previousPosition = selectedPosition;
+                selectedPosition = position;
+
+                // Notify the adapter to refresh the previously selected and currently selected items
+                notifyItemChanged(previousPosition);
+                notifyItemChanged(selectedPosition);
+
+                if (imageClickListener != null) {
+                    imageClickListener.onImageClick(suppliesImgUrl);
                 }
             });
         }

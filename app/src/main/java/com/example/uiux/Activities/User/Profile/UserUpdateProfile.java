@@ -38,7 +38,6 @@ public class UserUpdateProfile extends AppCompatActivity {
     private Uri imageUri;
     private String account_id;
     private DatabaseReference databaseReference;
-
     private Calendar calendar = Calendar.getInstance();
     private static final int PICK_IMAGE_REQUEST = 100;
 

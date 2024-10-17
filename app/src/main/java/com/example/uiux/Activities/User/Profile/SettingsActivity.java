@@ -14,13 +14,18 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.uiux.Activities.EntryActivity;
+import com.example.uiux.Activities.SplashActivity;
 import com.example.uiux.R;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+
 
 public class SettingsActivity extends AppCompatActivity {
     String accountId;
-    MaterialCardView mcv_address_setting;
+    MaterialCardView mcv_address_setting, mcv_sign_out;
     ImageView img_back_settings;
+    FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +34,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
 
         initWidget();
+        mAuth = FirebaseAuth.getInstance();
 
         Intent intent = getIntent();
         accountId = intent.getStringExtra("account_id");
@@ -41,11 +47,24 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(gotoAddress);
         });
 
+        mcv_sign_out.setOnClickListener(view -> {
+            signOutUser();
+        });
+
     }
     private void initWidget()
     {
         img_back_settings = findViewById(R.id.img_back_settings);
         mcv_address_setting = findViewById(R.id.mcv_address_setting);
+        mcv_sign_out = findViewById(R.id.mcv_sign_out);
+    }
+
+    private void signOutUser() {
+        mAuth.signOut();  // Firebase Auth sign out
+        Intent intent = new Intent(SettingsActivity.this, SplashActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
 

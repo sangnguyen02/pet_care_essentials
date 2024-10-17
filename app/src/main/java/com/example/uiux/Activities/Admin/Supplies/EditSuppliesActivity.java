@@ -187,23 +187,25 @@ public class EditSuppliesActivity extends AppCompatActivity {
                  int index2=getPositionByName(suppType,typeFromDb);
                  suppType.setSelection(index2);
 
-                 if (supplies.getImageUrls()!=null)
-                 {
-                     if(supplies.getImageUrls().get(0)!=null)
-                     {
-                         Glide.with(EditSuppliesActivity.this).load(supplies.getImageUrls().get(0)).into(img1);
-                     }
-                     if(supplies.getImageUrls().get(1)!=null)
-                     {
-                         Glide.with(EditSuppliesActivity.this).load(supplies.getImageUrls().get(1)).into(img2);
-                     }
-                     if(supplies.getImageUrls().get(2)!=null)
-                     {
-                         Glide.with(EditSuppliesActivity.this).load(supplies.getImageUrls().get(2)).into(img3);
-                     }
-                     if(supplies.getImageUrls().get(3)!=null)
-                     {
-                         Glide.with(EditSuppliesActivity.this).load(supplies.getImageUrls().get(3)).into(img4);
+                 if (supplies.getImageUrls() != null) {
+                     List<String> imageUrls = supplies.getImageUrls();
+                     for (int i = 0; i < imageUrls.size(); i++) {
+                         if (imageUrls.get(i) != null) {
+                             switch (i) {
+                                 case 0:
+                                     Glide.with(EditSuppliesActivity.this).load(imageUrls.get(i)).into(img1);
+                                     break;
+                                 case 1:
+                                     Glide.with(EditSuppliesActivity.this).load(imageUrls.get(i)).into(img2);
+                                     break;
+                                 case 2:
+                                     Glide.with(EditSuppliesActivity.this).load(imageUrls.get(i)).into(img3);
+                                     break;
+                                 case 3:
+                                     Glide.with(EditSuppliesActivity.this).load(imageUrls.get(i)).into(img4);
+                                     break;
+                             }
+                         }
                      }
                  }
 
