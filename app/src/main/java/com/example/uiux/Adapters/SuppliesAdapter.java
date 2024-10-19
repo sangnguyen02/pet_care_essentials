@@ -126,8 +126,8 @@ public class SuppliesAdapter  extends RecyclerView.Adapter<SuppliesAdapter.Suppl
                 if (imageUrls.size() > 0) {
                     Glide.with(itemView.getContext())
                             .load(imageUrls.get(0))
-                            .placeholder(R.drawable.banner1)
-                            .error(R.drawable.guest)
+                            .placeholder(R.drawable.product_sample)
+                            .error(R.drawable.product_sample)
                             .into(img1);
                 }
 

@@ -23,6 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.User.CartActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.SupplyDetailActivity"
             android:exported="false" />
         <activity

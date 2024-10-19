@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="56dp"
     android:layout_height="56dp"
-    android:layout_margin="8dp">
+    android:layout_margin="4dp">
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/mcv_img_child"
         android:layout_width="match_parent"

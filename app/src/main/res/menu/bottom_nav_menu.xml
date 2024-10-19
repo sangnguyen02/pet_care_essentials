@@ -6,11 +6,11 @@
         android:icon="@drawable/nav1_selector"
         />
 
-    <item
-        android:id="@+id/cart_screen"
-        android:title="@string/cart"
-        android:icon="@drawable/nav2_selector"
-        />
+<!--    <item-->
+<!--        android:id="@+id/cart_screen"-->
+<!--        android:title="@string/cart"-->
+<!--        android:icon="@drawable/nav2_selector"-->
+<!--        />-->
 
     <item
         android:id="@+id/wishlist_screen"

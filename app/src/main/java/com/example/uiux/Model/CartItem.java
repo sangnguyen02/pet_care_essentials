@@ -1,27 +1,77 @@
 package com.example.uiux.Model;
 
 public class CartItem {
-    private String cart_item_id;
+    private String supply_id;
+    private String supply_title;
+    private String supply_size;
+    private double supply_price;
     private int quantity;
-    private  String cart_id;
-    private  int supplies_id;
+    private double totalPrice;
+    private String imageUrl;
+    private String combinedKey;
 
     public CartItem() {
     }
 
-    public CartItem(String cart_item_id, int quantity, String cart_id, int supplies_id) {
-        this.cart_item_id = cart_item_id;
+    public CartItem(String supply_id, String supply_title, String supply_size, double supply_price, int quantity, double totalPrice, String imageUrl) {
+        this.supply_id = supply_id;
+        this.supply_title = supply_title;
+        this.supply_size = supply_size;
+        this.supply_price = supply_price;
         this.quantity = quantity;
-        this.cart_id = cart_id;
-        this.supplies_id = supplies_id;
+        this.totalPrice = totalPrice;
+        this.imageUrl = imageUrl;
+        this.combinedKey = generateCombinedKey(supply_id, supply_size);
     }
 
-    public String getCart_item_id() {
-        return cart_item_id;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setCart_item_id(String cart_item_id) {
-        this.cart_item_id = cart_item_id;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+    private String generateCombinedKey(String supply_id, String supply_size) {
+        return supply_id + "_" + supply_size;
+    }
+    public String getCombinedKey() {
+        return combinedKey;
+    }
+
+    public void setCombinedKey(String combinedKey) {
+        this.combinedKey = combinedKey;
+    }
+
+    public String getSupply_id() {
+        return supply_id;
+    }
+
+    public void setSupply_id(String supply_id) {
+        this.supply_id = supply_id;
+    }
+
+    public String getSupply_title() {
+        return supply_title;
+    }
+
+    public void setSupply_title(String supply_title) {
+        this.supply_title = supply_title;
+    }
+
+    public String getSupply_size() {
+        return supply_size;
+    }
+
+    public void setSupply_size(String supply_size) {
+        this.supply_size = supply_size;
+    }
+
+    public double getSupply_price() {
+        return supply_price;
+    }
+
+    public void setSupply_price(double supply_price) {
+        this.supply_price = supply_price;
     }
 
     public int getQuantity() {
@@ -32,19 +82,11 @@ public class CartItem {
         this.quantity = quantity;
     }
 
-    public String getCart_id() {
-        return cart_id;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setCart_id(String cart_id) {
-        this.cart_id = cart_id;
-    }
-
-    public int getSupplies_id() {
-        return supplies_id;
-    }
-
-    public void setSupplies_id(int supplies_id) {
-        this.supplies_id = supplies_id;
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

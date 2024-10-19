@@ -1,5 +1,6 @@
 package com.example.uiux.Activities.User.Profile;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,11 +12,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.uiux.R;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,9 +36,9 @@ import java.util.Locale;
 import Model.Account;
 
 public class UserUpdateProfile extends AppCompatActivity {
-    private Button btnBirthday, btnUpdate, btnChooseImage,btnAddress;
-    private EditText tvGender, tvPhone, tvEmail, tvFullname;
-    private TextView tvBirthday;
+    private ActivityResultLauncher<Intent> pickImageLauncher;
+    private MaterialButton btnUpdate;
+    private TextInputEditText edt_fullname, edt_gender, edt_phone, edt_email, edt_birthday;
     private ImageView imgAvatar;
     private Uri imageUri;
     private String account_id;
@@ -49,19 +54,21 @@ public class UserUpdateProfile extends AppCompatActivity {
         // Initialize widgets
         initWidget();
 
-        // Set up button listeners
-        btnBirthday.setOnClickListener(view -> showDatePickerDialog());
-        btnChooseImage.setOnClickListener(view -> chooseImage());
+        imgAvatar.setOnClickListener(view -> chooseImage());
         btnUpdate.setOnClickListener(view -> updateAccountInfo());
-        btnAddress.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent gotoAddress= new Intent(UserUpdateProfile.this, AddressActivity.class);
-                gotoAddress.putExtra("account_id",account_id);
-                startActivity(gotoAddress);
-            }
-        });
+
         loadUserProfile();
+    }
+
+    private void showGenderDialog() {
+        String[] genders = getResources().getStringArray(R.array.genders);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose gender")
+                .setItems(genders, (dialog, which) -> {
+                    edt_gender.setText(genders[which]);
+                });
+        builder.create().show();
     }
 
     // Show date picker dialog
@@ -71,7 +78,7 @@ public class UserUpdateProfile extends AppCompatActivity {
             calendar.set(Calendar.MONTH, month);
             calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-            tvBirthday.setText(sdf.format(calendar.getTime()));
+            edt_birthday.setText(sdf.format(calendar.getTime()));
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
@@ -79,18 +86,18 @@ public class UserUpdateProfile extends AppCompatActivity {
     private void chooseImage() {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        pickImageLauncher.launch(intent);
     }
 
     private void updateAccountInfo() {
-        String fullName = tvFullname.getText().toString().trim();
-        String gender = tvGender.getText().toString().trim();
-        String phone = tvPhone.getText().toString().trim();
-        String email = tvEmail.getText().toString().trim();
+        String fullName = edt_fullname.getText().toString().trim();
+        String gender = edt_gender.getText().toString().trim();
+        String phone = edt_phone.getText().toString().trim();
+        String email = edt_email.getText().toString().trim();
 
-        String birthday = tvBirthday.getText().toString().trim();
+        String birthday = edt_birthday.getText().toString().trim();
 
-        if (fullName.isEmpty() || phone.isEmpty() || email.isEmpty() ||  birthday.equals("Ngày sinh chưa chọn")) {
+        if (fullName.isEmpty() || phone.isEmpty() || email.isEmpty() ||  birthday.isEmpty()) {
             Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -190,11 +197,11 @@ public class UserUpdateProfile extends AppCompatActivity {
         //phoneNum=  countryCodePicker.getFullNumberWithPlus();
 
         Account account = new Account();
-        account.setFullname(tvFullname.getText().toString().trim());
-        account.setEmail(tvEmail.getText().toString().trim());
-        account.setPhone(tvPhone.getText().toString().trim());
-        account.setGender(tvGender.getText().toString().trim());
-        account.setBirthday(tvBirthday.getText().toString().trim());
+        account.setFullname(edt_fullname.getText().toString().trim());
+        account.setEmail(edt_email.getText().toString().trim());
+        account.setPhone(edt_phone.getText().toString().trim());
+        account.setGender(edt_gender.getText().toString().trim());
+        account.setBirthday(edt_birthday.getText().toString().trim());
 
         account.setAccount_id(account_id);
         if (imageUrl != null) {
@@ -220,10 +227,10 @@ public class UserUpdateProfile extends AppCompatActivity {
 
         // Display user information
         if (fullname != null && !fullname.isEmpty()) {
-            tvFullname.setText(fullname);
+            edt_fullname.setText(fullname);
         }
         if (email != null && !email.isEmpty()) {
-            tvEmail.setText(email);
+            edt_email.setText(email);
         }
         if (imageUrl != null && !imageUrl.isEmpty()) {
             Glide.with(this).load(imageUrl).into(imgAvatar);
@@ -244,12 +251,12 @@ public class UserUpdateProfile extends AppCompatActivity {
                         // Populate the fields with the user's data
                         if (account != null) {
                             account_id = account.getAccount_id();
-                            tvPhone.setText(account.getPhone()!=null?account.getPhone():" ");
-                            tvFullname.setText(account.getFullname() != null ? account.getFullname() : "");
-                            tvGender.setText(account.getGender() != null ? account.getGender() : "");
-                            tvEmail.setText(account.getEmail() != null ? account.getEmail() : "");
+                            edt_phone.setText(account.getPhone()!=null?account.getPhone():" ");
+                            edt_fullname.setText(account.getFullname() != null ? account.getFullname() : "");
+                            edt_gender.setText(account.getGender() != null ? account.getGender() : "");
+                            edt_email.setText(account.getEmail() != null ? account.getEmail() : "");
 
-                            tvBirthday.setText(account.getBirthday() != null ? account.getBirthday() : "");
+                            edt_birthday.setText(account.getBirthday() != null ? account.getBirthday() : "");
                             // Load image if it exists
                             if (account.getImage() != null) {
                                 Glide.with(UserUpdateProfile.this)
@@ -282,16 +289,26 @@ public class UserUpdateProfile extends AppCompatActivity {
     }
     // Initialize widgets
     private void  initWidget() {
-        btnBirthday = findViewById(R.id.btn_birthday);
-        tvBirthday = findViewById(R.id.tv_birthday);
-        tvFullname = findViewById(R.id.edt_fullname);
-        tvGender = findViewById(R.id.edt_gender);
-        tvPhone = findViewById(R.id.edt_phone);
-        tvEmail = findViewById(R.id.edt_email);
-
+        edt_fullname = findViewById(R.id.edt_fullname);
+        edt_gender = findViewById(R.id.edt_gender);
+        edt_phone = findViewById(R.id.edt_phone);
+        edt_email = findViewById(R.id.edt_email);
+        edt_birthday = findViewById(R.id.edt_birthday);
         imgAvatar = findViewById(R.id.img_avatar);
-        btnChooseImage = findViewById(R.id.btn_choose_image);
         btnUpdate = findViewById(R.id.btn_update);
-        btnAddress=findViewById(R.id.btn_addess);
+
+        // Chọn giới tính
+        edt_gender.setOnClickListener(v -> showGenderDialog());
+
+        // Chọn ngày sinh
+        edt_birthday.setOnClickListener(v -> showDatePickerDialog());
+
+        // Khởi tạo ActivityResultLauncher
+        pickImageLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK && result.getData() != null && result.getData().getData() != null) {
+                imageUri = result.getData().getData();
+                imgAvatar.setImageURI(imageUri);
+            }
+        });
     }
 }

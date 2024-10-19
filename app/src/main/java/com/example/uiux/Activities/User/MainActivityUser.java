@@ -23,10 +23,16 @@ import com.example.uiux.Fragments.User.WishlistFragment;
 import com.example.uiux.R;
 import com.example.uiux.databinding.ActivityMainUserBinding;
 import com.google.android.material.badge.BadgeDrawable;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivityUser extends AppCompatActivity {
     ActivityMainUserBinding binding;
     String phone;
+    DatabaseReference accountRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,10 +41,10 @@ public class MainActivityUser extends AppCompatActivity {
         binding = ActivityMainUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         replaceFragment(new HomeFragment());
-        BadgeDrawable badgeDrawable = binding.bottomNavigationView.getOrCreateBadge(R.id.cart_screen);
-        badgeDrawable.setVisible(true);
-        badgeDrawable.setNumber(3);
-
+//        BadgeDrawable badgeDrawable = binding.bottomNavigationView.getOrCreateBadge(R.id.cart_screen);
+//        badgeDrawable.setVisible(true);
+//        badgeDrawable.setNumber(3);
+        accountRef = FirebaseDatabase.getInstance().getReference("Account");
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             phone = extras.getString("phone_number");
@@ -46,16 +52,21 @@ public class MainActivityUser extends AppCompatActivity {
             preferences.edit().putString("phone_number", phone).apply();
             Log.d("Phone No Ở Main", phone);
 //            Log.d("Username", userName);
+
+            getAccountIDByPhone(phone);
         }
+
+
+
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.home_screen:
                     replaceFragment(new HomeFragment());
                     break;
-                case R.id.cart_screen:
-                    replaceFragment(new CartFragment());
-                    break;
+//                case R.id.cart_screen:
+//                    replaceFragment(new CartFragment());
+//                    break;
                 case R.id.wishlist_screen:
                     replaceFragment(new WishlistFragment());
                     break;
@@ -82,5 +93,29 @@ public class MainActivityUser extends AppCompatActivity {
         fragmentTransaction.replace(R.id.frame_layout, fragment);
         fragmentTransaction.commit();
 
+    }
+
+    void getAccountIDByPhone(String phone) {
+        accountRef.orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot accountSnapshot : dataSnapshot.getChildren()) {
+                        String accountId = accountSnapshot.getKey(); // Lấy accountID
+                        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                        preferences.edit().putString("accountID", accountId).apply();
+                        Log.d("Account ID", "Found Account ID: " + accountId);
+                        // Bạn có thể lưu accountId hoặc sử dụng ở đây
+                    }
+                } else {
+                    Log.d("Account ID", "No account found with this phone number.");
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d("Account ID", "Error fetching account ID: " + databaseError.getMessage());
+            }
+        });
     }
 }

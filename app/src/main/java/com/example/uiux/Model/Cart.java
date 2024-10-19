@@ -1,23 +1,17 @@
 package com.example.uiux.Model;
 
+import java.util.List;
+
 public class Cart {
-    private  String cart_id;
-    private  String account_id;
+    private String account_id;
+    private List<CartItem> cartItemList;
 
     public Cart() {
     }
 
-    public Cart(String cart_id, String account_id) {
-        this.cart_id = cart_id;
+    public Cart(String account_id, List<CartItem> cartItemList) {
         this.account_id = account_id;
-    }
-
-    public String getCart_id() {
-        return cart_id;
-    }
-
-    public void setCart_id(String cart_id) {
-        this.cart_id = cart_id;
+        this.cartItemList = cartItemList;
     }
 
     public String getAccount_id() {
@@ -26,5 +20,13 @@ public class Cart {
 
     public void setAccount_id(String account_id) {
         this.account_id = account_id;
+    }
+
+    public List<CartItem> getCartItemList() {
+        return cartItemList;
+    }
+
+    public void setCartItemList(List<CartItem> cartItemList) {
+        this.cartItemList = cartItemList;
     }
 }

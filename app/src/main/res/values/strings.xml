@@ -42,6 +42,7 @@
     <string name="add_to_cart">Add to Cart</string>
     <string name="stock">Stock:</string>
     <string name="sign_out">Sign Out</string>
+    <string name="confirm_add_to_cart">Confirm</string>
     <string-array name="genders">
         <item>@string/gender_male</item>
         <item>@string/gender_female</item>

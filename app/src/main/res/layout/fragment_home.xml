@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_margin="8dp"
-            android:outlineSpotShadowColor="@color/white"
+            android:outlineSpotShadowColor="@color/light_grey"
             app:cardElevation="10dp"
             app:cardCornerRadius="8dp"
             app:cardBackgroundColor="@color/primary"
@@ -53,32 +53,31 @@
                         android:queryHint="Search for products"
                         android:theme="@style/ThemeOverlay.SearchView"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/iv_bell"
+                        app:layout_constraintEnd_toStartOf="@id/iv_cart"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="HardcodedText" />
 
                     <ImageView
-                        android:id="@+id/iv_bell"
+                        android:id="@+id/iv_cart"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginTop="2dp"
                         android:layout_marginEnd="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@+id/search_view"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/search_view"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:srcCompat="@drawable/bell"
+                        app:layout_constraintTop_toTopOf="@+id/search_view"
+                        app:srcCompat="@drawable/cart"
                         tools:ignore="ContentDescription" />
 
                     <ImageView
                         android:id="@+id/iv_red_circle"
                         android:layout_width="18dp"
                         android:layout_height="18dp"
-                        app:layout_constraintBottom_toTopOf="@+id/iv_bell"
-                        app:layout_constraintEnd_toEndOf="@+id/iv_bell"
-                        app:layout_constraintStart_toEndOf="@+id/iv_bell"
-                        app:layout_constraintTop_toTopOf="@+id/iv_bell"
+                        app:layout_constraintBottom_toTopOf="@+id/iv_cart"
+                        app:layout_constraintEnd_toEndOf="@+id/iv_cart"
+                        app:layout_constraintStart_toEndOf="@+id/iv_cart"
+                        app:layout_constraintTop_toTopOf="@+id/iv_cart"
                         app:srcCompat="@drawable/red_circle"
                         tools:ignore="ContentDescription" />
 

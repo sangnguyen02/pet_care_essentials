@@ -2,9 +2,13 @@ package com.example.uiux.Activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,12 +31,16 @@ import com.example.uiux.Activities.Admin.Supplies.UpdateSuppliesActivity;
 import com.example.uiux.Adapters.SuppliesAdapter;
 import com.example.uiux.Adapters.SupplyDetailOptionAdapter;
 import com.example.uiux.Adapters.SupplyImageListAdapter;
+import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Detail;
 import com.example.uiux.Model.Supplies_Import;
 import com.example.uiux.R;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,22 +51,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SupplyDetailActivity extends AppCompatActivity implements SupplyDetailOptionAdapter.OnSupplyOptionClickListener {
-    View overlay;
-    CardView bottomSheetAddToCart;
+    MaterialCardView bottomSheetAddToCart, mcv_minus, mcv_plus;
+    MaterialButton btn_confirm_add_to_cart;
     BottomSheetBehavior bottomSheetBehaviorAddToCart;
     LottieAnimationView aniLove;
     ImageView img_back, img_supply, img_arrow, img_supply_add_to_cart;
-    MaterialCardView mcv_see_more, mcv_add_to_cart;
+    MaterialCardView mcv_description, mcv_add_to_cart;
     RecyclerView rcv_img_list, rcv_option_list;
     SupplyImageListAdapter supplyImageListAdapter;
     List<String> imageUrls  = new ArrayList<>();
-    TextView tv_supply_title, tv_supply_description, tv_supply_price, tv_show_more, tv_price_add_to_cart, tv_total_stock_quantity;
-    DatabaseReference databaseReference;
-    DatabaseReference detailRef;
+    TextView tv_supply_title, tv_supply_description, tv_supply_price, tv_price_add_to_cart, tv_total_stock_quantity, tv_quantity_of_supply;
+    DatabaseReference databaseReference, detailRef, cartRef;
+    String accountId;
     String supplyId;
     String currency;
+    String supplyAddToCartImageUrl;
+//    FirebaseAuth mAuth;
+    SupplyDetailOptionAdapter supplyDetailOptionAdapter;
     boolean showMoreClick = false;
     boolean isAnimating = false;
+    boolean isOptionSelected = false;
+
 
 
     @Override
@@ -67,6 +80,9 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
         EdgeToEdge.enable(this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         setContentView(R.layout.activity_supply_detail);
+//        mAuth = FirebaseAuth.getInstance();
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        accountId = preferences.getString("accountID", null);
         initWidget();
         // Lấy supply_id từ Intent
         currency = "VND ";
@@ -78,33 +94,46 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
             Toast.makeText(this, "Supply ID not found.", Toast.LENGTH_SHORT).show();
         }
 
+        // Set trạng thái ẩn đi ở onCreate()
+        bottomSheetBehaviorAddToCart.setState(BottomSheetBehavior.STATE_HIDDEN);
         bottomSheetBehaviorAddToCart.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int i) {
-                if (i == BottomSheetBehavior.STATE_EXPANDED) {
-                    overlay.setVisibility(View.VISIBLE);
-                } else if (i == BottomSheetBehavior.STATE_COLLAPSED) {
-                    overlay.setVisibility(View.GONE);
-                }
+//                if (i == BottomSheetBehavior.STATE_EXPANDED) {
+//
+//                } else if (i == BottomSheetBehavior.STATE_COLLAPSED) {
+//
+//                }
             }
 
             @Override
             public void onSlide(@NonNull View view, float v) {
-                overlay.setAlpha(v);
+                view.setAlpha(0.5f + (v * 0.5f));
+                view.setScaleX(0.9f + (0.1f * v));
+                view.setScaleY(0.9f + (0.1f * v));
+
+                view.animate()
+                        .setInterpolator(new AccelerateDecelerateInterpolator())
+                        .setDuration(300)
+                        .start();
             }
         });
 
     }
 
     private void initWidget() {
-        overlay = findViewById(R.id.overlay);
         aniLove = findViewById(R.id.ani_love);
         tv_supply_title = findViewById(R.id.tv_supply_title);
         tv_supply_price = findViewById(R.id.tv_supply_price);
         tv_supply_description = findViewById(R.id.tv_description);
-        tv_show_more = findViewById(R.id.tv_show_more);
+        // Bottomsheet
         tv_price_add_to_cart = findViewById(R.id.tv_price_add_to_cart);
         tv_total_stock_quantity = findViewById(R.id.tv_total_stock_quantity);
+        mcv_minus = findViewById(R.id.mcv_minus);
+        mcv_plus = findViewById(R.id.mcv_plus);
+        tv_quantity_of_supply = findViewById(R.id.tv_quantity_of_supply);
+        btn_confirm_add_to_cart = findViewById(R.id.btn_confirm_add_to_cart);
+
         img_back = findViewById(R.id.img_back_supply_detail);
         img_arrow = findViewById(R.id.img_arrow);
         img_supply = findViewById(R.id.img_thumpnail);
@@ -127,10 +156,9 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
         rcv_option_list = findViewById(R.id.rcv_option_list);
 
 
-        mcv_see_more = findViewById(R.id.mcv_see_more);
+        mcv_description = findViewById(R.id.mcv_description);
         mcv_add_to_cart = findViewById(R.id.mcv_add_to_cart);
 
-        bottomSheetAddToCart.setVisibility(View.GONE);
         mcv_add_to_cart.setOnClickListener(view -> {
             if(!supplyId.isEmpty()) {
                 bottomSheetAddToCart.setVisibility(View.VISIBLE);
@@ -139,22 +167,40 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
             }
         });
 
+        mcv_minus.setOnClickListener(view -> {
+            if (!isOptionSelected) {
+                Toast.makeText(this, "Please select an option before adjusting quantity.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            updateQuantity(-1);
+        });
 
+        mcv_plus.setOnClickListener(view -> {
+            if (!isOptionSelected) {
+                Toast.makeText(this, "Please select an option before adjusting quantity.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            updateQuantity(1);
+        });
 
-        mcv_see_more.setOnClickListener(view -> {
+        if (Integer.parseInt(tv_quantity_of_supply.getText().toString()) <= 0) {
+            mcv_minus.setEnabled(false);
+            //btn_confirm_add_to_cart.setEnabled(false);
+        }
+
+        mcv_description.setOnClickListener(view -> {
             if (showMoreClick) {
                 tv_supply_description.setMaxLines(5);
-                tv_show_more.setText("See More");
                 img_arrow.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.arrow_down));
             } else {
-                // Expand the description
                 tv_supply_description.setMaxLines(Integer.MAX_VALUE);
-                tv_show_more.setText("Hide"); // Update text to "Hide"
                 img_arrow.setImageDrawable(AppCompatResources.getDrawable(this, R.drawable.arrow_up));
             }
-            // Toggle the state
             showMoreClick = !showMoreClick;
         });
+
+
+        btn_confirm_add_to_cart.setOnClickListener(view -> addToCart(supplyId));
 
         // Thiết lập sự kiện click cho aniLove
         aniLove.setOnClickListener(view -> {
@@ -169,6 +215,69 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
 
     }
 
+    private void addToCart(String supplyId) {
+        if (accountId != null) {
+            int quantity = Integer.parseInt(tv_quantity_of_supply.getText().toString());
+            String priceStr = tv_price_add_to_cart.getText().toString().replace(currency, "").trim();
+            double price = Double.parseDouble(priceStr);
+            String supplyTitle = tv_supply_title.getText().toString();
+            String selectedSupplySize = supplyDetailOptionAdapter.getSelectedOptionName();
+            String combinedKey = generateCombinedKey(supplyId, selectedSupplySize);
+            cartRef = FirebaseDatabase.getInstance().getReference("Cart").child(accountId).child(combinedKey);
+
+            // Kiểm tra giỏ hàng dựa trên combinedKey
+            cartRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        // Sản phẩm đã có trong Cart, cập nhật số lượng
+                        CartItem existingCartItem = snapshot.getValue(CartItem.class);
+                        if (existingCartItem != null) {
+                            int newQuantity = existingCartItem.getQuantity() + quantity;
+                            double newTotalPrice = newQuantity * existingCartItem.getSupply_price();
+                            existingCartItem.setQuantity(newQuantity);
+                            existingCartItem.setTotalPrice(newTotalPrice);
+                            cartRef.setValue(existingCartItem);
+                            Toast.makeText(SupplyDetailActivity.this, "Quantity updated in cart.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        // Sản phẩm chưa có trong Cart, thêm mới
+                        CartItem newCartItem = new CartItem(supplyId, supplyTitle, selectedSupplySize, price, quantity, quantity * price, supplyAddToCartImageUrl);
+                        cartRef.setValue(newCartItem);
+                        Toast.makeText(SupplyDetailActivity.this, "Added to cart.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Handle error
+                }
+            });
+        }
+    }
+
+
+    private String generateCombinedKey(String supplyId, String selectedSupplySize) {
+        return supplyId + "_" + selectedSupplySize;
+    }
+
+
+    private void updateQuantity(int change) {
+        int currentQuantity = Integer.parseInt(tv_quantity_of_supply.getText().toString());
+        int totalStock = Integer.parseInt(tv_total_stock_quantity.getText().toString());
+
+        int newQuantity = currentQuantity + change;
+
+        if (newQuantity < 0) {
+            newQuantity = 0;
+        } else if (newQuantity > totalStock) {
+            newQuantity = totalStock;
+        }
+
+        tv_quantity_of_supply.setText(String.valueOf(newQuantity));
+        mcv_minus.setEnabled(newQuantity > 0);
+    }
+
     // Hàm lấy các thông tin khác của sản phẩm (tiêu đề, mô tả, giá)
     private void loadSupplyDetails(String supplyId) {
         databaseReference = FirebaseDatabase.getInstance().getReference("Supplies").child(supplyId);
@@ -180,6 +289,14 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
                     tv_supply_title.setText(supplies.getName());
                     tv_supply_description.setText(supplies.getDescription());
                     tv_supply_price.setText(currency + String.valueOf(supplies.getSell_price()));
+                    tv_total_stock_quantity.setText(String.valueOf(supplies.getQuantity()));
+
+                    if (supplies.getImageUrls() != null && !supplies.getImageUrls().isEmpty()) {
+                        supplyAddToCartImageUrl = supplies.getImageUrls().get(0);
+                        Glide.with(SupplyDetailActivity.this)
+                                .load(supplyAddToCartImageUrl)
+                                .into(img_supply_add_to_cart);
+                    }
                 }
             }
 
@@ -198,16 +315,17 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Supplies_Detail> supplyDetailOptions = new ArrayList<>();
                 // Duyệt qua các child của snapshot
-                for (DataSnapshot optionSnapshot : snapshot.child("suppliesDetail").getChildren()) { // Sửa lại để lấy đúng nút suppliesDetail
+                for (DataSnapshot optionSnapshot : snapshot.child("suppliesDetail").getChildren()) {
                     Supplies_Detail option = optionSnapshot.getValue(Supplies_Detail.class);
                     if (option != null) {
                         supplyDetailOptions.add(option);
                     }
                 }
                 // Khởi tạo adapter và set cho RecyclerView
-                SupplyDetailOptionAdapter supplyDetailOptionAdapter = new SupplyDetailOptionAdapter(supplyDetailOptions, SupplyDetailActivity.this, SupplyDetailActivity.this);
+                supplyDetailOptionAdapter = new SupplyDetailOptionAdapter(supplyDetailOptions, SupplyDetailActivity.this, SupplyDetailActivity.this);
                 rcv_option_list.setLayoutManager(new GridLayoutManager(SupplyDetailActivity.this, 3));
                 rcv_option_list.setAdapter(supplyDetailOptionAdapter);
+
             }
 
             @Override
@@ -218,8 +336,18 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
     }
 
     @Override
-    public void onSupplyOptionClick(double costPrice) {
+    public void onSupplyOptionClick(double costPrice, int stockRemain) {
         tv_price_add_to_cart.setText(currency + String.valueOf(costPrice));
+        tv_total_stock_quantity.setText(String.valueOf(stockRemain));
+        isOptionSelected = true;
+        mcv_minus.setEnabled(true);
+        mcv_plus.setEnabled(true);
+        //btn_confirm_add_to_cart.setEnabled(true);
+
+        if (tv_quantity_of_supply.getText().equals("0")) {
+            mcv_minus.setEnabled(false);
+            //btn_confirm_add_to_cart.setEnabled(false);
+        }
     }
 
 

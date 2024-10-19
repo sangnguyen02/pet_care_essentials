@@ -38,7 +38,6 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 FirebaseUser currentUser = mAuth.getCurrentUser();  // Lấy thông tin user đã đăng nhập
                 if (currentUser != null) {
-                    // Nếu user đã đăng nhập, chuyển đến trang chủ (MainActivity)
                     Intent intent = new Intent(SplashActivity.this, MainActivityUser.class);
                     Bundle bundle = new Bundle();
                     String formattedPhoneNumber = formatPhoneNumber(currentUser.getPhoneNumber()); // Định dạng lại số điện thoại
@@ -47,7 +46,6 @@ public class SplashActivity extends AppCompatActivity {
                     intent.putExtras(bundle);
                     startActivity(intent);
                 } else {
-                    // Nếu chưa đăng nhập, chuyển đến màn hình đăng nhập (EntryActivity)
                     Intent intent = new Intent(SplashActivity.this, EntryActivity.class);
                     startActivity(intent);
                 }

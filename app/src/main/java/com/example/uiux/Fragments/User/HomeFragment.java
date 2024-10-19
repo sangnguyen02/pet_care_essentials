@@ -1,5 +1,6 @@
 package com.example.uiux.Fragments.User;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.example.uiux.Activities.User.CartActivity;
 import com.example.uiux.Adapters.BannerAdapter;
 import com.example.uiux.Adapters.BestSellerAdapter;
 import com.example.uiux.Adapters.CategoryAdapter;
@@ -44,7 +46,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
     View rootView;
-    ImageView bell;
+    ImageView cart;
     ViewPager2 mViewPager2;
     DotsIndicator dotsIndicator;
     List<Banner> mListBanner;
@@ -79,7 +81,7 @@ public class HomeFragment extends Fragment {
     }
 
     void initWidget() {
-        bell = rootView.findViewById(R.id.iv_bell);
+        cart = rootView.findViewById(R.id.iv_cart);
         progressBar_banner = rootView.findViewById(R.id.progressBar_banners);
         progressBar_category = rootView.findViewById(R.id.progressBar_categories);
         progressBar_bestSeller = rootView.findViewById(R.id.progressBar_bestSeller);
@@ -99,6 +101,11 @@ public class HomeFragment extends Fragment {
                 mHandler.removeCallbacks(mRunnable);
                 mHandler.postDelayed(mRunnable, 5000);
             }
+        });
+
+        cart.setOnClickListener(view -> {
+            Intent intent = new Intent(rootView.getContext(), CartActivity.class);
+            startActivity(intent);
         });
     }
 

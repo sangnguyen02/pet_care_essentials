@@ -36,7 +36,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class PhoneUpdateProfileActivity extends AppCompatActivity {
     private ActivityResultLauncher<Intent> pickImageLauncher;
-    private Button btnAddress;
     private TextInputEditText edt_fullname, edt_gender, edt_phone, edt_email, edt_birthday;
     private CircleImageView imgAvatar;
     private ImageView img_back, img_update;
@@ -235,7 +234,6 @@ private void loadUserProfile() {
         edt_email = findViewById(R.id.edt_email2);
         edt_birthday = findViewById(R.id.edt_birthday2);
         imgAvatar = findViewById(R.id.img_avatar2);
-        btnAddress=findViewById(R.id.btn_addess);
         img_back = findViewById(R.id.img_back);
         img_update = findViewById(R.id.img_update);
 

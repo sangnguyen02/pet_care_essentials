@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mcv_cart_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:backgroundTint="@color/white"
+    android:layout_margin="8dp"
+    app:rippleColor="@color/ripple_color"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="10dp"
+    app:strokeWidth="0dp"
+    android:outlineSpotShadowColor="@color/light_grey"
+    android:padding="8dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/checkbox_cart_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            app:buttonTint="@color/primary"
+            app:checkedState="unchecked"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="240dp"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/checkbox_cart_item"
+            app:layout_constraintStart_toEndOf="@+id/checkbox_cart_item"
+            app:layout_constraintTop_toTopOf="@+id/checkbox_cart_item">
+
+            <ImageView
+                android:id="@+id/img_cart_item"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/product_sample"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+                android:id="@+id/linear_supply_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@+id/img_cart_item"
+                app:layout_constraintStart_toEndOf="@+id/img_cart_item"
+                app:layout_constraintTop_toTopOf="@+id/img_cart_item">
+
+                <TextView
+                    android:id="@+id/tv_cart_item_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Supply Title"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_cart_item_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Size" />
+
+                <TextView
+                    android:id="@+id/tv_cart_item_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Price" />
+
+                <TextView
+                    android:id="@+id/tv_cart_total_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Price" />
+
+            </LinearLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardView"
+            android:layout_width="80dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:cardBackgroundColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="3">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/mcv_cart_minus"
+                    android:layout_width="0dp"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="1dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:rippleColor="@color/ripple_color"
+                    app:strokeColor="@color/light_grey"
+                    app:strokeWidth="1dp">
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@color/white"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/minus" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/tv_cart_item_quantity"
+                    android:layout_width="0dp"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/roboto_bold"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textSize="14sp" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/mcv_cart_plus"
+                    android:layout_width="0dp"
+                    android:layout_height="24dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/white"
+                    app:cardCornerRadius="1dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:rippleColor="@color/ripple_color"
+                    app:strokeColor="@color/light_grey"
+                    app:strokeWidth="1dp">
+
+                    <ImageView
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@color/white"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/add" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

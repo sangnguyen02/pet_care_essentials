@@ -22,7 +22,7 @@ public class SupplyDetailOptionAdapter extends RecyclerView.Adapter<SupplyDetail
     private int selectedPosition = -1;
 
     public interface OnSupplyOptionClickListener {
-        void onSupplyOptionClick(double costPrice);
+        void onSupplyOptionClick(double costPrice, int stockRemain);
     }
 
     private OnSupplyOptionClickListener listener;
@@ -80,7 +80,7 @@ public class SupplyDetailOptionAdapter extends RecyclerView.Adapter<SupplyDetail
                 selectedPosition = position;
 
                 if (listener != null) {
-                    listener.onSupplyOptionClick(suppliesDetail.getCost_price());
+                    listener.onSupplyOptionClick(suppliesDetail.getCost_price(), suppliesDetail.getQuantity());
                 }
 
                 // Notify the adapter to refresh the previously selected and currently selected items
@@ -89,5 +89,12 @@ public class SupplyDetailOptionAdapter extends RecyclerView.Adapter<SupplyDetail
 
             });
         }
+    }
+
+    public String getSelectedOptionName() {
+        if (selectedPosition >= 0 && selectedPosition < suppliesDetailList.size()) {
+            return suppliesDetailList.get(selectedPosition).getSize();
+        }
+        return "null";
     }
 }
