@@ -8,6 +8,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.example.uiux.Activities.Admin.Branch.BranchStoreActivity;
+import com.example.uiux.Activities.Admin.Branch.UpdateBranchStoreActivity;
 import com.example.uiux.Activities.Admin.Category.CategoryActivity;
 import com.example.uiux.Activities.Admin.Category.UpdateCategoryActivity;
 import com.example.uiux.Activities.Admin.Services.ServiceActivity;
@@ -32,7 +34,7 @@ import java.util.UUID;
 
 public class MainActivityAdmin extends AppCompatActivity {
     FirebaseAuth mAuth;
-    MaterialCardView category_btn,type_btn,supplies_btn,supplies_import,service_btn, sign_out_admin;
+    MaterialCardView category_btn,type_btn,supplies_btn,supplies_import,service_btn, sign_out_admin,branchStore_btn;
     DatabaseReference suppliesRef;
     DatabaseReference suppliesImageRef;
     DatabaseReference suppliesImportRef;
@@ -54,11 +56,13 @@ public class MainActivityAdmin extends AppCompatActivity {
         suppliesPriceRef = FirebaseDatabase.getInstance().getReference("Supplies_Price");
         suppliesReviewRef = FirebaseDatabase.getInstance().getReference("Supplies_Review");
 
+
         category_btn=findViewById(R.id.category);
         type_btn=findViewById(R.id.type);
         supplies_btn=findViewById(R.id.supplies);
         supplies_import=findViewById(R.id.supplies_import);
         service_btn=findViewById(R.id.service);
+        branchStore_btn=findViewById(R.id.branchStore);
         sign_out_admin=findViewById(R.id.sign_out_admin);
 
         category_btn.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +104,11 @@ public class MainActivityAdmin extends AppCompatActivity {
                 Intent intent=new Intent(MainActivityAdmin.this, UpdateServiceActivity.class);
                 startActivity(intent);
             }
+        });
+        branchStore_btn.setOnClickListener(view -> {
+            Intent intent=new Intent(MainActivityAdmin.this, UpdateBranchStoreActivity.class);
+            startActivity(intent);
+
         });
 
         sign_out_admin.setOnClickListener(view -> {

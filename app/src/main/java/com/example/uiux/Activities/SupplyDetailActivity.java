@@ -47,8 +47,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SupplyDetailActivity extends AppCompatActivity implements SupplyDetailOptionAdapter.OnSupplyOptionClickListener {
     MaterialCardView bottomSheetAddToCart, mcv_minus, mcv_plus;
@@ -288,7 +290,15 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
                 if (supplies != null) {
                     tv_supply_title.setText(supplies.getName());
                     tv_supply_description.setText(supplies.getDescription());
-                    tv_supply_price.setText(currency + String.valueOf(supplies.getSell_price()));
+
+                    // Format the sell price to remove decimals
+                    DecimalFormat df = new DecimalFormat("#");
+                    double sellPrice = Double.valueOf(Objects.requireNonNull(supplies.getSell_price()));
+
+                    // Set formatted price
+                    tv_supply_price.setText(currency + df.format(sellPrice));
+
+                    // Set quantity without formatting (as it's an integer)
                     tv_total_stock_quantity.setText(String.valueOf(supplies.getQuantity()));
 
                     if (supplies.getImageUrls() != null && !supplies.getImageUrls().isEmpty()) {
@@ -305,8 +315,8 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
                 Toast.makeText(SupplyDetailActivity.this, "Failed to load supply details.", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
+
 
     private void loadSupplyOptions(String supplyId) {
         detailRef = FirebaseDatabase.getInstance().getReference("Supplies_Imports").child(supplyId);

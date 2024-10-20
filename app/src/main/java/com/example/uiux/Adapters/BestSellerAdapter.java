@@ -18,7 +18,9 @@ import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Review;
 import com.example.uiux.R;
 
+import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Objects;
 
 public class BestSellerAdapter extends RecyclerView.Adapter<BestSellerAdapter.BestSellerViewHolder> {
 
@@ -71,29 +73,40 @@ public class BestSellerAdapter extends RecyclerView.Adapter<BestSellerAdapter.Be
             });
         }
 
-        public void bind(Supplies supplies) {
-            tvTitle.setText(supplies.getName() != null ? supplies.getName() : "N/A");
-            tvPrice.setText(String.valueOf(supplies.getSell_price()));
-            tvRating.setText("5");
+         public void bind(Supplies supplies) {
+             tvTitle.setText(supplies.getName() != null ? supplies.getName() : "N/A");
 
-            List<String> imageUrls = supplies.getImageUrls();
-            if (imageUrls != null && !imageUrls.isEmpty()) {
-                // Load the first image
-                if (imageUrls.size() > 0) {
-                    Glide.with(itemView.getContext())
-                            .load(imageUrls.get(0))
-                            .placeholder(R.drawable.banner1)
-                            .error(R.drawable.guest)
-                            .into(imgBestSeller);
-                }
+             // DecimalFormat to remove decimals and trailing zeros
+             DecimalFormat df = new DecimalFormat("#");
 
+             // Parse the sell price as a double
+             double sellPrice = Double.valueOf(Objects.requireNonNull(supplies.getSell_price()));
 
-            } else {
-                // Set placeholders if no images are available
-                imgBestSeller.setImageResource(R.drawable.product_sample);
-            }
-        }
-    }
+             // Set the formatted price
+             tvPrice.setText(df.format(sellPrice));
+
+             // Set rating
+             tvRating.setText("5");
+
+             // Get the list of image URLs
+             List<String> imageUrls = supplies.getImageUrls();
+
+             if (imageUrls != null && !imageUrls.isEmpty()) {
+                 // Load the first image if the list is not empty
+                 if (imageUrls.size() > 0) {
+                     Glide.with(itemView.getContext())
+                             .load(imageUrls.get(0))
+                             .placeholder(R.drawable.banner1)
+                             .error(R.drawable.guest)
+                             .into(imgBestSeller);
+                 }
+             } else {
+                 // Set placeholder image if there are no images available
+                 imgBestSeller.setImageResource(R.drawable.product_sample);
+             }
+         }
+
+     }
 
     // Method to find review for a given supply
     private Supplies_Review findReviewForSupply(String suppliesId) {
