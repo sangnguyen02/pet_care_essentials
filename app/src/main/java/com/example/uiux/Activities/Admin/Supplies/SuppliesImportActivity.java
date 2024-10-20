@@ -168,6 +168,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
         String selectedSupplyId = suppliesMap.get(selectedSupply);
         String importDateStr = Objects.requireNonNull(edtImportDate.getText()).toString();
         final int[] totalQuantity = {0};
+        double lowestCostPrice = Double.MAX_VALUE;
         List<Supplies_Detail> sizeList = new ArrayList<>();
 
         for (View view : sizeQuantityViews) {
@@ -195,6 +196,10 @@ public class SuppliesImportActivity extends AppCompatActivity {
             double importPrice = Double.parseDouble(importPriceStr);
             double costPrice = Double.parseDouble(costPriceStr);
 
+            if(costPrice < lowestCostPrice) {
+                lowestCostPrice = costPrice;
+            }
+
             String sizeId = (String) view.getTag();
             Supplies_Detail suppliesSize = new Supplies_Detail(sizeId, size, quantity, importPrice, costPrice);
             sizeList.add(suppliesSize);
@@ -210,10 +215,11 @@ public class SuppliesImportActivity extends AppCompatActivity {
                     sizeList
             );
 
+            double finalLowestCostPrice = lowestCostPrice;
             importsRef.child(selectedSupplyId).setValue(suppliesImport)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(SuppliesImportActivity.this, "Product imported successfully", Toast.LENGTH_SHORT).show();
-                        updateSupplyQuantity(selectedSupplyId, totalQuantity[0]);
+                        updateSupplyQuantity(selectedSupplyId, totalQuantity[0], finalLowestCostPrice);
                     })
                     .addOnFailureListener(e -> Toast.makeText(SuppliesImportActivity.this, "Failed to import product", Toast.LENGTH_SHORT).show());
         }
@@ -221,7 +227,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
     }
 
 
-    private void updateSupplyQuantity(String selectedSupplyId, int newQuantity) {
+    private void updateSupplyQuantity(String selectedSupplyId, int newQuantity, double sellPrice) {
         DatabaseReference suppliesRef = FirebaseDatabase.getInstance().getReference("Supplies");
         suppliesRef.child(selectedSupplyId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -230,6 +236,9 @@ public class SuppliesImportActivity extends AppCompatActivity {
                     snapshot.getRef().child("quantity").setValue(newQuantity)
                             .addOnSuccessListener(aVoid -> Log.e("Firebase", "Supply quantity updated successfully"))
                             .addOnFailureListener(e -> Log.e("Firebase", "Failed to update supply quantity"));
+                    snapshot.getRef().child("sell_price").setValue(sellPrice)
+                            .addOnSuccessListener(aVoid -> Log.e("Firebase", "Supply sell_price updated successfully"))
+                            .addOnFailureListener(e -> Log.e("Firebase", "Failed to update supply sell_price"));
                 } else {
                     Log.e("Firebase", "Supply not found.");
                 }

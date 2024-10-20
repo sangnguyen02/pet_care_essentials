@@ -1,7 +1,7 @@
 package com.example.uiux.Adapters;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.uiux.Activities.User.CartActivity;
 import com.example.uiux.Model.CartItem;
+import com.example.uiux.Model.Supplies_Detail;
 import com.example.uiux.R;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.checkbox.MaterialCheckBox;
@@ -41,7 +43,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     @Override
     public CartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_cart, parent, false);
-        return new CartViewHolder(view);
+        return new CartViewHolder(view, context);
     }
 
     @Override
@@ -63,8 +65,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             } else {
                 selectedItems.remove(cartItem);
             }
+            // Cập nhật tổng tiền mỗi khi có sự thay đổi
+            ((CartActivity) context).updateTotalAmount();
         });
-
 
         String imageUrls = cartItem.getImageUrl();
         if (imageUrls != null && !imageUrls.isEmpty()) {
@@ -77,18 +80,26 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
 
         holder.mcv_cart_item.setOnClickListener(view -> {
-
+            // Handle item click if needed
         });
 
         holder.mcv_cart_minus.setOnClickListener(view -> {
-            holder.updateQuantity(-1);
+            holder.updateQuantity(-1, cartItem);
         });
 
         holder.mcv_cart_plus.setOnClickListener(view -> {
-            holder.updateQuantity(1);
+            holder.updateQuantity(1, cartItem);
         });
+    }
 
-
+    public void selectAllItems(boolean isChecked) {
+        selectedItems.clear(); // Clear the current selection
+        for (CartItem item : cartItemList) {
+            if (isChecked) {
+                selectedItems.add(item);
+            }
+        }
+        notifyDataSetChanged(); // Refresh the RecyclerView
     }
 
     @Override
@@ -106,8 +117,10 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         TextView tvSupplyTitle, tvSupplySize, tvSupplyPrice, tvTotalPrice, tvSupplyQuantity;
         MaterialCheckBox checkBoxSelectItem;
         int sizeQuantity;
+        String accountId;
+        SharedPreferences preferences;
 
-        public CartViewHolder(@NonNull View itemView) {
+        public CartViewHolder(@NonNull View itemView, Context context) {
             super(itemView);
             mcv_cart_item = itemView.findViewById(R.id.mcv_cart_item);
             mcv_cart_plus = itemView.findViewById(R.id.mcv_cart_plus);
@@ -120,12 +133,11 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             checkBoxSelectItem = itemView.findViewById(R.id.checkbox_cart_item);
             img_supply = itemView.findViewById(R.id.img_cart_item);
 
-
+            preferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         }
 
-        private void updateQuantity(int change) {
+        private void updateQuantity(int change, CartItem cartItem) {
             int currentQuantity = Integer.parseInt(tvSupplyQuantity.getText().toString());
-
             int newQuantity = currentQuantity + change;
 
             if (newQuantity < 0) {
@@ -136,6 +148,77 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
             tvSupplyQuantity.setText(String.valueOf(newQuantity));
             mcv_cart_minus.setEnabled(newQuantity > 0);
+
+            // Cập nhật tổng giá trị
+            if (newQuantity > 0) {
+                int pricePerUnit = (int) cartItem.getSupply_price(); // lấy giá một đơn vị
+                int totalPrice = pricePerUnit * newQuantity;
+                tvTotalPrice.setText(String.valueOf(totalPrice));
+
+                // Cập nhật tổng tiền ở Activity
+                ((CartActivity) itemView.getContext()).updateTotalAmount();
+
+                // Cập nhật Firebase
+                accountId = preferences.getString("accountID", null);
+                DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("Cart")
+                        .child(accountId).child(cartItem.getCombinedKey());
+                cartRef.child("quantity").setValue(newQuantity);
+                cartRef.child("totalPrice").setValue(totalPrice);
+            } else {
+                tvTotalPrice.setText("0");
+            }
+
+            cartItem.setQuantity(newQuantity);
+            cartItem.updateTotalPrice();
+
+            //updateStockQuantity(cartItem.getSupply_id(), cartItem.getSupply_size(), currentQuantity, newQuantity);
+        }
+
+        private void updateStockQuantity(String suppliesImportId, String size, int currentQuantity, int newQuantity) {
+            // Tính toán sự thay đổi số lượng
+            int quantityChange = currentQuantity - newQuantity;
+
+            // Nếu có thay đổi về số lượng, cập nhật trong Firebase
+            if (quantityChange != 0) {
+                DatabaseReference stockRef = FirebaseDatabase.getInstance().getReference("Supplies_Imports").child(suppliesImportId);
+                stockRef.child("suppliesDetail").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int totalQuantity = 0; // Để tính tổng số lượng cho bảng Supplies
+
+                        for (DataSnapshot detailSnapshot : snapshot.getChildren()) {
+                            // Lấy chi tiết size của sản phẩm
+                            Supplies_Detail suppliesDetail = detailSnapshot.getValue(Supplies_Detail.class);
+
+                            if (suppliesDetail != null) {
+                                // Nếu size trùng khớp, cập nhật số lượng cho size đó
+                                if (suppliesDetail.getSize().equals(size)) {
+                                    int stockQuantity = suppliesDetail.getQuantity();
+                                    int updatedStockQuantity = stockQuantity + quantityChange;
+                                    detailSnapshot.getRef().child("quantity").setValue(updatedStockQuantity);
+                                }
+
+                                // Tính tổng số lượng cho tất cả các size
+                                totalQuantity += suppliesDetail.getQuantity();
+                            }
+                        }
+
+                        // Cập nhật lại tổng số lượng trong bảng Supplies
+                        updateTotalSupplyQuantity(suppliesImportId, totalQuantity);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        // Xử lý lỗi nếu cần
+                    }
+                });
+            }
+        }
+
+        private void updateTotalSupplyQuantity(String suppliesId, int totalQuantity) {
+            DatabaseReference supplyRef = FirebaseDatabase.getInstance().getReference("Supplies").child(suppliesId);
+
+            supplyRef.child("quantity").setValue(totalQuantity);
         }
 
 
@@ -161,4 +244,3 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
     }
 }
-

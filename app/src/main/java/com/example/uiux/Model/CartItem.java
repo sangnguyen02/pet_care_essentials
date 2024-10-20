@@ -89,4 +89,7 @@ public class CartItem {
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
+    public void updateTotalPrice() {
+        this.totalPrice = this.supply_price * this.quantity; // Cập nhật giá trị tổng
+    }
 }

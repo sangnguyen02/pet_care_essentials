@@ -3,6 +3,7 @@ package com.example.uiux.Activities.User;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -12,6 +13,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
@@ -28,10 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartActivity extends AppCompatActivity {
+    TextView tv_total_amount;
+    MaterialButton btn_buy;
+    MaterialCheckBox checkBox_all;
     ImageView img_back_my_cart;
     RecyclerView rcv_cart;
     CartAdapter cartAdapter;
     List<CartItem> cartItemList = new ArrayList<>();
+    List<CartItem> selectedItems = new ArrayList<>();
     DatabaseReference cartRef;
     String accountId;
     SharedPreferences preferences;
@@ -57,6 +64,22 @@ public class CartActivity extends AppCompatActivity {
         rcv_cart.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         cartAdapter = new CartAdapter(this, cartItemList);
         rcv_cart.setAdapter(cartAdapter);
+        tv_total_amount = findViewById(R.id.tv_total_amount_price);
+        btn_buy = findViewById(R.id.btn_buy);
+        checkBox_all = findViewById(R.id.checkbox_all_item);
+
+        checkBox_all.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            cartAdapter.selectAllItems(isChecked);
+            updateTotalAmount();
+        });
+    }
+
+    public void updateTotalAmount() {
+        double totalAmount = 0.0;
+        for (CartItem item : cartAdapter.getSelectedItems()) {
+            totalAmount += item.getTotalPrice();
+        }
+        tv_total_amount.setText(String.valueOf(totalAmount));
     }
 
     private void loadCartItems() {
