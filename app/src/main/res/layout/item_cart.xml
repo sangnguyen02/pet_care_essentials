@@ -22,7 +22,6 @@
             android:id="@+id/checkbox_cart_item"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             app:buttonTint="@color/primary"
             app:checkedState="unchecked"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -33,7 +32,9 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="240dp"
             android:layout_height="match_parent"
-            android:layout_margin="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:padding="8dp"
             app:layout_constraintBottom_toBottomOf="@+id/checkbox_cart_item"
             app:layout_constraintStart_toEndOf="@+id/checkbox_cart_item"
@@ -63,27 +64,38 @@
                     android:id="@+id/tv_cart_item_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:ellipsize="end"
                     android:text="Supply Title"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="14sp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:textColor="@color/black"/>
 
                 <TextView
                     android:id="@+id/tv_cart_item_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Size" />
+                    android:text="Size"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:textColor="@color/black"/>
 
                 <TextView
                     android:id="@+id/tv_cart_item_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Price" />
+                    android:text="Price"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:textColor="@color/black"/>
 
                 <TextView
                     android:id="@+id/tv_cart_total_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total Price" />
+                    android:text="Total Price"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:textColor="@color/black"/>
 
             </LinearLayout>
 
@@ -91,7 +103,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/materialCardView"
+            android:id="@+id/mcv_numberic"
             android:layout_width="80dp"
             android:layout_height="24dp"
             android:layout_marginEnd="8dp"
@@ -138,7 +150,8 @@
                     android:fontFamily="@font/roboto_bold"
                     android:gravity="center"
                     android:text="0"
-                    android:textSize="14sp" />
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/mcv_cart_plus"

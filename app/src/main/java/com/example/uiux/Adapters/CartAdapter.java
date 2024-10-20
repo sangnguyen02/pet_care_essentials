@@ -1,6 +1,8 @@
 package com.example.uiux.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,11 @@ import com.example.uiux.Model.CartItem;
 import com.example.uiux.R;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.checkbox.MaterialCheckBox;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,10 +47,12 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
         CartItem cartItem = cartItemList.get(position);
+        holder.loadStockQuantity(cartItem.getSupply_id(), holder);
         holder.tvSupplyTitle.setText(cartItem.getSupply_title());
         holder.tvSupplySize.setText(cartItem.getSupply_size());
         holder.tvSupplyPrice.setText(String.valueOf(cartItem.getSupply_price()));
         holder.tvTotalPrice.setText(String.valueOf(cartItem.getTotalPrice()));
+        holder.tvSupplyQuantity.setText(String.valueOf(cartItem.getQuantity()));
 
         // Set up checkbox listener to track selected items
         holder.checkBoxSelectItem.setOnCheckedChangeListener(null);
@@ -56,10 +65,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             }
         });
 
-        holder.mcv_cart_item.setOnClickListener(v -> {
-            boolean newState = !holder.checkBoxSelectItem.isChecked();
-            holder.checkBoxSelectItem.setChecked(newState);
-        });
 
         String imageUrls = cartItem.getImageUrl();
         if (imageUrls != null && !imageUrls.isEmpty()) {
@@ -70,6 +75,18 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         } else {
             holder.img_supply.setImageResource(R.drawable.product_sample);
         }
+
+        holder.mcv_cart_item.setOnClickListener(view -> {
+
+        });
+
+        holder.mcv_cart_minus.setOnClickListener(view -> {
+            holder.updateQuantity(-1);
+        });
+
+        holder.mcv_cart_plus.setOnClickListener(view -> {
+            holder.updateQuantity(1);
+        });
 
 
     }
@@ -88,6 +105,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         ImageView img_supply;
         TextView tvSupplyTitle, tvSupplySize, tvSupplyPrice, tvTotalPrice, tvSupplyQuantity;
         MaterialCheckBox checkBoxSelectItem;
+        int sizeQuantity;
 
         public CartViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -103,6 +121,43 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             img_supply = itemView.findViewById(R.id.img_cart_item);
 
 
+        }
+
+        private void updateQuantity(int change) {
+            int currentQuantity = Integer.parseInt(tvSupplyQuantity.getText().toString());
+
+            int newQuantity = currentQuantity + change;
+
+            if (newQuantity < 0) {
+                newQuantity = 0;
+            } else if (newQuantity > sizeQuantity) {
+                newQuantity = sizeQuantity;
+            }
+
+            tvSupplyQuantity.setText(String.valueOf(newQuantity));
+            mcv_cart_minus.setEnabled(newQuantity > 0);
+        }
+
+
+        private void loadStockQuantity(String supplyId, CartViewHolder holder) {
+            DatabaseReference detailRef = FirebaseDatabase.getInstance().getReference("Supplies_Imports").child(supplyId);
+            detailRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot optionSnapshot : snapshot.child("suppliesDetail").getChildren()) {
+                        String size = optionSnapshot.child("size").getValue(String.class);
+                        if (size != null && size.contentEquals(tvSupplySize.getText())) {
+                            sizeQuantity = optionSnapshot.child("quantity").getValue(Integer.class);
+                            Log.e("size Quantity: ", String.valueOf(sizeQuantity));
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Xử lý lỗi nếu cần
+                }
+            });
         }
     }
 }
