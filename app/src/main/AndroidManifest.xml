@@ -23,6 +23,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.Admin.Branch.UpdateBranchStoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.Admin.Branch.EditBranchStoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.Admin.Branch.BranchStoreActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.User.CartActivity"
             android:exported="false" />
         <activity

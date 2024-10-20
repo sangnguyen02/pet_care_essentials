@@ -68,4 +68,10 @@
         <item>Đang cung cấp</item>
         <item>Ngừng cung cấp</item>
     </string-array>
+    <string-array name="branch_store_status">
+        <item>Mới Khai trương</item>
+        <item>Đang mở</item>
+        <item>Tạm đóng cửa</item>
+        <item>Đóng cửa</item>
+    </string-array>
 </resources>
