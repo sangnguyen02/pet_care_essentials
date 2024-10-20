@@ -47,6 +47,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
     private Map<String, String> suppliesMap;
     private ArrayList<View> sizeQuantityViews = new ArrayList<>();
     private DatabaseReference databaseReference;
+    private  String suppliesId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -240,6 +241,8 @@ public class SuppliesImportActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private void FetchSpinnerSupplies() {
         suppliesList = new ArrayList<>(); // Khởi tạo suppliesList

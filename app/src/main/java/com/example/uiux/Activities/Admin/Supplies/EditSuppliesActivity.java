@@ -20,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.Admin.Category.EditCategoryActivity;
 import com.example.uiux.Model.Category;
 import com.example.uiux.Model.Supplies;
+import com.example.uiux.Model.Supplies_Price;
 import com.example.uiux.Model.Type;
 import com.example.uiux.R;
 import com.google.android.material.button.MaterialButton;
@@ -33,10 +34,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class EditSuppliesActivity extends AppCompatActivity {
@@ -113,8 +117,52 @@ public class EditSuppliesActivity extends AppCompatActivity {
         suppliesRef.child("quantity").setValue(updateQuantity);
         suppliesRef.child("type ").setValue(suppType.getSelectedItem().toString());
 
-        uploadImageToStorage();
+    // Kiểm tra nếu giá bán thay đổi
+    suppliesRef.child("sell_price").addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            Double oldSellPrice = snapshot.getValue(Double.class);
+            if (oldSellPrice != null && !oldSellPrice.equals(updateSellPrice)) {
+                // Nếu giá bán thay đổi, cập nhật giá mới và tạo bản ghi Supplies_Price
+                suppliesRef.child("sell_price").setValue(updateSellPrice);
+                addSuppliesPriceToDatabase(supplies_id, updateSellPrice);
+            }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+            Toast.makeText(EditSuppliesActivity.this, "Failed to update price: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    });
+
+    uploadImageToStorage();
+}
+    private void addSuppliesPriceToDatabase(String supplyId, double sellPrice) {
+        DatabaseReference suppliesPriceDatabase = FirebaseDatabase.getInstance().getReference("Supplies_Price");
+        String suppliesPriceId = suppliesPriceDatabase.push().getKey(); // Tạo ID duy nhất cho bảng Supplies_Price
+
+        // Tạo đối tượng Supplies_Price
+        Supplies_Price suppliesPrice = new Supplies_Price();
+        suppliesPrice.setSupplies_price_id(suppliesPriceId);
+        suppliesPrice.setSupplies_id(supplyId);
+        suppliesPrice.setSupply(Objects.requireNonNull(suppName.getText()).toString());
+        suppliesPrice.setSell_price(sellPrice);
+
+        // Định dạng ngày hiện tại theo hh:mm dd/MM/yyyy
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+        String formattedDate = dateFormat.format(new Date()); // Lấy ngày hiện tại và format
+        suppliesPrice.setEffective_date(formattedDate); // Lưu ngày định dạng
+
+        // Lưu vào Firebase Database
+        suppliesPriceDatabase.child(suppliesPriceId).setValue(suppliesPrice).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(EditSuppliesActivity.this, "Supplies price added successfully!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(EditSuppliesActivity.this, "Failed to add supplies price: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
+
 
     private void uploadImageToStorage() {
         // Tạo danh sách các URL ảnh mới
@@ -173,7 +221,6 @@ public class EditSuppliesActivity extends AppCompatActivity {
              if (snapshot.exists()) {
                  Supplies supplies = snapshot.getValue(Supplies.class);
                  DecimalFormat df = new DecimalFormat("0");
-
                  suppName.setText(supplies.getName());
                  suppQuantity.setText(String.valueOf(supplies.getQuantity()));
                  suppDescription.setText(supplies.getDescription());

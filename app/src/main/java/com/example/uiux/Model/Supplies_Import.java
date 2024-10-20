@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Supplies_Import {
     private String supplies_import_id;
+    private String supplies_Id;
     private String supplies_name;
 //    private  int quantity;
 //    private int remaining_quantity;
@@ -16,6 +17,7 @@ public class Supplies_Import {
 
     public Supplies_Import(String supplies_import_id, String supplies_name, String import_date, List<Supplies_Detail> sizes) {
         this.supplies_import_id = supplies_import_id;
+        this.supplies_Id = supplies_Id;
         this.supplies_name = supplies_name;
         this.import_date = import_date;
         this.sizes = sizes;
@@ -27,6 +29,14 @@ public class Supplies_Import {
 
     public void setSupplies_import_id(String supplies_import_id) {
         this.supplies_import_id = supplies_import_id;
+    }
+
+    public String getSupplies_Id() {
+        return supplies_Id;
+    }
+
+    public void setSupplies_Id(String supplies_Id) {
+        this.supplies_Id = supplies_Id;
     }
 
     public String getSupplies_name() {

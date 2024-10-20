@@ -5,15 +5,17 @@ import java.util.Date;
 public class Supplies_Price {
     private String supplies_price_id;
     private  String supplies_id;
+    private  String supply;
     private  double sell_price;
-    private Date effective_date;
+    private String effective_date;
 
     public Supplies_Price() {
     }
 
-    public Supplies_Price(String supplies_price_id, String supplies_id, double sell_price, Date effective_date) {
+    public Supplies_Price(String supplies_price_id, String supplies_id, String supply, double sell_price, String effective_date) {
         this.supplies_price_id = supplies_price_id;
         this.supplies_id = supplies_id;
+        this.supply = supply;
         this.sell_price = sell_price;
         this.effective_date = effective_date;
     }
@@ -34,6 +36,14 @@ public class Supplies_Price {
         this.supplies_id = supplies_id;
     }
 
+    public String getSupply() {
+        return supply;
+    }
+
+    public void setSupply(String supply) {
+        this.supply = supply;
+    }
+
     public double getSell_price() {
         return sell_price;
     }
@@ -42,11 +52,11 @@ public class Supplies_Price {
         this.sell_price = sell_price;
     }
 
-    public Date getEffective_date() {
+    public String getEffective_date() {
         return effective_date;
     }
 
-    public void setEffective_date(Date effective_date) {
+    public void setEffective_date(String effective_date) {
         this.effective_date = effective_date;
     }
 }
