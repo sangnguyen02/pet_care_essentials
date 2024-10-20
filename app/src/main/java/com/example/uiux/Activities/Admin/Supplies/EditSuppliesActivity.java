@@ -46,7 +46,7 @@ import java.util.UUID;
 public class EditSuppliesActivity extends AppCompatActivity {
 
     private ImageView img1, img2, img3, img4, img_back_edit_supply;
-    private TextInputEditText suppName, suppQuantity, suppDescription;
+    private TextInputEditText suppName, suppQuantity, suppDescription, suppSellPrice;
     private Spinner suppStatus, suppCate, suppType;
     private MaterialButton suppSave;
     private static final int PICK_IMAGE_REQUEST = 100;
@@ -64,6 +64,7 @@ public class EditSuppliesActivity extends AppCompatActivity {
 
         suppName = findViewById(R.id.edt_name);
         suppQuantity = findViewById(R.id.edt_quantity);
+        suppSellPrice = findViewById(R.id.edt_sell_price);
         suppSave = findViewById(R.id.btnSave);
         suppDescription = findViewById(R.id.edt_description);
         img_back_edit_supply = findViewById(R.id.img_back_edit_supply);
@@ -101,6 +102,7 @@ public class EditSuppliesActivity extends AppCompatActivity {
 
     private void saveSuppliesData() {
         String updatedName = suppName.getText().toString().trim();
+        Double updateSellPrice = Double.valueOf(suppSellPrice.getText().toString().trim());
         Integer updateQuantity = Integer.valueOf(suppQuantity.getText().toString().trim());
         String updateDescription =suppDescription.getText().toString().trim();
 
@@ -223,6 +225,7 @@ public class EditSuppliesActivity extends AppCompatActivity {
                  DecimalFormat df = new DecimalFormat("0");
                  suppName.setText(supplies.getName());
                  suppQuantity.setText(String.valueOf(supplies.getQuantity()));
+                 suppSellPrice.setText(String.valueOf(supplies.getSell_price()));
                  suppDescription.setText(supplies.getDescription());
                  int status = supplies.getStatus();
                  suppStatus.setSelection(status);

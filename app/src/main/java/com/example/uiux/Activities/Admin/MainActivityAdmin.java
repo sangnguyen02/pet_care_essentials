@@ -17,10 +17,13 @@ import com.example.uiux.Activities.Admin.Supplies.SuppliesActivity;
 import com.example.uiux.Activities.Admin.Supplies.SuppliesImportActivity;
 import com.example.uiux.Activities.Admin.Type.TypeActivity;
 import com.example.uiux.Activities.Admin.Type.UpdateTypeActivity;
+import com.example.uiux.Activities.SplashActivity;
+import com.example.uiux.Activities.User.Profile.SettingsActivity;
 import com.example.uiux.R;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -28,8 +31,8 @@ import java.util.Date;
 import java.util.UUID;
 
 public class MainActivityAdmin extends AppCompatActivity {
-
-    MaterialCardView category_btn,type_btn,supplies_btn,supplies_import,service_btn;
+    FirebaseAuth mAuth;
+    MaterialCardView category_btn,type_btn,supplies_btn,supplies_import,service_btn, sign_out_admin;
     DatabaseReference suppliesRef;
     DatabaseReference suppliesImageRef;
     DatabaseReference suppliesImportRef;
@@ -42,6 +45,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         EdgeToEdge.enable(this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         setContentView(R.layout.activity_main_admin);
+        mAuth = FirebaseAuth.getInstance();
 
         // Khởi tạo Database Reference cho các model
         suppliesRef = FirebaseDatabase.getInstance().getReference("Supplies");
@@ -55,6 +59,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         supplies_btn=findViewById(R.id.supplies);
         supplies_import=findViewById(R.id.supplies_import);
         service_btn=findViewById(R.id.service);
+        sign_out_admin=findViewById(R.id.sign_out_admin);
 
         category_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +101,18 @@ public class MainActivityAdmin extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        sign_out_admin.setOnClickListener(view -> {
+            signOutUser();
+        });
+    }
+
+    private void signOutUser() {
+        mAuth.signOut();  // Firebase Auth sign out
+        Intent intent = new Intent(MainActivityAdmin.this, SplashActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }
 

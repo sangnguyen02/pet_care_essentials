@@ -172,7 +172,7 @@
                     android:textSize="@dimen/text_size"
                     android:focusable="false"
                     android:cursorVisible="false"
-                    android:enabled="false"/>
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
             <GridLayout
