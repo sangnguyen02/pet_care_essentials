@@ -1,7 +1,9 @@
 package com.example.uiux.Activities.User;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.uiux.Activities.User.Order.OrderPaymentActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.firebase.database.DataSnapshot;
@@ -27,8 +30,10 @@ import com.example.uiux.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CartActivity extends AppCompatActivity {
     TextView tv_total_amount;
@@ -42,6 +47,7 @@ public class CartActivity extends AppCompatActivity {
     DatabaseReference cartRef;
     String accountId;
     SharedPreferences preferences;
+    private double totalAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,17 @@ public class CartActivity extends AppCompatActivity {
         accountId = preferences.getString("accountID", null);
         initWidget();
         loadCartItems();
+        btn_buy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CartActivity.this, OrderPaymentActivity.class);
+                if(totalAmount!=0)
+                {
+                    intent.putExtra("totalPrice",totalAmount);
+                }
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -75,10 +92,12 @@ public class CartActivity extends AppCompatActivity {
     }
 
     public void updateTotalAmount() {
-        double totalAmount = 0.0;
+
         for (CartItem item : cartAdapter.getSelectedItems()) {
             totalAmount += item.getTotalPrice();
         }
+        DecimalFormat df = new DecimalFormat("#");
+        totalAmount= Double.parseDouble(df.format(totalAmount));
         tv_total_amount.setText(String.valueOf(totalAmount));
     }
 

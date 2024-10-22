@@ -36,7 +36,6 @@ public class OrderPaymentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_order_payment);
-        txtSoluong = findViewById(R.id.textViewSoluong);
         txtTongTien = findViewById(R.id.textViewTongTien);
         btnThanhToan = findViewById(R.id.buttonThanhToan);
 
@@ -47,9 +46,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
         ZaloPaySDK.init(553, Environment.SANDBOX);
 
         Intent intent = getIntent();
-
-        txtSoluong.setText(intent.getStringExtra("soluong"));
-        Double total = intent.getDoubleExtra("total", (double) 0);
+        Double total = intent.getDoubleExtra("totalPrice", (double) 0);
         String totalString = String.format("%.0f", total);
         txtTongTien.setText(Double.toString(total));
 
