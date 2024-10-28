@@ -74,4 +74,5 @@
         <item>Tạm đóng cửa</item>
         <item>Đóng cửa</item>
     </string-array>
+<!--    <string name="mapbox_access_token">sk.eyJ1IjoidGFudGhvIiwiYSI6ImNtMnBzdGh0NjB2d3Qya3F6d3RqbmRxd3YifQ.-QWfcwRQFmlLjDsqLdJvng</string>-->
 </resources>

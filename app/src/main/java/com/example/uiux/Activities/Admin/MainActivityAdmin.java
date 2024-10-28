@@ -20,6 +20,7 @@ import com.example.uiux.Activities.Admin.Supplies.SuppliesImportActivity;
 import com.example.uiux.Activities.Admin.Type.TypeActivity;
 import com.example.uiux.Activities.Admin.Type.UpdateTypeActivity;
 import com.example.uiux.Activities.SplashActivity;
+import com.example.uiux.Activities.User.Map.BranchMapActivity;
 import com.example.uiux.Activities.User.Profile.SettingsActivity;
 import com.example.uiux.R;
 
@@ -34,7 +35,7 @@ import java.util.UUID;
 
 public class MainActivityAdmin extends AppCompatActivity {
     FirebaseAuth mAuth;
-    MaterialCardView category_btn,type_btn,supplies_btn,supplies_import,service_btn, sign_out_admin,branchStore_btn;
+    MaterialCardView category_btn,type_btn,supplies_btn,supplies_import,service_btn, sign_out_admin,branchStore_btn,mapbtn;
     DatabaseReference suppliesRef;
     DatabaseReference suppliesImageRef;
     DatabaseReference suppliesImportRef;
@@ -64,6 +65,8 @@ public class MainActivityAdmin extends AppCompatActivity {
         service_btn=findViewById(R.id.service);
         branchStore_btn=findViewById(R.id.branchStore);
         sign_out_admin=findViewById(R.id.sign_out_admin);
+        mapbtn=findViewById(R.id.map);
+
 
         category_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,6 +112,13 @@ public class MainActivityAdmin extends AppCompatActivity {
             Intent intent=new Intent(MainActivityAdmin.this, UpdateBranchStoreActivity.class);
             startActivity(intent);
 
+        });
+        mapbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent=new Intent(MainActivityAdmin.this, BranchMapActivity.class);
+                startActivity(intent);
+            }
         });
 
         sign_out_admin.setOnClickListener(view -> {
