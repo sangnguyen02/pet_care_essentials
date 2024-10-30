@@ -26,6 +26,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.Admin.Branch.TestMapActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.User.Map.BranchMapActivity"
             android:exported="false" />
         <activity

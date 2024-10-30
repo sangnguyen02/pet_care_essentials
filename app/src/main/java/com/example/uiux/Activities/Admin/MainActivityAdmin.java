@@ -9,7 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.uiux.Activities.Admin.Branch.BranchStoreActivity;
-import com.example.uiux.Activities.Admin.Branch.UpdateBranchStoreActivity;
+import com.example.uiux.Activities.Admin.Branch.TestMapActivity;
+//import com.example.uiux.Activities.Admin.Branch.UpdateBranchStoreActivity;
 import com.example.uiux.Activities.Admin.Category.CategoryActivity;
 import com.example.uiux.Activities.Admin.Category.UpdateCategoryActivity;
 import com.example.uiux.Activities.Admin.Services.ServiceActivity;
@@ -109,14 +110,14 @@ public class MainActivityAdmin extends AppCompatActivity {
             }
         });
         branchStore_btn.setOnClickListener(view -> {
-            Intent intent=new Intent(MainActivityAdmin.this, UpdateBranchStoreActivity.class);
+            Intent intent=new Intent(MainActivityAdmin.this, BranchMapActivity.class);
             startActivity(intent);
 
         });
         mapbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(MainActivityAdmin.this, BranchMapActivity.class);
+                Intent intent=new Intent(MainActivityAdmin.this, TestMapActivity.class);
                 startActivity(intent);
             }
         });
