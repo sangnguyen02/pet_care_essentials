@@ -22,6 +22,7 @@ import com.example.uiux.Activities.Admin.Type.TypeActivity;
 import com.example.uiux.Activities.Admin.Type.UpdateTypeActivity;
 import com.example.uiux.Activities.SplashActivity;
 import com.example.uiux.Activities.User.Map.BranchMapActivity;
+import com.example.uiux.Activities.User.Map.RouteBranchActivity;
 import com.example.uiux.Activities.User.Profile.SettingsActivity;
 import com.example.uiux.R;
 
@@ -110,7 +111,7 @@ public class MainActivityAdmin extends AppCompatActivity {
             }
         });
         branchStore_btn.setOnClickListener(view -> {
-            Intent intent=new Intent(MainActivityAdmin.this, BranchMapActivity.class);
+            Intent intent=new Intent(MainActivityAdmin.this, RouteBranchActivity.class);
             startActivity(intent);
 
         });
