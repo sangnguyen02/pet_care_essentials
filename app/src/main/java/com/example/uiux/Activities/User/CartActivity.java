@@ -23,6 +23,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.uiux.Activities.User.Order.OrderPaymentActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.firebase.database.DataSnapshot;
@@ -39,8 +40,10 @@ import com.example.uiux.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CartActivity extends AppCompatActivity {
     TextView tv_total_amount;
@@ -54,6 +57,7 @@ public class CartActivity extends AppCompatActivity {
     DatabaseReference cartRef;
     String accountId;
     SharedPreferences preferences;
+    private double totalAmount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

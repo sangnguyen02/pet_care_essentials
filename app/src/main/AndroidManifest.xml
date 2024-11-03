@@ -7,11 +7,15 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application
         android:allowBackup="true"
@@ -25,6 +29,35 @@
         <activity
             android:name=".Activities.User.PaymentActivity"
             android:exported="false" />
+        <activity
+            android:name=".Activities.User.Map.RouteBranchActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.Admin.Branch.TestMapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.User.Map.BranchMapActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.User.Order.PaymentNotificationActivity"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".Activities.User.Order.OrderPaymentActivity" -->
+        <!-- android:exported="false" /> -->
+        <activity
+            android:name=".Activities.User.Order.OrderPaymentActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="app"
+                    android:scheme="demozpdk" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activities.Admin.Branch.UpdateBranchStoreActivity"
             android:exported="false" />

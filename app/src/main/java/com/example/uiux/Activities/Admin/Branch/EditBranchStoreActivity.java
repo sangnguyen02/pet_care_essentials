@@ -134,7 +134,7 @@ public class EditBranchStoreActivity extends AppCompatActivity {
                 Ward selectedWard = (Ward) adapterView.getItemAtPosition(i);
 
                 Toast.makeText(getApplicationContext(), "Select ward: " + selectedWard.getWardName(), Toast.LENGTH_SHORT).show();
-                branchStore.setWard(selectedWard.getWardId()+"+"+ selectedWard.getWardName());
+               // branchStore.setWard(selectedWard.getWardId()+"+"+ selectedWard.getWardName());
 
             }
 
@@ -151,7 +151,7 @@ public class EditBranchStoreActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 District selectedDistrict = (District) parentView.getItemAtPosition(position);
                 Toast.makeText(getApplicationContext(), "Select district: " + selectedDistrict.getDistrictName(), Toast.LENGTH_SHORT).show();
-                branchStore.setDistrict(selectedDistrict.getDistrictId()+"+"+selectedDistrict.getDistrictName());
+              //  branchStore.setDistrict(selectedDistrict.getDistrictId()+"+"+selectedDistrict.getDistrictName());
 
                 // Gọi API để lấy danh sách phường/xã theo district_id
                 new EditBranchStoreActivity.FetchWardsTask().execute("https://vapi.vnappmob.com/api/province/ward/" + selectedDistrict.getDistrictId());
@@ -182,7 +182,7 @@ public class EditBranchStoreActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 Province selectedProvince = (Province) parentView.getItemAtPosition(position);
                 Toast.makeText(getApplicationContext(), "Select province: " + selectedProvince.getProvinceName(), Toast.LENGTH_SHORT).show();
-                branchStore.setProvince(selectedProvince.getProvinceId()+"+"+selectedProvince.getProvinceName());
+               // branchStore.setProvince(selectedProvince.getProvinceId()+"+"+selectedProvince.getProvinceName());
 
                 // Gọi API để lấy danh sách quận/huyện theo province_id
                 new EditBranchStoreActivity.FetchDistrictsTask().execute("https://vapi.vnappmob.com/api/province/district/" + selectedProvince.getProvinceId());
@@ -247,8 +247,8 @@ public class EditBranchStoreActivity extends AppCompatActivity {
             super.onPostExecute(provinces);
             if (provinces != null) {
                 // Thêm hint vào danh sách
-                String[] Province=branchStore.getProvince().split("\\+");
-                provinces.add(0, new Province("-1", Province[1], ""));
+             //   String[] Province=branchStore.getProvince().split("\\+");
+             //   provinces.add(0, new Province("-1", Province[1], ""));
 
                 provinceAdapter = new ArrayAdapter<>(EditBranchStoreActivity.this, android.R.layout.simple_spinner_item, provinces);
                 provinceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -291,8 +291,8 @@ public class EditBranchStoreActivity extends AppCompatActivity {
             super.onPostExecute(districts);
             if (districts != null) {
                 // Thêm hint vào danh sách
-                String[] District=branchStore.getDistrict().split("\\+");
-                districts.add(0, new District("-1", District[1]));
+               // String[] District=branchStore.getDistrict().split("\\+");
+              //  districts.add(0, new District("-1", District[1]));
 
                 districtAdapter = new ArrayAdapter<>(EditBranchStoreActivity.this, android.R.layout.simple_spinner_item, districts);
                 districtAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -335,8 +335,8 @@ public class EditBranchStoreActivity extends AppCompatActivity {
             super.onPostExecute(wards);
             if (wards != null) {
                 // Thêm mục hint vào danh sách
-                String[] Ward=branchStore.getWard().split("\\+");
-                wards.add(0, new Ward("-1", Ward[1]));
+               // String[] Ward=branchStore.getWard().split("\\+");
+               // wards.add(0, new Ward("-1", Ward[1]));
 
                 wardAdapter = new ArrayAdapter<>(EditBranchStoreActivity.this, android.R.layout.simple_spinner_item, wards);
                 wardAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

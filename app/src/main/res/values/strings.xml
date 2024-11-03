@@ -80,4 +80,5 @@
     <string name="delete_cart_item_message">Are you sure you want to remove this product from the cart?</string>
     <string name="confirm_delete">Confirm</string>
     <string name="cancel">Hủy</string>
+    <string name="mapbox_access_token">sk.eyJ1IjoidGFudGhvIiwiYSI6ImNtMnBzdGh0NjB2d3Qya3F6d3RqbmRxd3YifQ.-QWfcwRQFmlLjDsqLdJvng</string>
 </resources>

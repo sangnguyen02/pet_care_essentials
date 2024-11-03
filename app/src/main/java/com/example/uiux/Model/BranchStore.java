@@ -3,21 +3,20 @@ package com.example.uiux.Model;
 public class BranchStore {
     private String branch_Store_id;
     private  String branch_name;
-    private  String province;
-    private  String district;
-    private String ward;
+    private  double longtitude;
+    private  double latitude;
+
     private String address_details;
     private int status;
 
     public BranchStore() {
     }
 
-    public BranchStore(String branch_Store_id, String branch_name, String province, String district, String ward, String address_details, int status) {
+    public BranchStore(String branch_Store_id, String branch_name, double longtitude, double latitude, String address_details, int status) {
         this.branch_Store_id = branch_Store_id;
         this.branch_name = branch_name;
-        this.province = province;
-        this.district = district;
-        this.ward = ward;
+        this.longtitude = longtitude;
+        this.latitude = latitude;
         this.address_details = address_details;
         this.status = status;
     }
@@ -38,28 +37,20 @@ public class BranchStore {
         this.branch_name = branch_name;
     }
 
-    public String getProvince() {
-        return province;
+    public double getLongtitude() {
+        return longtitude;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setLongtitude(double longtitude) {
+        this.longtitude = longtitude;
     }
 
-    public String getDistrict() {
-        return district;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public String getWard() {
-        return ward;
-    }
-
-    public void setWard(String ward) {
-        this.ward = ward;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
     public String getAddress_details() {
