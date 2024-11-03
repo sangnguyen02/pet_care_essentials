@@ -118,7 +118,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         mapbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(MainActivityAdmin.this, TestMapActivity.class);
+                Intent intent=new Intent(MainActivityAdmin.this, BranchMapActivity.class);
                 startActivity(intent);
             }
         });
