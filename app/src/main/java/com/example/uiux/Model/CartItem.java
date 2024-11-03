@@ -9,6 +9,8 @@ public class CartItem {
     private double totalPrice;
     private String imageUrl;
     private String combinedKey;
+    private boolean isSelected;
+
 
     public CartItem() {
     }
@@ -22,6 +24,14 @@ public class CartItem {
         this.totalPrice = totalPrice;
         this.imageUrl = imageUrl;
         this.combinedKey = generateCombinedKey(supply_id, supply_size);
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
     public String getImageUrl() {

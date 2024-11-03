@@ -23,6 +23,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.User.PaymentActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.Admin.Branch.UpdateBranchStoreActivity"
             android:exported="false" />
         <activity

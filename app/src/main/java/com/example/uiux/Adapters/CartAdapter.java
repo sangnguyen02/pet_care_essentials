@@ -53,21 +53,24 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.tvSupplyTitle.setText(cartItem.getSupply_title());
         holder.tvSupplySize.setText(cartItem.getSupply_size());
         holder.tvSupplyPrice.setText(String.valueOf(cartItem.getSupply_price()));
-        holder.tvTotalPrice.setText(String.valueOf(cartItem.getTotalPrice()));
         holder.tvSupplyQuantity.setText(String.valueOf(cartItem.getQuantity()));
 
         // Set up checkbox listener to track selected items
         holder.checkBoxSelectItem.setOnCheckedChangeListener(null);
-        holder.checkBoxSelectItem.setChecked(selectedItems.contains(cartItem));
+        holder.checkBoxSelectItem.setChecked(isItemSelected(cartItem));
         holder.checkBoxSelectItem.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 selectedItems.add(cartItem);
+                notifyItemChanged(position);
             } else {
                 selectedItems.remove(cartItem);
+                notifyItemChanged(position);
             }
             // Cập nhật tổng tiền mỗi khi có sự thay đổi
             ((CartActivity) context).updateTotalAmount();
         });
+
+
 
         String imageUrls = cartItem.getImageUrl();
         if (imageUrls != null && !imageUrls.isEmpty()) {
@@ -85,20 +88,34 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 
         holder.mcv_cart_minus.setOnClickListener(view -> {
             holder.updateQuantity(-1, cartItem);
+            notifyItemChanged(position);
         });
 
         holder.mcv_cart_plus.setOnClickListener(view -> {
             holder.updateQuantity(1, cartItem);
+            notifyItemChanged(position);
         });
+    }
+
+    // Hàm kiểm tra xem item có được chọn hay không
+    private boolean isItemSelected(CartItem item) {
+        for (CartItem selectedItem : selectedItems) {
+            if (selectedItem.getCombinedKey().equals(item.getCombinedKey())) {  // So sánh dựa trên ID hoặc thuộc tính duy nhất
+                return true;
+            }
+        }
+        return false;
     }
 
     public void selectAllItems(boolean isChecked) {
         selectedItems.clear(); // Clear the current selection
-        for (CartItem item : cartItemList) {
-            if (isChecked) {
-                selectedItems.add(item);
-            }
+
+        if (isChecked) {
+            selectedItems.addAll(cartItemList);
         }
+        ((CartActivity) context).updateTotalAmount();
+
+
         notifyDataSetChanged(); // Refresh the RecyclerView
     }
 
@@ -114,7 +131,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public static class CartViewHolder extends RecyclerView.ViewHolder {
         MaterialCardView mcv_cart_item, mcv_cart_minus, mcv_cart_plus;
         ImageView img_supply;
-        TextView tvSupplyTitle, tvSupplySize, tvSupplyPrice, tvTotalPrice, tvSupplyQuantity;
+        TextView tvSupplyTitle, tvSupplySize, tvSupplyPrice, tvSupplyQuantity;
         MaterialCheckBox checkBoxSelectItem;
         int sizeQuantity;
         String accountId;
@@ -128,7 +145,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
             tvSupplyTitle = itemView.findViewById(R.id.tv_cart_item_title);
             tvSupplySize = itemView.findViewById(R.id.tv_cart_item_size);
             tvSupplyPrice = itemView.findViewById(R.id.tv_cart_item_price);
-            tvTotalPrice = itemView.findViewById(R.id.tv_cart_total_price);
             tvSupplyQuantity = itemView.findViewById(R.id.tv_cart_item_quantity);
             checkBoxSelectItem = itemView.findViewById(R.id.checkbox_cart_item);
             img_supply = itemView.findViewById(R.id.img_cart_item);
@@ -137,8 +153,9 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         }
 
         private void updateQuantity(int change, CartItem cartItem) {
-            int currentQuantity = Integer.parseInt(tvSupplyQuantity.getText().toString());
-            int newQuantity = currentQuantity + change;
+            int newQuantity = cartItem.getQuantity() + change;
+            Log.e("New Quantity", String.valueOf(newQuantity));
+
 
             if (newQuantity < 0) {
                 newQuantity = 0;
@@ -146,31 +163,26 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                 newQuantity = sizeQuantity;
             }
 
-            tvSupplyQuantity.setText(String.valueOf(newQuantity));
-            mcv_cart_minus.setEnabled(newQuantity > 0);
 
             // Cập nhật tổng giá trị
             if (newQuantity > 0) {
                 int pricePerUnit = (int) cartItem.getSupply_price(); // lấy giá một đơn vị
                 int totalPrice = pricePerUnit * newQuantity;
-                tvTotalPrice.setText(String.valueOf(totalPrice));
 
-                // Cập nhật tổng tiền ở Activity
-                ((CartActivity) itemView.getContext()).updateTotalAmount();
 
+                cartItem.setQuantity(newQuantity);
+                tvSupplyQuantity.setText(String.valueOf(newQuantity));
                 // Cập nhật Firebase
                 accountId = preferences.getString("accountID", null);
                 DatabaseReference cartRef = FirebaseDatabase.getInstance().getReference("Cart")
                         .child(accountId).child(cartItem.getCombinedKey());
                 cartRef.child("quantity").setValue(newQuantity);
                 cartRef.child("totalPrice").setValue(totalPrice);
-            } else {
-                tvTotalPrice.setText("0");
+
+                // Cập nhật tổng tiền ở Activity
+
             }
-
-            cartItem.setQuantity(newQuantity);
-            cartItem.updateTotalPrice();
-
+            ((CartActivity) itemView.getContext()).updateTotalAmount();
             //updateStockQuantity(cartItem.getSupply_id(), cartItem.getSupply_size(), currentQuantity, newQuantity);
         }
 
@@ -231,7 +243,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
                         String size = optionSnapshot.child("size").getValue(String.class);
                         if (size != null && size.contentEquals(tvSupplySize.getText())) {
                             sizeQuantity = optionSnapshot.child("quantity").getValue(Integer.class);
-                            Log.e("size Quantity: ", String.valueOf(sizeQuantity));
                         }
                     }
                 }

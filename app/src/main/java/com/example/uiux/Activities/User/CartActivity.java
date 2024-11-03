@@ -1,9 +1,19 @@
 package com.example.uiux.Activities.User;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -18,6 +28,8 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -54,6 +66,75 @@ public class CartActivity extends AppCompatActivity {
         accountId = preferences.getString("accountID", null);
         initWidget();
         loadCartItems();
+        updateTotalAmount();
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                // Vuốt item nhưng không xóa ngay lập tức
+                int position = viewHolder.getAdapterPosition();
+                CartItem cartItem = cartItemList.get(position);
+
+                // Hiển thị nút "Xóa" khi vuốt
+                new AlertDialog.Builder(CartActivity.this)
+                        .setTitle(getString(R.string.delete_cart_item_title))
+                        .setMessage(getString(R.string.delete_cart_item_message))
+                        .setPositiveButton(getString(R.string.confirm_delete), (dialog, which) -> {
+                            cartItemList.remove(position);
+                            cartAdapter.notifyItemRemoved(position);
+                            // Chỉ cần gọi xóa từ Firebase
+                            removeFromFirebase(cartItem);
+                            // Xóa khỏi danh sách hiển thị trong adapter
+
+
+                        })
+                        .setNegativeButton(getString(R.string.cancel), (dialog, which) -> {
+                            // Hoàn tác vuốt, khôi phục item
+                            cartAdapter.notifyItemChanged(position);
+                        })
+                        .setCancelable(false)
+                        .show();
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                View itemView = viewHolder.itemView;
+                int backgroundCornerOffset = 20;
+                Drawable deleteIcon = ContextCompat.getDrawable(CartActivity.this, R.drawable.minus);
+                ColorDrawable background = new ColorDrawable(ContextCompat.getColor(CartActivity.this, R.color.light_coral));
+
+                if (dX < 0) { // Vuốt từ phải sang trái
+                    background.setBounds(itemView.getRight() + (int) dX - backgroundCornerOffset, itemView.getTop(),
+                            itemView.getRight(), itemView.getBottom());
+                    background.draw(c);
+
+                    int iconMargin = (itemView.getHeight() - deleteIcon.getIntrinsicHeight()) / 2;
+                    int iconTop = itemView.getTop() + iconMargin;
+                    int iconBottom = iconTop + deleteIcon.getIntrinsicHeight();
+                    int iconLeft = itemView.getRight() - iconMargin - deleteIcon.getIntrinsicWidth();
+                    int iconRight = itemView.getRight() - iconMargin;
+                    deleteIcon.setBounds(iconLeft, iconTop, iconRight, iconBottom);
+                    deleteIcon.draw(c);
+                }
+
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+
+            @Override
+            public float getSwipeThreshold(@NonNull RecyclerView.ViewHolder viewHolder) {
+                return 0.7f;
+            }
+
+        };
+
+        // Gán ItemTouchHelper vào RecyclerView
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(rcv_cart);
 
     }
 
@@ -72,15 +153,72 @@ public class CartActivity extends AppCompatActivity {
             cartAdapter.selectAllItems(isChecked);
             updateTotalAmount();
         });
+
+        btn_buy.setOnClickListener(view -> {
+            goToPayment();
+        });
+    }
+
+    void goToPayment() {
+        List<CartItem> selectedItems = cartAdapter.getSelectedItems();
+        ArrayList<String> selectedSupplies = new ArrayList<>();
+
+        for (CartItem item : selectedItems) {
+            selectedSupplies.add(item.getCombinedKey());
+        }
+
+        Intent intent = new Intent(CartActivity.this, PaymentActivity.class);
+        intent.putStringArrayListExtra("selected_supplies", selectedSupplies);
+        startActivity(intent);
     }
 
     public void updateTotalAmount() {
-        double totalAmount = 0.0;
-        for (CartItem item : cartAdapter.getSelectedItems()) {
-            totalAmount += item.getTotalPrice();
+        final double[] totalAmount = {0.0};
+        List<CartItem> selectedItems = cartAdapter.getSelectedItems();
+        final int[] remainingItemsToFetch = {selectedItems.size()}; // Đếm số lượng item còn lại để fetch
+
+        if (remainingItemsToFetch[0] == 0) {
+            // Nếu không có item nào được chọn, hiển thị 0
+            tv_total_amount.setText(String.valueOf(totalAmount[0]));
+            return;
         }
-        tv_total_amount.setText(String.valueOf(totalAmount));
+
+        for (CartItem item : selectedItems) {
+            // Lấy dữ liệu từ Firebase về
+            DatabaseReference itemSelectedRef = FirebaseDatabase.getInstance().getReference("Cart")
+                    .child(accountId).child(item.getCombinedKey());
+
+            itemSelectedRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    // Lấy giá và số lượng từ Firebase
+                    Double price = snapshot.child("supply_price").getValue(Double.class);
+                    Integer quantity = snapshot.child("quantity").getValue(Integer.class);
+
+                    if (price != null && quantity != null) {
+                        totalAmount[0] += price * quantity; // Cộng dồn giá trị vào tổng
+                    }
+
+                    // Kiểm tra nếu đã lấy xong tất cả item
+                    remainingItemsToFetch[0]--;
+                    if (remainingItemsToFetch[0] == 0) {
+                        tv_total_amount.setText(String.valueOf(totalAmount[0])); // Cập nhật TextView với tổng số tiền
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Xử lý lỗi nếu cần
+                    Log.e("FirebaseError", "Error fetching data: " + error.getMessage());
+                    remainingItemsToFetch[0]--; // Giảm số lượng items còn lại
+                    if (remainingItemsToFetch[0] == 0) {
+                        tv_total_amount.setText(String.valueOf(totalAmount[0])); // Cập nhật với tổng số tiền hiện tại
+                    }
+                }
+            });
+        }
     }
+
 
     private void loadCartItems() {
         if(!accountId.isEmpty()) {
@@ -102,6 +240,21 @@ public class CartActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void removeFromFirebase(CartItem cartItem) {
+        // Xóa item khỏi Firebase dựa trên accountId và khóa kết hợp (combinedKey)
+        cartRef.child(cartItem.getCombinedKey()).removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    // Đã xóa thành công
+                    updateTotalAmount();
+
+                    Toast.makeText(CartActivity.this, "Item removed", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    // Lỗi khi xóa
+                    Toast.makeText(CartActivity.this, "Failed to remove item", Toast.LENGTH_SHORT).show();
+                });
     }
 
 

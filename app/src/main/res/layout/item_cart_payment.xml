@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mcv_cart_payment_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:backgroundTint="@color/white"
+    android:layout_margin="8dp"
+    app:rippleColor="@color/ripple_color"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="10dp"
+    app:strokeWidth="0dp"
+    android:outlineSpotShadowColor="@color/light_grey"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/img_cart_payment_item"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/product_sample"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/linear_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/img_cart_payment_item"
+            app:layout_constraintStart_toEndOf="@+id/img_cart_payment_item"
+            app:layout_constraintTop_toTopOf="@+id/img_cart_payment_item">
+
+            <TextView
+                android:id="@+id/tv_cart_payment_item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Supply Title"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_cart_payment_item_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Size"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tv_cart_payment_item_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Price"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="x"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_cart_payment_item_quantity"
+            app:layout_constraintEnd_toStartOf="@id/tv_cart_payment_item_quantity"
+            app:layout_constraintTop_toTopOf="@+id/tv_cart_payment_item_quantity" />
+
+        <TextView
+            android:id="@+id/tv_cart_payment_item_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="2"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/linear_item_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/linear_item_text" />
+
+        <View
+            android:id="@+id/line_cart_payment_item"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_grey"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linear_item_text" />
+
+        <TextView
+            android:id="@+id/label_item_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_bold"
+            android:layout_marginTop="4dp"
+            android:text="Total price: "
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line_cart_payment_item" />
+
+        <TextView
+            android:id="@+id/tv_cart_payment_item_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/roboto_bold"
+            android:text="đ250000"
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/label_item_total_price"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/label_item_total_price" />
+        
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    
+
+</com.google.android.material.card.MaterialCardView>
