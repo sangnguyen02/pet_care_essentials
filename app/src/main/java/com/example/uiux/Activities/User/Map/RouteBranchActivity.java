@@ -16,6 +16,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
@@ -25,9 +28,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.uiux.Activities.Admin.Supplies.SuppliesActivity;
+import com.example.uiux.Model.BranchStore;
+import com.example.uiux.Model.Type;
 import com.example.uiux.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
 import com.mapbox.android.core.location.LocationEngineProvider;
@@ -83,9 +94,12 @@ import com.mapbox.navigation.ui.voice.model.SpeechValue;
 import com.mapbox.navigation.ui.voice.model.SpeechVolume;
 import com.mapbox.navigation.ui.voice.view.MapboxSoundButton;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 import kotlin.Unit;
@@ -100,6 +114,10 @@ public class RouteBranchActivity extends AppCompatActivity {
     private final NavigationLocationProvider navigationLocationProvider = new NavigationLocationProvider();
     private MapboxRouteLineView routeLineView;
     private MapboxRouteLineApi routeLineApi;
+    private Spinner spinnerBranch;
+    private   double longtitude;
+    private  double  latitude;
+    private List<BranchStore> branchList = new ArrayList<>(); // Danh sách chứa các BranchStore từ Firebase
     private final LocationObserver locationObserver = new LocationObserver() {
         @Override
         public void onNewRawLocation(@NonNull Location location) {
@@ -229,6 +247,7 @@ public class RouteBranchActivity extends AppCompatActivity {
         mapView = findViewById(R.id.mapView);
         focusLocationBtn = findViewById(R.id.focusLocation);
         setRoute = findViewById(R.id.setRoute);
+        spinnerBranch=findViewById(R.id.spinnerBranch);
         checkAndRequestPermissions();
 
         MapboxRouteLineOptions options = new MapboxRouteLineOptions.Builder(this).withRouteLineResources(new RouteLineResources.Builder().build())
@@ -238,6 +257,7 @@ public class RouteBranchActivity extends AppCompatActivity {
 
         speechApi = new MapboxSpeechApi(RouteBranchActivity.this, getString(R.string.mapbox_access_token), Locale.US.toLanguageTag());
         mapboxVoiceInstructionsPlayer = new MapboxVoiceInstructionsPlayer(RouteBranchActivity.this, Locale.US.toLanguageTag());
+        FetchSpinnerBranch();
 
        // NavigationOptions navigationOptions = new NavigationOptions.Builder(this).accessToken(getString(R.string.mapbox_access_token)).build();
 
@@ -290,7 +310,12 @@ public class RouteBranchActivity extends AppCompatActivity {
         setRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(RouteBranchActivity.this, "Please select a location in map", Toast.LENGTH_SHORT).show();
+                if (latitude != 0.0 && longtitude != 0.0) {
+                                    Point destination = Point.fromLngLat(longtitude, latitude);
+                                    fetchRoute(destination); // Use the selected coordinates
+                                } else {
+                                    Toast.makeText(RouteBranchActivity.this, "Please select a branch from the list.", Toast.LENGTH_SHORT).show();
+                                }
             }
         });
 
@@ -312,23 +337,7 @@ public class RouteBranchActivity extends AppCompatActivity {
                 Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.location_pin);
                 AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
                 PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
-                addOnMapClickListener(mapView.getMapboxMap(), new OnMapClickListener() {
-                    @Override
-                    public boolean onMapClick(@NonNull Point point) {
-                        pointAnnotationManager.deleteAll();
-                        PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap)
-                                .withPoint(point);
-                        pointAnnotationManager.create(pointAnnotationOptions);
-
-                        setRoute.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                fetchRoute(point);
-                            }
-                        });
-                        return true;
-                    }
-                });
+                
                 focusLocationBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -337,6 +346,72 @@ public class RouteBranchActivity extends AppCompatActivity {
                         focusLocationBtn.hide();
                     }
                 });
+            }
+        });
+    }
+
+    private void FetchSpinnerBranch() {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Branch Store");
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.location_pin);
+        AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
+        PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                branchList.clear(); // Xóa dữ liệu cũ
+                List<String> branchNames = new ArrayList<>(); // Danh sách chỉ chứa tên chi nhánh
+
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    BranchStore branchStore = snapshot.getValue(BranchStore.class);
+                    if (branchStore != null) {
+                        branchList.add(branchStore); // Thêm BranchStore vào danh sách
+                        branchNames.add(branchStore.getBranch_name()); // Thêm tên chi nhánh vào danh sách tên
+                    }
+                }
+
+                // Tạo và gắn ArrayAdapter
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(RouteBranchActivity.this,
+                        android.R.layout.simple_spinner_item, branchNames);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerBranch.setAdapter(adapter);
+
+                // Đặt sự kiện khi chọn Spinner
+                spinnerBranch.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        // Lấy BranchStore được chọn
+                        BranchStore selectedBranch = branchList.get(position);
+                         longtitude = selectedBranch.getLongtitude();
+                         latitude = selectedBranch.getLatitude();
+                        Point destination = Point.fromLngLat(longtitude, latitude);
+                        pointAnnotationManager.deleteAll();
+                        PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions().withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap)
+                                .withPoint(destination);
+                        pointAnnotationManager.create(pointAnnotationOptions);
+
+                        // Hiển thị Toast
+                        Toast.makeText(RouteBranchActivity.this,
+                                "Longitude: " + longtitude + ", Latitude: " + latitude,
+                                Toast.LENGTH_LONG).show();
+
+
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        // Không làm gì nếu không có lựa chọn nào
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Xử lý lỗi
+                Toast.makeText(RouteBranchActivity.this,
+                        "Failed to load data: " + error.getMessage(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
