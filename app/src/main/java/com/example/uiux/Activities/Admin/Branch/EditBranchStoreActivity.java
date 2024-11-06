@@ -2,6 +2,7 @@ package com.example.uiux.Activities.Admin.Branch;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -54,6 +55,10 @@ public class EditBranchStoreActivity extends AppCompatActivity {
     private ImageView imgv_back;
     BranchStore branchStore;
     private String branchStore_id;
+    private String selectedProvinceName = "";
+    private String selectedDistrictName = "";
+    private String selectedWardName = "";
+    private String detailedStreetAddress = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,11 +88,19 @@ public class EditBranchStoreActivity extends AppCompatActivity {
         Wardselection();
         FectchSpinnerStatus();
         saveBTN.setOnClickListener(v -> {
-            String detailAddress = edt_address.getText().toString().trim();
+            detailedStreetAddress = edt_address.getText().toString().trim();
             String branch_name=edt_branch_name.getText().toString().trim();
             branchStore.setStatus( statusSpinner.getSelectedItemPosition());
-            if (!detailAddress.isEmpty()&&!branch_name.isEmpty()) {
-                branchStore.setAddress_details(detailAddress);
+            if (detailedStreetAddress.isEmpty() || branch_name.isEmpty()) {
+                Toast.makeText(EditBranchStoreActivity.this, "Please enter all details.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Construct the full address
+            String detail_address = String.format("%s, %s, %s, %s",
+                    detailedStreetAddress, selectedWardName, selectedDistrictName, selectedProvinceName);
+            if (!detail_address.isEmpty()&&!branch_name.isEmpty()) {
+                branchStore.setAddress_details(detail_address);
                 branchStore.setBranch_name(branch_name);
             } else {
                 Toast.makeText(EditBranchStoreActivity.this, "Please enter the detail address.", Toast.LENGTH_SHORT).show();
@@ -134,7 +147,8 @@ public class EditBranchStoreActivity extends AppCompatActivity {
                 Ward selectedWard = (Ward) adapterView.getItemAtPosition(i);
 
                 Toast.makeText(getApplicationContext(), "Select ward: " + selectedWard.getWardName(), Toast.LENGTH_SHORT).show();
-               // branchStore.setWard(selectedWard.getWardId()+"+"+ selectedWard.getWardName());
+                selectedWardName=selectedWard.getWardName();
+
 
             }
 
@@ -151,7 +165,7 @@ public class EditBranchStoreActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 District selectedDistrict = (District) parentView.getItemAtPosition(position);
                 Toast.makeText(getApplicationContext(), "Select district: " + selectedDistrict.getDistrictName(), Toast.LENGTH_SHORT).show();
-              //  branchStore.setDistrict(selectedDistrict.getDistrictId()+"+"+selectedDistrict.getDistrictName());
+                selectedDistrictName=selectedDistrict.getDistrictName();
 
                 // Gọi API để lấy danh sách phường/xã theo district_id
                 new EditBranchStoreActivity.FetchWardsTask().execute("https://vapi.vnappmob.com/api/province/ward/" + selectedDistrict.getDistrictId());
@@ -183,6 +197,7 @@ public class EditBranchStoreActivity extends AppCompatActivity {
                 Province selectedProvince = (Province) parentView.getItemAtPosition(position);
                 Toast.makeText(getApplicationContext(), "Select province: " + selectedProvince.getProvinceName(), Toast.LENGTH_SHORT).show();
                // branchStore.setProvince(selectedProvince.getProvinceId()+"+"+selectedProvince.getProvinceName());
+                selectedProvinceName=selectedProvince.getProvinceName();
 
                 // Gọi API để lấy danh sách quận/huyện theo province_id
                 new EditBranchStoreActivity.FetchDistrictsTask().execute("https://vapi.vnappmob.com/api/province/district/" + selectedProvince.getProvinceId());
