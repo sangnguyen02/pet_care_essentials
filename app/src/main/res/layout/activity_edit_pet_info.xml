@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:background="@color/bg_grey">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_add_supply_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardElevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_back_add_supply"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/ripple_effect"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Edit Pet Information"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back_add_supply"
+                app:layout_constraintStart_toEndOf="@+id/img_back_add_supply"
+                app:layout_constraintTop_toTopOf="@+id/img_back_add_supply"
+                tools:ignore="HardcodedText" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cv_add_supply_app_bar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="vertical">
+
+
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:columnCount="2"
+                android:rowCount="2">
+
+                <!-- First Image -->
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/grey"
+                    android:scaleType="centerCrop" />
+
+                <!-- Second Image -->
+                <ImageView
+                    android:id="@+id/img2"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/grey"
+                    android:scaleType="centerCrop" />
+
+                <!-- Third Image -->
+                <ImageView
+                    android:id="@+id/img3"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/grey"
+                    android:scaleType="centerCrop" />
+
+                <!-- Fourth Image -->
+                <ImageView
+                    android:id="@+id/img4"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/grey"
+                    android:scaleType="centerCrop" />
+            </GridLayout>
+
+            <!-- Name -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="Name"
+                app:boxStrokeColor="@color/text_input"
+                app:boxStrokeWidth="1dp"
+                app:hintTextColor="@color/text_input"
+                app:shapeAppearanceOverlay="@style/Button4">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="text"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Sell Price -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="Pet Age"
+                app:boxStrokeColor="@color/text_input"
+                app:boxStrokeWidth="1dp"
+                app:hintTextColor="@color/text_input"
+                app:shapeAppearanceOverlay="@style/Button4">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_age"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:inputType="numberDecimal"
+                    android:text="0"
+                    android:enabled="false"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size"
+                    android:focusable="false"
+                    android:cursorVisible="false" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Quantity -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:hint="Weight"
+                app:boxStrokeColor="@color/text_input"
+                app:boxStrokeWidth="1dp"
+                app:hintTextColor="@color/text_input"
+                app:shapeAppearanceOverlay="@style/Button4">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edt_weight"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:inputType="number"
+                    android:enabled="false"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:columnCount="2"
+                android:rowCount="2">
+
+                <LinearLayout
+                    android:layout_width="200dp"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+
+                    >
+                    <!-- Category (Spinner) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Gender: "
+                        android:fontFamily="@font/roboto_bold"
+                        android:textSize="16sp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_gender"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="180dp"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    >
+                    <!-- Type (Spinner) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Type: "
+                        android:fontFamily="@font/roboto_bold"
+                        android:textSize="16sp" />
+
+                    <Spinner
+                        android:id="@+id/spinner_type"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="200dp"
+                    android:layout_height="60dp"
+                    android:orientation="horizontal"
+                    >
+                    <!-- Status (Spinner) -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Breed: "
+                        android:fontFamily="@font/roboto_bold"
+                        android:textSize="16sp" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_breed"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="Color: "
+                        android:fontFamily="@font/roboto_bold"
+                        android:textSize="16sp" />
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edt_color"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:inputType="text"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size" />
+
+
+
+
+                </LinearLayout>
+
+            </GridLayout>
+
+            <!-- Description -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Description"
+                app:boxStrokeColor="@color/text_input"
+                app:boxStrokeWidth="1dp"
+                app:hintTextColor="@color/text_input"
+                app:shapeAppearanceOverlay="@style/Button4">
+
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:id="@+id/btnSubmit"
+                android:text="ADD"
+                android:textSize="16sp"
+                android:fontFamily="@font/roboto_bold"
+                android:textAllCaps="false"
+                android:elevation="15dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:layout_gravity="center"
+                app:shapeAppearanceOverlay="@style/Button5"
+                app:backgroundTint="@color/tabLayout_background"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

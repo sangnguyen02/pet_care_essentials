@@ -59,7 +59,6 @@ public class SuppliesActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private DatabaseReference suppliesDatabase;
-    private double supply_sell_price;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
