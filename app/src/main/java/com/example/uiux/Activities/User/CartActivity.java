@@ -171,6 +171,11 @@ public class CartActivity extends AppCompatActivity {
             selectedSupplies.add(item.getCombinedKey());
         }
 
+        if (selectedSupplies.isEmpty()) {
+            Toast.makeText(this, "Please select at least one item to proceed to payment.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Intent intent = new Intent(CartActivity.this, PaymentActivity.class);
         intent.putStringArrayListExtra("selected_supplies", selectedSupplies);
         startActivity(intent);

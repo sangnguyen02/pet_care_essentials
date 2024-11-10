@@ -81,4 +81,16 @@
     <string name="confirm_delete">Confirm</string>
     <string name="cancel">Hủy</string>
     <string name="mapbox_access_token">sk.eyJ1IjoidGFudGhvIiwiYSI6ImNtMnBzdGh0NjB2d3Qya3F6d3RqbmRxd3YifQ.-QWfcwRQFmlLjDsqLdJvng</string>
+
+
+    <string name="payment_method">Payment method</string>
+    <string name="zalo_method">ZaloPay</string>
+    <string name="cod_method">Cash on Delivery</string>
+
+
+
+    <string name="delivery_method">Delivery method</string>
+    <string name="shipping_standard">Standard</string>
+    <string name="shipping_express">Express</string>
+    <string name="shipping_expedited">Expedited</string>
 </resources>

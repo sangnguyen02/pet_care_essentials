@@ -34,6 +34,7 @@ public class UpdateAddressActivity extends AppCompatActivity {
     private List<Account_Address> addressList = new ArrayList<>();
     private DatabaseReference databaseReference;
     private String accountId;
+    private boolean fromPaymentActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +49,14 @@ public class UpdateAddressActivity extends AppCompatActivity {
         imgv_back_add_address.setOnClickListener(view -> finish());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        addressAdapter = new AddressAdapter(addressList, this);
-        recyclerView.setAdapter(addressAdapter);
         Intent intent= getIntent();
         accountId = intent.getStringExtra("account_id");
+        fromPaymentActivity = intent.getBooleanExtra("from_payment_activity", false);
+
+        addressAdapter = new AddressAdapter(addressList, this, fromPaymentActivity);
+        recyclerView.setAdapter(addressAdapter);
+
+
         databaseReference = FirebaseDatabase.getInstance().getReference("Account_Address");
 
         loadAddresses();

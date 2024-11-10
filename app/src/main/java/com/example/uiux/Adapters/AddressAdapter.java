@@ -1,5 +1,6 @@
 package com.example.uiux.Adapters;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -31,10 +32,12 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
 
     private List<Account_Address> addressList;
     private Context context;
+    private boolean fromPaymentActivity;
 
-    public AddressAdapter(List<Account_Address> addressList, Context context) {
+    public AddressAdapter(List<Account_Address> addressList, Context context, boolean fromPaymentActivity) {
         this.addressList = addressList;
         this.context = context;
+        this.fromPaymentActivity = fromPaymentActivity;
     }
 
     @NonNull
@@ -68,8 +71,14 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
                 int position = getAdapterPosition();
                 Account_Address address = addressList.get(position);
 
-                // Tạo một AlertDialog với 2 lựa chọn: Edit và Delete
-                new AlertDialog.Builder(context)
+                if (fromPaymentActivity) {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("selected_address", address.getAccount_address_id());
+                    ((Activity) context).setResult(Activity.RESULT_OK, resultIntent);
+                    ((Activity) context).finish();
+                } else {
+                    // Tạo một AlertDialog với 2 lựa chọn: Edit và Delete
+                    new AlertDialog.Builder(context)
                         .setItems(new CharSequence[]{"Edit", "Delete"}, (dialog, which) -> {
                             if (which == 0) {
                                 // Nếu người dùng chọn "Sửa"
@@ -109,6 +118,7 @@ public class AddressAdapter extends RecyclerView.Adapter<AddressAdapter.AddressV
                             }
                         })
                         .show();
+                }
             });
 
         }
