@@ -14,6 +14,8 @@ import com.example.uiux.Activities.Admin.Branch.TestMapActivity;
 import com.example.uiux.Activities.Admin.Branch.UpdateBranchStoreActivity;
 import com.example.uiux.Activities.Admin.Category.CategoryActivity;
 import com.example.uiux.Activities.Admin.Category.UpdateCategoryActivity;
+import com.example.uiux.Activities.Admin.Discount.DiscountActivity;
+import com.example.uiux.Activities.Admin.Discount.UpdateDiscountActivity;
 import com.example.uiux.Activities.Admin.Services.ServiceActivity;
 import com.example.uiux.Activities.Admin.Services.UpdateServiceActivity;
 import com.example.uiux.Activities.Admin.Supplies.UpdateSuppliesActivity;
@@ -119,7 +121,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         mapbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(MainActivityAdmin.this, RouteBranchActivity.class);
+                Intent intent=new Intent(MainActivityAdmin.this, UpdateDiscountActivity.class);
                 startActivity(intent);
             }
         });

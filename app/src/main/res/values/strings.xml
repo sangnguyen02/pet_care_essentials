@@ -74,6 +74,11 @@
         <item>Tạm đóng cửa</item>
         <item>Đóng cửa</item>
     </string-array>
+    <string-array name="discount_status">
+        <item>New </item>
+        <item>Active</item>
+        <item>Disable</item>
+    </string-array>
 
 
     <string name="delete_cart_item_title">Delete Item</string>
@@ -86,7 +91,6 @@
     <string name="payment_method">Payment method</string>
     <string name="zalo_method">ZaloPay</string>
     <string name="cod_method">Cash on Delivery</string>
-
 
 
     <string name="delivery_method">Delivery method</string>

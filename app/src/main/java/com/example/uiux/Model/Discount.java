@@ -4,21 +4,19 @@ import java.util.Date;
 
 public class Discount {
     private String discount_id;
-    private String supplies_id;
+    private String category;
     private double discount_percent;
-    private double discounted_price;
-    private int status;
-    private Date start_date;
-    private Date end_date;
+    private String status;
+    private String start_date;
+    private String end_date;
 
     public Discount() {
     }
 
-    public Discount(String discount_id, String supplies_id, double discount_percent, double discounted_price, int status, Date start_date, Date end_date) {
+    public Discount(String discount_id, String category, double discount_percent, String status, String start_date, String end_date) {
         this.discount_id = discount_id;
-        this.supplies_id = supplies_id;
+        this.category = category;
         this.discount_percent = discount_percent;
-        this.discounted_price = discounted_price;
         this.status = status;
         this.start_date = start_date;
         this.end_date = end_date;
@@ -32,12 +30,12 @@ public class Discount {
         this.discount_id = discount_id;
     }
 
-    public String getSupplies_id() {
-        return supplies_id;
+    public String getCategory() {
+        return category;
     }
 
-    public void setSupplies_id(String supplies_id) {
-        this.supplies_id = supplies_id;
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public double getDiscount_percent() {
@@ -48,35 +46,27 @@ public class Discount {
         this.discount_percent = discount_percent;
     }
 
-    public double getDiscounted_price() {
-        return discounted_price;
-    }
-
-    public void setDiscounted_price(double discounted_price) {
-        this.discounted_price = discounted_price;
-    }
-
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
-    public Date getStart_date() {
+    public String getStart_date() {
         return start_date;
     }
 
-    public void setStart_date(Date start_date) {
+    public void setStart_date(String start_date) {
         this.start_date = start_date;
     }
 
-    public Date getEnd_date() {
+    public String getEnd_date() {
         return end_date;
     }
 
-    public void setEnd_date(Date end_date) {
+    public void setEnd_date(String end_date) {
         this.end_date = end_date;
     }
 }

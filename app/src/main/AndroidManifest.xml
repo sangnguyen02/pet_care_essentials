@@ -27,6 +27,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.Admin.Discount.UpdateDiscountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.Admin.Discount.DiscountActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.User.Pet.UpdatePetInfoActivity"
             android:exported="false" />
         <activity

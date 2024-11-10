@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -15,7 +14,6 @@ import android.view.LayoutInflater;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Import;
 import com.example.uiux.Model.Supplies_Detail;
@@ -47,7 +45,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
     private Map<String, String> suppliesMap;
     private ArrayList<View> sizeQuantityViews = new ArrayList<>();
     private DatabaseReference databaseReference;
-    private  String suppliesId;
+    private  String  selectedSupplyId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +67,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 String selectedSupply = suppliesList.get(position);
-                String selectedSupplyId = suppliesMap.get(selectedSupply); // Lấy ID từ suppliesMap
+                 selectedSupplyId = suppliesMap.get(selectedSupply); // Lấy ID từ suppliesMap
                 Log.e("Selected Supply: ", selectedSupply + " | ID: " + selectedSupplyId);
                 loadSupplyDetails(selectedSupplyId);
             }
@@ -92,7 +90,6 @@ public class SuppliesImportActivity extends AppCompatActivity {
         sizeQuantityContainer.addView(sizeQuantityView);
         sizeQuantityViews.add(sizeQuantityView);
     }
-
     private void showDatePickerDialog() {
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -225,8 +222,6 @@ public class SuppliesImportActivity extends AppCompatActivity {
         }
 
     }
-
-
     private void updateSupplyQuantity(String selectedSupplyId, int newQuantity, double sellPrice) {
         DatabaseReference suppliesRef = FirebaseDatabase.getInstance().getReference("Supplies");
         suppliesRef.child(selectedSupplyId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -250,9 +245,6 @@ public class SuppliesImportActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
     private void FetchSpinnerSupplies() {
         suppliesList = new ArrayList<>(); // Khởi tạo suppliesList
         FirebaseDatabase database = FirebaseDatabase.getInstance();
