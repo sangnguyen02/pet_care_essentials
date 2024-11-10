@@ -1,22 +1,23 @@
 package com.example.uiux.Model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Supplies_Price {
     private String supplies_price_id;
     private  String supplies_id;
     private  String supply;
-    private  double sell_price;
+    private List<Supplies_Detail> suppliesDetailList;
     private String effective_date;
 
     public Supplies_Price() {
     }
 
-    public Supplies_Price(String supplies_price_id, String supplies_id, String supply, double sell_price, String effective_date) {
+    public Supplies_Price(String supplies_price_id, String supplies_id, String supply, List<Supplies_Detail> suppliesDetailList, String effective_date) {
         this.supplies_price_id = supplies_price_id;
         this.supplies_id = supplies_id;
         this.supply = supply;
-        this.sell_price = sell_price;
+        this.suppliesDetailList = suppliesDetailList;
         this.effective_date = effective_date;
     }
 
@@ -44,12 +45,12 @@ public class Supplies_Price {
         this.supply = supply;
     }
 
-    public double getSell_price() {
-        return sell_price;
+    public List<Supplies_Detail> getSuppliesDetailList() {
+        return suppliesDetailList;
     }
 
-    public void setSell_price(double sell_price) {
-        this.sell_price = sell_price;
+    public void setSuppliesDetailList(List<Supplies_Detail> suppliesDetailList) {
+        this.suppliesDetailList = suppliesDetailList;
     }
 
     public String getEffective_date() {

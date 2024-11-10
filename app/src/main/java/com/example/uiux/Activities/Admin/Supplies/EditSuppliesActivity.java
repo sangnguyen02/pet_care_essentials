@@ -148,7 +148,7 @@ public class EditSuppliesActivity extends AppCompatActivity {
         suppliesPrice.setSupplies_price_id(suppliesPriceId);
         suppliesPrice.setSupplies_id(supplyId);
         suppliesPrice.setSupply(Objects.requireNonNull(suppName.getText()).toString());
-        suppliesPrice.setSell_price(sellPrice);
+
 
         // Định dạng ngày hiện tại theo hh:mm dd/MM/yyyy
         SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");

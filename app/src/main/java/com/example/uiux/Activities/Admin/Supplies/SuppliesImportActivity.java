@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Import;
 import com.example.uiux.Model.Supplies_Detail;
+import com.example.uiux.Model.Supplies_Price;
 import com.example.uiux.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -70,6 +71,11 @@ public class SuppliesImportActivity extends AppCompatActivity {
                  selectedSupplyId = suppliesMap.get(selectedSupply); // Lấy ID từ suppliesMap
                 Log.e("Selected Supply: ", selectedSupply + " | ID: " + selectedSupplyId);
                 loadSupplyDetails(selectedSupplyId);
+                // Lấy thông tin Supplies_Price
+                loadSuppliesPrice(selectedSupplyId);
+                // Tiến hành load thông tin chi tiết supply (có thể cần thiết cho phần sau)
+                loadSupplyDetails(selectedSupplyId);
+
             }
 
             @Override
@@ -174,9 +180,6 @@ public class SuppliesImportActivity extends AppCompatActivity {
             TextInputEditText edtImportPrice = view.findViewById(R.id.edt_import_price_row);
             TextInputEditText edtCostPrice = view.findViewById(R.id.edt_cost_price_row);
 
-
-
-
             String size = edtSize.getText().toString();
             String quantityStr = edtQuantity.getText().toString();
             String importPriceStr = edtImportPrice.getText().toString();
@@ -217,11 +220,48 @@ public class SuppliesImportActivity extends AppCompatActivity {
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(SuppliesImportActivity.this, "Product imported successfully", Toast.LENGTH_SHORT).show();
                         updateSupplyQuantity(selectedSupplyId, totalQuantity[0], finalLowestCostPrice);
+                        // Update Supplies_Price with the new sizeList
+                        updateSuppliesPrice(selectedSupplyId, sizeList);
                     })
                     .addOnFailureListener(e -> Toast.makeText(SuppliesImportActivity.this, "Failed to import product", Toast.LENGTH_SHORT).show());
         }
 
     }
+    private void loadSuppliesPrice(String selectedSupplyId) {
+        DatabaseReference suppliesPriceRef = FirebaseDatabase.getInstance().getReference("Supplies_Price");
+        suppliesPriceRef.child(selectedSupplyId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Lấy dữ liệu Supplies_Price
+                    Supplies_Price suppliesPrice = snapshot.getValue(Supplies_Price.class);
+                    if (suppliesPrice != null) {
+                        Log.e("Firebase", "Supplies_Price loaded: " + suppliesPrice.getSupply());
+
+                        // Cập nhật danh sách Supplies_Detail vào giao diện người dùng
+
+                    }
+                } else {
+                    Log.e("Firebase", "No data found for Supplies_Price with ID: " + selectedSupplyId);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Failed to load Supplies_Price data");
+            }
+        });
+    }
+    private void updateSuppliesPrice(String selectedSupplyId, List<Supplies_Detail> sizeList) {
+        DatabaseReference suppliesPriceRef = FirebaseDatabase.getInstance().getReference("Supplies_Price");
+
+        // Update Supplies_Price with the new sizeList
+        suppliesPriceRef.child(selectedSupplyId).child("sizes").setValue(sizeList)
+                .addOnSuccessListener(aVoid -> Log.e("Firebase", "Supplies_Price updated successfully"))
+                .addOnFailureListener(e -> Log.e("Firebase", "Failed to update Supplies_Price"));
+    }
+
+
     private void updateSupplyQuantity(String selectedSupplyId, int newQuantity, double sellPrice) {
         DatabaseReference suppliesRef = FirebaseDatabase.getInstance().getReference("Supplies");
         suppliesRef.child(selectedSupplyId).addListenerForSingleValueEvent(new ValueEventListener() {

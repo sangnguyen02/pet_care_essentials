@@ -97,6 +97,7 @@ public class SuppliesActivity extends AppCompatActivity {
             if (imageUris != null && !Objects.requireNonNull(suppName.getText()).toString().isEmpty()&& !Objects.requireNonNull(suppQuantity.getText()).toString().isEmpty()
                     && !Objects.requireNonNull(suppDescription.getText()).toString().isEmpty() && !Objects.requireNonNull(suppSellPrice.getText()).toString().isEmpty()) {
                 uploadImageAndAddSupplies();
+
             } else {
                 Toast.makeText(SuppliesActivity.this, "Please select correct", Toast.LENGTH_SHORT).show();
             }
@@ -156,7 +157,7 @@ public class SuppliesActivity extends AppCompatActivity {
         if (task.isSuccessful()) {
             Toast.makeText(SuppliesActivity.this, "Supply added successfully!", Toast.LENGTH_SHORT).show();
             // Sau khi thêm sản phẩm thành công, thêm giá của sản phẩm vào bảng Supplies_Price
-           // addSuppliesPriceToDatabase(supplyId, sellPrice);
+            addSuppliesPriceToDatabase(supplyId);
 
             clearInputFields(); // Optional: clear the input fields after successful upload
         } else {
@@ -164,32 +165,32 @@ public class SuppliesActivity extends AppCompatActivity {
         }
     });
 }
-//    private void addSuppliesPriceToDatabase(String supplyId, double sellPrice) {
-//        DatabaseReference suppliesPriceDatabase = FirebaseDatabase.getInstance().getReference("Supplies_Price");
-//        String suppliesPriceId = suppliesPriceDatabase.push().getKey(); // Tạo ID duy nhất cho bảng Supplies_Price
-//
-//        // Tạo đối tượng Supplies_Price
-//        Supplies_Price suppliesPrice = new Supplies_Price();
-//        suppliesPrice.setSupplies_price_id(suppliesPriceId);
-//        suppliesPrice.setSupplies_id(supplyId);
-//        suppliesPrice.setSupply(Objects.requireNonNull(suppName.getText()).toString());
-//        suppliesPrice.setSell_price(sellPrice);
-//
-//        // Bạn có thể lấy ngày hiện tại để làm ngày hiệu lực
-//        // Định dạng ngày hiện tại theo hh:mm dd/MM/yyyy
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
-//        String formattedDate = dateFormat.format(new Date()); // Lấy ngày hiện tại và format
-//        suppliesPrice.setEffective_date(formattedDate); // Lưu ngày định dạng
-//
-//        // Lưu vào Firebase Database
-//        suppliesPriceDatabase.child(suppliesPriceId).setValue(suppliesPrice).addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                Toast.makeText(SuppliesActivity.this, "Supplies price added successfully!", Toast.LENGTH_SHORT).show();
-//            } else {
-//                Toast.makeText(SuppliesActivity.this, "Failed to add supplies price: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
+    private void addSuppliesPriceToDatabase(String supplyId ) {
+        DatabaseReference suppliesPriceDatabase = FirebaseDatabase.getInstance().getReference("Supplies_Price");
+
+
+        // Tạo đối tượng Supplies_Price
+        Supplies_Price suppliesPrice = new Supplies_Price();
+        suppliesPrice.setSupplies_price_id(supplyId);
+        suppliesPrice.setSupplies_id(supplyId);
+        suppliesPrice.setSupply(Objects.requireNonNull(suppName.getText()).toString());
+
+
+        // Bạn có thể lấy ngày hiện tại để làm ngày hiệu lực
+        // Định dạng ngày hiện tại theo hh:mm dd/MM/yyyy
+        SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
+        String formattedDate = dateFormat.format(new Date()); // Lấy ngày hiện tại và format
+        suppliesPrice.setEffective_date(formattedDate); // Lưu ngày định dạng
+
+        // Lưu vào Firebase Database
+        suppliesPriceDatabase.child(supplyId).setValue(suppliesPrice).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(SuppliesActivity.this, "Supplies price added successfully!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(SuppliesActivity.this, "Failed to add supplies price: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
 
     private void clearInputFields() {
