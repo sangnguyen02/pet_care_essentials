@@ -27,6 +27,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.Admin.Voucher.EditVoucherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.Admin.Voucher.UpdateVoucherActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.Admin.Voucher.VoucherActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.Admin.Discount.UpdateDiscountActivity"
             android:exported="false" />
         <activity

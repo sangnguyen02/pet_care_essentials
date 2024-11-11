@@ -23,6 +23,7 @@ import com.example.uiux.Activities.Admin.Supplies.SuppliesActivity;
 import com.example.uiux.Activities.Admin.Supplies.SuppliesImportActivity;
 import com.example.uiux.Activities.Admin.Type.TypeActivity;
 import com.example.uiux.Activities.Admin.Type.UpdateTypeActivity;
+import com.example.uiux.Activities.Admin.Voucher.UpdateVoucherActivity;
 import com.example.uiux.Activities.SplashActivity;
 import com.example.uiux.Activities.User.Map.BranchMapActivity;
 import com.example.uiux.Activities.User.Map.RouteBranchActivity;
@@ -98,7 +99,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         });
 
         type_btn.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivityAdmin.this, UpdateTypeActivity.class);
+            Intent intent = new Intent(MainActivityAdmin.this, UpdateVoucherActivity.class);
             startActivity(intent);
         });
         supplies_import.setOnClickListener(view -> {
