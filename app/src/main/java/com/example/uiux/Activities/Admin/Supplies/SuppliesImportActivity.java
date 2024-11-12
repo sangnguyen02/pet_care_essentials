@@ -256,7 +256,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
         DatabaseReference suppliesPriceRef = FirebaseDatabase.getInstance().getReference("Supplies_Price");
 
         // Update Supplies_Price with the new sizeList
-        suppliesPriceRef.child(selectedSupplyId).child("sizes").setValue(sizeList)
+        suppliesPriceRef.child(selectedSupplyId).child("suppliesDetail").setValue(sizeList)
                 .addOnSuccessListener(aVoid -> Log.e("Firebase", "Supplies_Price updated successfully"))
                 .addOnFailureListener(e -> Log.e("Firebase", "Failed to update Supplies_Price"));
     }

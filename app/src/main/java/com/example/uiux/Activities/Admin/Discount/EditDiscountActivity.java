@@ -3,6 +3,7 @@ package com.example.uiux.Activities.Admin.Discount;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
@@ -17,6 +18,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.uiux.Activities.Admin.Voucher.EditVoucherActivity;
 import com.example.uiux.Model.Category;
+import com.example.uiux.Model.Supplies;
+import com.example.uiux.Model.Supplies_Detail;
+import com.example.uiux.Model.Supplies_Price;
 import com.example.uiux.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,6 +48,10 @@ public class EditDiscountActivity extends AppCompatActivity {
     private DatabaseReference discountDatabase;
     private Calendar calendar = Calendar.getInstance();
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+    String category;
+    int status;
+    int discountPercent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +75,14 @@ public class EditDiscountActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 SaveDiscountData();
+                // Nếu trạng thái discount là active (1), gọi hàm cập nhật giá sản phẩm
+                Log.e("Status", String.valueOf(status_spinner.getSelectedItemPosition()));
+                Log.e("Category",category);
+                if (status_spinner.getSelectedItemPosition() == 1) {
+                    Log.e("Check","Check at spinner");
+                    getSuppliesIdsByCategory(category, discountPercent);  // Cập nhật giá theo category
+                    Toast.makeText(EditDiscountActivity.this, "Success to update discount", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -81,14 +97,14 @@ public class EditDiscountActivity extends AppCompatActivity {
         discountDatabase.child(discountId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists())
-                {
+                if(snapshot.exists()) {
                     String category = snapshot.child("category").getValue(String.class);
                     String startDate = snapshot.child("start_date").getValue(String.class);
                     String endDate = snapshot.child("end_date").getValue(String.class);
-                    int discountPercent = snapshot.child("discount_percent").getValue(Integer.class);
-                    int status = status_spinner.getSelectedItemPosition();
+                     discountPercent = snapshot.child("discount_percent").getValue(Integer.class);
+                     status = status_spinner.getSelectedItemPosition();
 
+                    // Lưu các thông tin discount vào Firebase
                     discountDatabase.child(discountId).child("category").setValue(category);
                     discountDatabase.child(discountId).child("start_date").setValue(startDate);
                     discountDatabase.child(discountId).child("end_date").setValue(endDate);
@@ -99,26 +115,26 @@ public class EditDiscountActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             if (task.isSuccessful()) {
                                 Toast.makeText(EditDiscountActivity.this, "Discount edit successfully!", Toast.LENGTH_SHORT).show();
+
+
                             } else {
-                                // Handle error
+                                Toast.makeText(EditDiscountActivity.this, "Failed to update discount", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
 
-                }
-                else
-                {
-
+                } else {
+                    Toast.makeText(EditDiscountActivity.this, "Discount data not found", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                Toast.makeText(EditDiscountActivity.this, "Failed to load discount data.", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
+
 
     private void LoadDiscountData() {
         String discountId = getIntent().getStringExtra("discount_id");  // Lấy ID voucher từ Intent (nếu có)
@@ -131,7 +147,7 @@ public class EditDiscountActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    String category = snapshot.child("category").getValue(String.class);
+                    category = snapshot.child("category").getValue(String.class);
                     String startDate = snapshot.child("start_date").getValue(String.class);
                     String endDate = snapshot.child("end_date").getValue(String.class);
                     int discountPercent = snapshot.child("discount_percent").getValue(Integer.class);
@@ -155,6 +171,79 @@ public class EditDiscountActivity extends AppCompatActivity {
                 // Đóng dialog nếu có lỗi
                 progressDialog.dismiss();
                 Toast.makeText(EditDiscountActivity.this, "Failed to load discount data.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+
+    private void getSuppliesIdsByCategory(String category, int discountPercent) {
+        DatabaseReference suppliesRef = FirebaseDatabase.getInstance().getReference("Supplies");
+        Log.e("Check","Check at getSuppliesIdsByCategory");
+
+        suppliesRef.orderByChild("category").equalTo(category)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        List<String> suppliesIds = new ArrayList<>();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Supplies supply = snapshot.getValue(Supplies.class);
+                            Log.e("Check","Check at getSuppliesIdsByCategory in sanpshot");
+                            if (supply != null) {
+                                suppliesIds.add(supply.getSupplies_id());
+                                Log.e("ID",supply.getSupplies_id());
+                            }
+                        }
+                        // Sau khi có danh sách supplies_id, cập nhật giá trong Supplies_Price
+                        updateSuppliesPricesByIds(suppliesIds, discountPercent);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Toast.makeText(EditDiscountActivity.this, "Failed to access supplies data", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    private void updateSuppliesPricesByIds(List<String> suppliesIds, int discountPercent) {
+        DatabaseReference suppliesPriceRef = FirebaseDatabase.getInstance().getReference("Supplies_Price");
+        Log.e("Check","Check at updateSuppliesPricesByIds");
+        suppliesPriceRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Supplies_Price suppliesPrice = snapshot.getValue(Supplies_Price.class);
+
+                    // Kiểm tra xem supplies_id của sản phẩm có thuộc danh sách cần cập nhật giá không
+                    if (suppliesPrice != null && suppliesIds.contains(suppliesPrice.getSupplies_id())) {
+                        List<Supplies_Detail> details = suppliesPrice.getSuppliesDetailList();///checkkkkkkkkkkk
+
+                        if (details == null) {
+                            details = new ArrayList<>();
+                        }
+                        Log.e("Check List", String.valueOf(details.size()));
+                        for (Supplies_Detail detail : details) {
+                            double originalPrice = detail.getCost_price();
+                            double discountedPrice = originalPrice * discountPercent / 100.0;
+                            detail.setCost_price(discountedPrice);  // Update the price
+
+                            // Save the updated data
+                            snapshot.getRef().child("sizes").setValue(details)
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(EditDiscountActivity.this, "Updated product prices", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(EditDiscountActivity.this, "Failed to update product prices", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(EditDiscountActivity.this, "Failed to access supplies prices data", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -191,7 +280,6 @@ public class EditDiscountActivity extends AppCompatActivity {
         statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         status_spinner.setAdapter(statusAdapter);
     }
-
     private void showDatePickerDialog(TextInputEditText txt_edit) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
             calendar.set(Calendar.YEAR, year);
