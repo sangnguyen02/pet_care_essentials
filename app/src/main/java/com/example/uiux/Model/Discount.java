@@ -6,14 +6,14 @@ public class Discount {
     private String discount_id;
     private String category;
     private double discount_percent;
-    private String status;
+    private int status;
     private String start_date;
     private String end_date;
 
     public Discount() {
     }
 
-    public Discount(String discount_id, String category, double discount_percent, String status, String start_date, String end_date) {
+    public Discount(String discount_id, String category, double discount_percent, int status, String start_date, String end_date) {
         this.discount_id = discount_id;
         this.category = category;
         this.discount_percent = discount_percent;
@@ -46,11 +46,11 @@ public class Discount {
         this.discount_percent = discount_percent;
     }
 
-    public String getStatus() {
+    public int getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(int status) {
         this.status = status;
     }
 

@@ -1,6 +1,7 @@
 package com.example.uiux.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.uiux.Activities.Admin.Discount.EditDiscountActivity;
+import com.example.uiux.Activities.Admin.Voucher.EditVoucherActivity;
 import com.example.uiux.Model.Discount;
 import com.example.uiux.Model.Service;
+import com.example.uiux.Model.Voucher;
 import com.example.uiux.R;
 
 import java.util.List;
@@ -54,17 +58,22 @@ public class DiscountAdapter extends  RecyclerView.Adapter<DiscountAdapter.Disco
             status=itemView.findViewById(R.id.tv_status);
             start_date=itemView.findViewById(R.id.tv_startDate);
             end_date=itemView.findViewById(R.id.tv_endDate);
+            itemView.setOnClickListener(view -> {
+                int position = getAdapterPosition();
+                Discount discount = discountList.get(position);
+
+                Intent intent = new Intent(context, EditDiscountActivity.class);
+                intent.putExtra("discount_id", discount.getDiscount_id());
+                context.startActivity(intent);
+            });
         }
 
         public void bind(Discount discount) {
             category.setText(discount.getCategory() != null ? discount.getCategory() : "N/A");
             discount_percent.setText(String.valueOf(discount.getDiscount_percent()));
-
             start_date.setText(discount.getStart_date());
             end_date.setText(discount.getEnd_date());
             status.setText(String.valueOf(discount.getStatus()));
-
-
         }
     }
 }

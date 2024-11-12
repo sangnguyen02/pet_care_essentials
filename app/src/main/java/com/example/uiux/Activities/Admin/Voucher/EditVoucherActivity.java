@@ -112,10 +112,10 @@ public class EditVoucherActivity extends AppCompatActivity {
                     start_date.setText(startDate);
                     end_date.setText(endDate);
 
-//                    // Set the category spinner
-//                    ArrayAdapter<String> categoryAdapter = (ArrayAdapter<String>) category_spinner.getAdapter();
-//                    int categoryPosition = categoryAdapter.getPosition(category);
-//                    category_spinner.setSelection(categoryPosition);
+                    // Set the category spinner
+
+                    int categoryPosition = getPositionByName(category_spinner,category);
+                    category_spinner.setSelection(categoryPosition);
 
                     // Set the status spinner
                     status_spinner.setSelection(status);
@@ -169,6 +169,18 @@ public class EditVoucherActivity extends AppCompatActivity {
                         // Handle error
                     }
                 });
+    }
+
+    private int getPositionByName(Spinner spinner,String name) {
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner.getAdapter();
+        if (adapter != null) {
+            for (int i = 0; i < adapter.getCount(); i++) {
+                if (adapter.getItem(i).equals(name)) {
+                    return i; // Return the position if a match is found
+                }
+            }
+        }
+        return -1; // Return -1 if the item is not found
     }
 
 

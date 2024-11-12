@@ -72,14 +72,31 @@ public class DiscountActivity extends AppCompatActivity {
     }
 
     private void uploadDiscount() {
+        String startDateStr = start_date.getText().toString();
+        Date today = new Date();  // Ngày hiện tại
+        Date startDate;
+
+        try {
+            startDate = dateFormat.parse(startDateStr);
+            // Kiểm tra nếu ngày bắt đầu phải lớn hơn hôm nay
+            if (startDate == null || !startDate.after(today)) {
+                Toast.makeText(DiscountActivity.this, "Ngày bắt đầu phải lớn hơn hôm nay.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            Toast.makeText(DiscountActivity.this, "Định dạng ngày không hợp lệ.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String discount_id = discountDatabase.push().getKey();
 
         Discount discount = new Discount();
         discount.setDiscount_id(discount_id);
         discount.setDiscount_percent(Double.parseDouble(discount_percent.getText().toString()));
-        discount.setStart_date(start_date.getText().toString());
+        discount.setStart_date(startDateStr);
         discount.setEnd_date(end_date.getText().toString());
-        discount.setStatus("New");  // Default status to "New" upon creation
+        discount.setStatus(0);
         discount.setCategory(category.getSelectedItem().toString());
 
         progressDialog.show();
@@ -88,54 +105,14 @@ public class DiscountActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 Toast.makeText(DiscountActivity.this, "Service added successfully!", Toast.LENGTH_SHORT).show();
                 clearInputFields();
-                checkAndUpdateDiscountStatus();  // Check and update status after adding
             } else {
                 Toast.makeText(DiscountActivity.this, "Failed to add Service: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    private void checkAndUpdateDiscountStatus() {
-        discountDatabase.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Date today = new Date();  // Current date
-                for (DataSnapshot discountSnapshot : snapshot.getChildren()) {
-                    Discount discount = discountSnapshot.getValue(Discount.class);
-                    if (discount != null) {
-                        try {
-                            String startDateStr = discount.getStart_date();
-                            String endDateStr = discount.getEnd_date();
-                            Date startDate = dateFormat.parse(startDateStr);
-                            Date endDate = dateFormat.parse(endDateStr);
 
-                            String newStatus;
-                            if (today.before(startDate)) {
-                                newStatus = "New";
-                            } else if (today.after(endDate)) {
-                                newStatus = "Disable";
-                            } else {
-                                newStatus = "Active";
-                            }
 
-                            // Update status if it has changed
-                            if (!newStatus.equals(discount.getStatus())) {
-                                discountDatabase.child(discount.getDiscount_id()).child("status").setValue(newStatus);
-                            }
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Handle database error
-            }
-        });
-    }
 
     private void showDatePickerDialog(TextInputEditText txt_edit) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {

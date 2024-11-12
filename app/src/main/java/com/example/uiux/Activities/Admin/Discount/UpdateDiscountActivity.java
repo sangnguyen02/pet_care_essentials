@@ -34,8 +34,6 @@ public class UpdateDiscountActivity extends AppCompatActivity {
     private List<Discount> discountList = new ArrayList<>();
     private DatabaseReference databaseReference;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +48,7 @@ public class UpdateDiscountActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         discountAdapter = new DiscountAdapter(discountList, this);
         recyclerView.setAdapter(discountAdapter);
-        loadCategory();
+        loadDiscount();
 
         mcv_add_categories.setOnClickListener(view -> {
             Intent gotoAdd=new Intent(UpdateDiscountActivity.this, DiscountActivity.class);
@@ -65,15 +63,15 @@ public class UpdateDiscountActivity extends AppCompatActivity {
         mcv_add_categories = findViewById(R.id.mcv_add_categories);
     }
 
-    private void loadCategory() {
+    private void loadDiscount() {
         databaseReference = FirebaseDatabase.getInstance().getReference("Discount");
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 discountList.clear();
                 for (DataSnapshot categorySnapshot : snapshot.getChildren()) {
-                    Discount category = categorySnapshot.getValue(Discount.class);
-                    discountList.add(category);
+                    Discount discount = categorySnapshot.getValue(Discount.class);
+                    discountList.add(discount);
                 }
                 discountAdapter.notifyDataSetChanged();
             }
