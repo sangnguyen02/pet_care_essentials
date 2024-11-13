@@ -78,8 +78,8 @@ public class EditDiscountActivity extends AppCompatActivity {
                 // Nếu trạng thái discount là active (1), gọi hàm cập nhật giá sản phẩm
                 Log.e("Status", String.valueOf(status_spinner.getSelectedItemPosition()));
                 Log.e("Category",category);
-                if (status_spinner.getSelectedItemPosition() == 1) {
-                    Log.e("Check","Check at spinner");
+                if (status_spinner.getSelectedItemPosition() != 0) {
+                    Log.e("Check", String.valueOf(discountPercent));
                     getSuppliesIdsByCategory(category, discountPercent);  // Cập nhật giá theo category
                     Toast.makeText(EditDiscountActivity.this, "Success to update discount", Toast.LENGTH_SHORT).show();
                 }
@@ -134,8 +134,6 @@ public class EditDiscountActivity extends AppCompatActivity {
             }
         });
     }
-
-
     private void LoadDiscountData() {
         String discountId = getIntent().getStringExtra("discount_id");  // Lấy ID voucher từ Intent (nếu có)
         if (discountId == null) {
@@ -150,7 +148,7 @@ public class EditDiscountActivity extends AppCompatActivity {
                     category = snapshot.child("category").getValue(String.class);
                     String startDate = snapshot.child("start_date").getValue(String.class);
                     String endDate = snapshot.child("end_date").getValue(String.class);
-                    int discountPercent = snapshot.child("discount_percent").getValue(Integer.class);
+                    discountPercent = snapshot.child("discount_percent").getValue(Integer.class);
                     int status = status_spinner.getSelectedItemPosition();
 
                     // Set values to UI elements
@@ -174,9 +172,6 @@ public class EditDiscountActivity extends AppCompatActivity {
             }
         });
     }
-
-
-
     private void getSuppliesIdsByCategory(String category, int discountPercent) {
         DatabaseReference suppliesRef = FirebaseDatabase.getInstance().getReference("Supplies");
         Log.e("Check","Check at getSuppliesIdsByCategory");
@@ -206,28 +201,42 @@ public class EditDiscountActivity extends AppCompatActivity {
     }
     private void updateSuppliesPricesByIds(List<String> suppliesIds, int discountPercent) {
         DatabaseReference suppliesPriceRef = FirebaseDatabase.getInstance().getReference("Supplies_Price");
-        Log.e("Check","Check at updateSuppliesPricesByIds");
+        Log.e("Check", "Check at updateSuppliesPricesByIds");
         suppliesPriceRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Supplies_Price suppliesPrice = snapshot.getValue(Supplies_Price.class);
 
-                    // Kiểm tra xem supplies_id của sản phẩm có thuộc danh sách cần cập nhật giá không
+                    // Check if the supplies_id of the product is in the list that needs a price update
                     if (suppliesPrice != null && suppliesIds.contains(suppliesPrice.getSupplies_id())) {
-                        List<Supplies_Detail> details = suppliesPrice.getSuppliesDetailList();///checkkkkkkkkkkk
+                        Log.e("Supplies_Price", "Supplies Price ID: " + suppliesPrice.getSupplies_id() +
+                                ", Price Details: " + suppliesPrice.getSuppliesDetailList());
 
+                        List<Supplies_Detail> details = suppliesPrice.getSuppliesDetailList();
                         if (details == null) {
                             details = new ArrayList<>();
                         }
+
                         Log.e("Check List", String.valueOf(details.size()));
                         for (Supplies_Detail detail : details) {
-                            double originalPrice = detail.getCost_price();
-                            double discountedPrice = originalPrice * discountPercent / 100.0;
-                            detail.setCost_price(discountedPrice);  // Update the price
+                            if(status_spinner.getSelectedItemPosition()==1)
+                            {
+                                double originalPrice = detail.getCost_price();
+                                double discountedPrice = originalPrice * (1-(discountPercent / 100.0));
+                                detail.setCost_price(discountedPrice);
+                            }
+                            else if(status_spinner.getSelectedItemPosition()==2)
+                            {
+                                double originalPrice = detail.getCost_price();
+                                double discountedPrice = originalPrice /(1-(discountPercent / 100.0));
+                                detail.setCost_price(discountedPrice);
+                            }
+
+                              // Update the price
 
                             // Save the updated data
-                            snapshot.getRef().child("sizes").setValue(details)
+                            snapshot.getRef().child("suppliesDetailList").setValue(details)
                                     .addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(EditDiscountActivity.this, "Updated product prices", Toast.LENGTH_SHORT).show();
@@ -236,7 +245,6 @@ public class EditDiscountActivity extends AppCompatActivity {
                                         }
                                     });
                         }
-
                     }
                 }
             }
@@ -247,8 +255,6 @@ public class EditDiscountActivity extends AppCompatActivity {
             }
         });
     }
-
-
     private void FetchSpinnerCategory() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Category");
@@ -289,7 +295,6 @@ public class EditDiscountActivity extends AppCompatActivity {
         }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
-
     private int getPositionByName(Spinner spinner,String name) {
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) spinner.getAdapter();
         if (adapter != null) {

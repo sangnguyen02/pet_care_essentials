@@ -255,11 +255,33 @@ public class SuppliesImportActivity extends AppCompatActivity {
     private void updateSuppliesPrice(String selectedSupplyId, List<Supplies_Detail> sizeList) {
         DatabaseReference suppliesPriceRef = FirebaseDatabase.getInstance().getReference("Supplies_Price");
 
-        // Update Supplies_Price with the new sizeList
-        suppliesPriceRef.child(selectedSupplyId).child("suppliesDetail").setValue(sizeList)
-                .addOnSuccessListener(aVoid -> Log.e("Firebase", "Supplies_Price updated successfully"))
-                .addOnFailureListener(e -> Log.e("Firebase", "Failed to update Supplies_Price"));
+        // Retrieve current Supplies_Price data and then update it with new sizeList
+        suppliesPriceRef.child(selectedSupplyId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    Supplies_Price suppliesPrice = snapshot.getValue(Supplies_Price.class);
+                    if (suppliesPrice != null) {
+                        // Use the setter to update the suppliesDetail list
+                        suppliesPrice.setSuppliesDetailList(sizeList);
+
+                        // Save the updated Supplies_Price object back to Firebase
+                        suppliesPriceRef.child(selectedSupplyId).setValue(suppliesPrice)
+                                .addOnSuccessListener(aVoid -> Log.e("Firebase", "Supplies_Price updated successfully"))
+                                .addOnFailureListener(e -> Log.e("Firebase", "Failed to update Supplies_Price"));
+                    }
+                } else {
+                    Log.e("Firebase", "No Supplies_Price data found for ID: " + selectedSupplyId);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase", "Failed to load Supplies_Price data", error.toException());
+            }
+        });
     }
+
 
 
     private void updateSupplyQuantity(String selectedSupplyId, int newQuantity, double sellPrice) {
