@@ -24,7 +24,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.mapbox.geojson.Point;
+import com.mapbox.maps.CameraBoundsOptions;
 import com.mapbox.maps.CameraOptions;
+import com.mapbox.maps.CoordinateBounds;
 import com.mapbox.maps.MapView;
 import com.mapbox.maps.Style;
 import com.mapbox.maps.ViewAnnotationOptions;
@@ -61,13 +63,33 @@ public class BranchMapActivity extends AppCompatActivity {
         mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
-                mapView.getMapboxMap().setCamera(new CameraOptions.Builder()
-                        .center(Point.fromLngLat(106.688084, 16.054407))
+//                mapView.getMapboxMap().setCamera(new CameraOptions.Builder()
+//                        .center(Point.fromLngLat(106.688084, 16.054407))
+//                        .zoom(5.0)
+//                        .pitch(0.0)
+//                        .bearing(0.0)
+//                        .build()
+//                );
+                CameraBoundsOptions vietnamBounds = new CameraBoundsOptions.Builder()
+                        .bounds(new CoordinateBounds(
+                                Point.fromLngLat(102.14441, 8.179066), // Southwest corner of Vietnam
+                                Point.fromLngLat(109.464639, 23.393395) // Northeast corner of Vietnam
+                        ))
+                        .minZoom(5.0) // Set minimum zoom level
+                        .maxZoom(15.0) // Set maximum zoom level
+                        .build();
+
+                // Áp dụng giới hạn camera để giới hạn khu vực bản đồ chỉ ở Việt Nam
+                mapView.getMapboxMap().setBounds(vietnamBounds);
+                // Thiết lập vị trí camera ban đầu để hiển thị toàn bộ Việt Nam
+                Point vietnamCenter = Point.fromLngLat(108.2068, 16.0471);
+                CameraOptions initialCameraOptions = new CameraOptions.Builder()
+                        .center(vietnamCenter)
                         .zoom(5.0)
-                        .pitch(0.0)
                         .bearing(0.0)
-                        .build()
-                );
+                        .pitch(0.0)
+                        .build();
+                mapView.getMapboxMap().setCamera(initialCameraOptions);
 
                 AnnotationPlugin annotationAPI = AnnotationPluginImplKt.getAnnotations((MapPluginProviderDelegate) mapView);
                 pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationAPI, mapView);

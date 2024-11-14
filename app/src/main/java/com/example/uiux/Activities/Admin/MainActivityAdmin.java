@@ -122,7 +122,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         mapbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(MainActivityAdmin.this, UpdateDiscountActivity.class);
+                Intent intent=new Intent(MainActivityAdmin.this, TestMapActivity.class);
                 startActivity(intent);
             }
         });

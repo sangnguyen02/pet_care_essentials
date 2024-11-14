@@ -48,7 +48,9 @@ import com.mapbox.api.directions.v5.models.RouteOptions;
 import com.mapbox.api.directions.v5.models.VoiceInstructions;
 import com.mapbox.bindgen.Expected;
 import com.mapbox.geojson.Point;
+import com.mapbox.maps.CameraBoundsOptions;
 import com.mapbox.maps.CameraOptions;
+import com.mapbox.maps.CoordinateBounds;
 import com.mapbox.maps.EdgeInsets;
 import com.mapbox.maps.MapView;
 import com.mapbox.maps.Style;
@@ -108,140 +110,6 @@ import kotlin.coroutines.CoroutineContext;
 import kotlin.coroutines.EmptyCoroutineContext;
 import kotlin.jvm.functions.Function1;
 
-
-//public class TestMapActivity extends AppCompatActivity {
-//    MapView mapView;
-//    FloatingActionButton focusLocationBtn;
-//    private final NavigationLocationProvider navigationLocationProvider = new NavigationLocationProvider();
-//    private boolean focusLocation = true;
-//    private MapboxNavigation mapboxNavigation;
-//    private PlaceAutocomplete placeAutocomplete;
-//    private SearchResultsView searchResultsView;
-//    private PlaceAutocompleteUiAdapter placeAutocompleteUiAdapter;
-//    private TextInputEditText searchET;
-//    private boolean ignoreNextQueryUpdate = false;
-//
-//    private final LocationObserver locationObserver = new LocationObserver() {
-//        @Override
-//        public void onNewRawLocation(@NonNull Location location) {}
-//
-//        @Override
-//        public void onNewLocationMatcherResult(@NonNull LocationMatcherResult locationMatcherResult) {
-//            Location location = locationMatcherResult.getEnhancedLocation();
-//            navigationLocationProvider.changePosition(location, locationMatcherResult.getKeyPoints(), null, null);
-//            if (focusLocation) {
-//                updateCamera(Point.fromLngLat(location.getLongitude(), location.getLatitude()), (double) location.getBearing());
-//            }
-//        }
-//    };
-//
-//    private void updateCamera(Point point, Double bearing) {
-//        MapAnimationOptions animationOptions = new MapAnimationOptions.Builder().duration(1500L).build();
-//        CameraOptions cameraOptions = new CameraOptions.Builder()
-//                .center(point).zoom(18.0).bearing(bearing).pitch(45.0).build();
-//        getCamera(mapView).easeTo(cameraOptions, animationOptions);
-//    }
-//
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_test_map);
-//
-//        mapView = findViewById(R.id.mapView);
-//        focusLocationBtn = findViewById(R.id.focusLocation);
-//        int vectorResId = R.drawable.here; // Thay thế bằng id của hình ảnh vector của bạn
-//        Bitmap bitmap = VectorToBitmapConverter.convertVectorToBitmap(this, vectorResId);
-//
-//        NavigationOptions navigationOptions = new NavigationOptions.Builder(this)
-//                .accessToken(getString(R.string.mapbox_access_token)).build();
-//        MapboxNavigationApp.setup(navigationOptions);
-//        mapboxNavigation = new MapboxNavigation(navigationOptions);
-//        mapboxNavigation.registerLocationObserver(locationObserver);
-//
-//        // Autocomplete Search
-//        placeAutocomplete = PlaceAutocomplete.create(getString(R.string.mapbox_access_token));
-//        searchET = findViewById(R.id.searchET);
-//        searchResultsView = findViewById(R.id.search_results_view);
-//        searchResultsView.initialize(new SearchResultsView.Configuration(new CommonSearchViewConfiguration()));
-//
-//        placeAutocompleteUiAdapter = new PlaceAutocompleteUiAdapter(
-//                searchResultsView, placeAutocomplete, LocationEngineProvider.getBestLocationEngine(this)
-//        );
-//
-//        searchET.addTextChangedListener(new TextWatcher() {
-//            @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-//
-//            @Override
-//            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-//                if (ignoreNextQueryUpdate) {
-//                    ignoreNextQueryUpdate = false;
-//                } else {
-//                    placeAutocompleteUiAdapter.search(charSequence.toString(), new Continuation<Unit>() {
-//                        @NonNull @Override public CoroutineContext getContext() { return EmptyCoroutineContext.INSTANCE; }
-//
-//                        @Override
-//                        public void resumeWith(@NonNull Object o) {
-//                            runOnUiThread(() -> searchResultsView.setVisibility(View.VISIBLE));
-//                        }
-//                    });
-//                }
-//            }
-//
-//            @Override public void afterTextChanged(Editable editable) {}
-//        });
-//
-//        // Map and Markers
-//        mapView.getMapboxMap().loadStyleUri(Style.SATELLITE, style -> {
-//           // Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.here);
-//            AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
-//            PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
-//
-//            // Map click to add marker
-//            addOnMapClickListener(mapView.getMapboxMap(), point -> {
-//                pointAnnotationManager.deleteAll();
-//                PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
-//                        .withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap).withPoint(point);
-//                pointAnnotationManager.create(pointAnnotationOptions);
-//                return true;
-//            });
-//
-//            // Search Result Selection
-//            placeAutocompleteUiAdapter.addSearchListener(new PlaceAutocompleteUiAdapter.SearchListener() {
-//                @Override
-//                public void onSuggestionsShown(@NonNull List<PlaceAutocompleteSuggestion> list) {}
-//
-//                @Override
-//                public void onSuggestionSelected(@NonNull PlaceAutocompleteSuggestion suggestion) {
-//                    ignoreNextQueryUpdate = true;
-//                    focusLocation = false;
-//                    searchET.setText(suggestion.getName());
-//                    searchResultsView.setVisibility(View.GONE);
-//
-//                    pointAnnotationManager.deleteAll();
-//                    PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
-//                            .withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap).withPoint(suggestion.getCoordinate());
-//                    pointAnnotationManager.create(pointAnnotationOptions);
-//                    updateCamera(suggestion.getCoordinate(), 0.0);
-//                }
-//
-//                @Override public void onPopulateQueryClick(@NonNull PlaceAutocompleteSuggestion suggestion) {}
-//                @Override public void onError(@NonNull Exception e) {}
-//            });
-//        });
-//
-//        focusLocationBtn.setOnClickListener(view -> {
-//            focusLocation = true;
-//            focusLocationBtn.hide();
-//        });
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        mapboxNavigation.unregisterLocationObserver(locationObserver);
-//        mapboxNavigation.onDestroy();
-//    }
-//}
 public class TestMapActivity extends AppCompatActivity {
     MapView mapView;
     FloatingActionButton focusLocationBtn;
@@ -341,8 +209,29 @@ public class TestMapActivity extends AppCompatActivity {
         // Load the map style and set initial position
         mapView.getMapboxMap().loadStyleUri(Style.SATELLITE, style -> {
             // Center the map on Vietnam initially
-            Point vietnamCenter = Point.fromLngLat(108.2068, 16.0471); // Da Nang area
-            updateCamera(vietnamCenter, 0.0);
+//            Point vietnamCenter = Point.fromLngLat(108.2068, 16.0471);
+//            updateCamera(vietnamCenter, 0.0);
+
+            CameraBoundsOptions vietnamBounds = new CameraBoundsOptions.Builder()
+                    .bounds(new CoordinateBounds(
+                            Point.fromLngLat(102.14441, 8.179066), // Southwest corner of Vietnam
+                            Point.fromLngLat(109.464639, 23.393395) // Northeast corner of Vietnam
+                    ))
+                    .minZoom(5.0) // Set minimum zoom level
+                    .maxZoom(15.0) // Set maximum zoom level
+                    .build();
+
+            // Áp dụng giới hạn camera để giới hạn khu vực bản đồ chỉ ở Việt Nam
+            mapView.getMapboxMap().setBounds(vietnamBounds);
+            // Thiết lập vị trí camera ban đầu để hiển thị toàn bộ Việt Nam
+            Point vietnamCenter = Point.fromLngLat(108.2068, 16.0471);
+            CameraOptions initialCameraOptions = new CameraOptions.Builder()
+                    .center(vietnamCenter)
+                    .zoom(5.0)
+                    .bearing(0.0)
+                    .pitch(0.0)
+                    .build();
+            mapView.getMapboxMap().setCamera(initialCameraOptions);
 
             AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
             PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
