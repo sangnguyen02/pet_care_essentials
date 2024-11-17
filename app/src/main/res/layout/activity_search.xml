@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/light_bg"
+    android:fitsSystemWindows="true"
+    tools:context=".Activities.User.SearchActivity">
+
+    <ImageView
+        android:id="@+id/img_back_search"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/ripple_effect"
+        android:scaleType="centerCrop"
+        android:src="@drawable/back_filled"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <SearchView
+        android:id="@+id/main_search_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/search_view_bg_main"
+        android:ems="10"
+        android:iconifiedByDefault="false"
+        android:inputType="text"
+        android:queryBackground="@android:color/transparent"
+        android:queryHint="Search for your pet..."
+        android:searchIcon="@drawable/nav_search_outlined_blue"
+        android:theme="@style/ThemeOverlay.SearchView"
+        app:layout_constraintBottom_toBottomOf="@+id/img_back_search"
+        app:layout_constraintStart_toEndOf="@+id/img_back_search"
+        app:layout_constraintTop_toTopOf="@+id/img_back_search"
+        tools:ignore="HardcodedText" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_search_results"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/main_search_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_no_results"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:fontFamily="@font/roboto_bold"
+        android:text="@string/not_found"
+        android:textColor="@color/grey"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/rcv_search_results"
+        app:layout_constraintEnd_toEndOf="@+id/rcv_search_results"
+        app:layout_constraintStart_toStartOf="@+id/rcv_search_results"
+        app:layout_constraintTop_toTopOf="@+id/rcv_search_results" />
+
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

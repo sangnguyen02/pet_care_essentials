@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/bg_grey"
+    android:background="@color/light_bg"
     >
 
     <androidx.cardview.widget.CardView
@@ -41,15 +41,15 @@
                 android:id="@+id/textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:fontFamily="@font/roboto_bold"
                 android:text="Branch Store"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/img_back_my_address"
-                app:layout_constraintStart_toEndOf="@+id/img_back_my_address"
-                app:layout_constraintTop_toTopOf="@+id/img_back_my_address"
+                android:layout_marginStart="16dp"
+                app:layout_constraintStart_toEndOf="@+id/img_back_my_store"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back_my_store"
+                app:layout_constraintTop_toTopOf="@+id/img_back_my_store"
                 tools:ignore="HardcodedText" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -71,6 +71,7 @@
             android:id="@+id/rcv_my_store"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clipToPadding="false"
             />
     </LinearLayout>
 

@@ -5,7 +5,7 @@
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_grey">
+    android:background="@color/light_bg">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_setting_app_bar"

@@ -1,6 +1,8 @@
 package com.example.uiux.Fragments.User;
-
+import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,13 +16,17 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.example.uiux.Activities.User.CartActivity;
+import com.example.uiux.Activities.User.SearchActivity;
 import com.example.uiux.Adapters.BannerAdapter;
 import com.example.uiux.Adapters.BestSellerAdapter;
 import com.example.uiux.Adapters.CategoryAdapter;
@@ -43,10 +49,13 @@ import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class HomeFragment extends Fragment {
     View rootView;
-    ImageView cart;
+    SearchView search_view;
+    TextView tv_number_of_cart_item, animated_text_hint;
+    ImageView cart, iv_red_circle;
     ViewPager2 mViewPager2;
     DotsIndicator dotsIndicator;
     List<Banner> mListBanner;
@@ -55,7 +64,10 @@ public class HomeFragment extends Fragment {
     List<Supplies_Review> mListSuppliesReview;
     RecyclerView rcv_category, rcv_best_seller;
     ProgressBar progressBar_banner, progressBar_category, progressBar_bestSeller;
-    private Handler mHandler = new Handler();
+    DatabaseReference cartItems;
+    SharedPreferences preferences;
+    String accountId;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
@@ -70,18 +82,29 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        rootView =  inflater.inflate(R.layout.fragment_home, container, false);
+
+        rootView = inflater.inflate(R.layout.fragment_home, container, false);
+
         if (getActivity() != null) {
             getActivity().getWindow().setStatusBarColor(ContextCompat.getColor(getActivity(), R.color.white));
         }
+
+        preferences =  getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        accountId = preferences.getString("accountID", null);
+
         initWidget();
+        displayNoOfCartItem();
+        animatedText();
 
         return rootView;
     }
 
     void initWidget() {
+        search_view = rootView.findViewById(R.id.search_view);
+        animated_text_hint = rootView.findViewById(R.id.animated_text_hint);
         cart = rootView.findViewById(R.id.iv_cart);
+        iv_red_circle = rootView.findViewById(R.id.iv_red_circle);
+        tv_number_of_cart_item = rootView.findViewById(R.id.tv_number_of_cart_item);
         progressBar_banner = rootView.findViewById(R.id.progressBar_banners);
         progressBar_category = rootView.findViewById(R.id.progressBar_categories);
         progressBar_bestSeller = rootView.findViewById(R.id.progressBar_bestSeller);
@@ -107,6 +130,62 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(rootView.getContext(), CartActivity.class);
             startActivity(intent);
         });
+
+        search_view.setOnClickListener(view -> {
+            Intent intent = new Intent(rootView.getContext(), SearchActivity.class);
+//            ActivityOptions options = ActivityOptions.makeCustomAnimation(
+//                    getContext(),
+//                    android.R.anim.slide_out_right,
+//                    android.R.anim.slide_in_left
+//            );
+//            startActivity(intent, options.toBundle());
+            startActivity(intent);
+            requireActivity().overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
+    }
+
+    void displayNoOfCartItem() {
+        cartItems = FirebaseDatabase.getInstance().getReference("Cart").child(accountId);
+        cartItems.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Đếm số lượng item trong giỏ
+                long itemCount = dataSnapshot.getChildrenCount();
+
+                // Kiểm tra và cập nhật giao diện tùy vào số lượng item
+                if (itemCount > 0) {
+                    // Hiển thị số lượng item trong giỏ
+                    tv_number_of_cart_item.setVisibility(View.VISIBLE);
+                    tv_number_of_cart_item.setText(String.valueOf(itemCount));
+                    iv_red_circle.setVisibility(View.VISIBLE);
+                } else {
+                    tv_number_of_cart_item.setVisibility(View.GONE);
+                    iv_red_circle.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi nếu có (tuỳ theo yêu cầu của bạn)
+            }
+        });
+    }
+
+    void animatedText() {
+        String hintText = "Search for your pet...";
+        animated_text_hint.setText("");
+        animated_text_hint.setVisibility(View.VISIBLE);
+        int delay = 150;
+        for (int i = 0; i <= hintText.length(); i++) {
+            final int index = i;
+            animated_text_hint.postDelayed(() -> {
+                animated_text_hint.setText(hintText.substring(0, index));
+                if (index == hintText.length()) {
+                    animated_text_hint.setVisibility(View.GONE);
+                    search_view.setQueryHint(hintText);
+                }
+            }, delay * i);
+        }
     }
 
     private void getBannerImages() {

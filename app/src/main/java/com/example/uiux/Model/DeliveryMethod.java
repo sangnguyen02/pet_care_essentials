@@ -3,9 +3,9 @@ package com.example.uiux.Model;
 public class DeliveryMethod {
     private int id;
     private String title;
-    private float cost;
+    private double cost;
 
-    public DeliveryMethod(int id, String title, float cost) {
+    public DeliveryMethod(int id, String title, double cost) {
         this.id = id;
         this.title = title;
         this.cost = cost;
@@ -27,11 +27,11 @@ public class DeliveryMethod {
         this.title = title;
     }
 
-    public float getCost() {
+    public double getCost() {
         return cost;
     }
 
-    public void setCost(float cost) {
+    public void setCost(double cost) {
         this.cost = cost;
     }
 }

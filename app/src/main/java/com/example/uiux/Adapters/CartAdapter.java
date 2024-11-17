@@ -17,6 +17,7 @@ import com.example.uiux.Activities.User.CartActivity;
 import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.Supplies_Detail;
 import com.example.uiux.R;
+import com.example.uiux.Utils.CurrencyFormatter;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.firebase.database.DataSnapshot;
@@ -52,7 +53,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.loadStockQuantity(cartItem.getSupply_id(), holder);
         holder.tvSupplyTitle.setText(cartItem.getSupply_title());
         holder.tvSupplySize.setText(cartItem.getSupply_size());
-        holder.tvSupplyPrice.setText(String.valueOf(cartItem.getSupply_price()));
+        holder.tvSupplyPrice.setText(CurrencyFormatter.formatCurrency(cartItem.getSupply_price(), context.getString(R.string.currency_vn)));
         holder.tvSupplyQuantity.setText(String.valueOf(cartItem.getQuantity()));
 
         // Set up checkbox listener to track selected items

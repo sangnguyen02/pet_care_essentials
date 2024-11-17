@@ -22,13 +22,14 @@
         android:layout_marginEnd="16dp"
         android:elevation="4dp"
         android:hint="Search"
-        app:boxCornerRadiusBottomEnd="20dp"
-        app:boxCornerRadiusBottomStart="20dp"
-        app:boxCornerRadiusTopEnd="20dp"
-        app:boxCornerRadiusTopStart="20dp"
+        app:boxBackgroundColor="@color/light_white"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
         app:boxStrokeWidthFocused="0dp"
         app:boxStrokeWidth="0dp"
-        app:startIconDrawable="@drawable/search"
+        app:startIconDrawable="@drawable/branch"
         style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -38,51 +39,69 @@
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- TextInputEditText for Branch Name -->
-    <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/edt_branch_name"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/branch_name_input"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="52dp"
+        android:hint="Branch name"
         android:layout_below="@id/searchLayout"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:hint="Branch name"
-        android:background="@color/white" />
+        app:shapeAppearanceOverlay="@style/Button4"
+        app:hintTextColor="@color/text_input"
+        app:boxStrokeColor="@color/text_input"
+        app:boxStrokeWidth="1dp"
+        app:boxBackgroundColor="@color/light_white"
+        app:boxBackgroundMode="filled"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edt_branch_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:ems="10"
+            android:textSize="@dimen/text_size"
+            android:textColor="@color/black"
+            android:fontFamily="@font/roboto_flex" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Spinner for Status -->
     <Spinner
         android:id="@+id/statusSpinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/edt_branch_name"
+        android:layout_height="@dimen/edt_height"
+        android:layout_below="@id/branch_name_input"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:background="@color/white" />
+        android:background="@drawable/bg_spinner" />
 
     <!-- Sound Button -->
-    <com.mapbox.navigation.ui.voice.view.MapboxSoundButton
-        android:id="@+id/soundButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/statusSpinner"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp" />
+<!--    <com.mapbox.navigation.ui.voice.view.MapboxSoundButton-->
+<!--        android:id="@+id/soundButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@id/statusSpinner"-->
+<!--        android:layout_alignParentEnd="true"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:layout_marginEnd="16dp" />-->
 
     <!-- Search Results View with fixed height -->
     <com.mapbox.search.ui.view.SearchResultsView
         android:id="@+id/search_results_view"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_below="@id/soundButton"
-    android:layout_marginHorizontal="16dp"
-    android:layout_marginTop="16dp"
-    android:visibility="gone"
-    android:elevation="4dp"
-    android:paddingTop="8dp"
-    android:paddingBottom="22dp" />
+        android:layout_below="@id/statusSpinner"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:visibility="gone"
+        android:elevation="4dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="22dp"
+        android:background="@drawable/bg_search_map_result"
+        />
 
     <!-- Save Button -->
     <com.google.android.material.button.MaterialButton
@@ -92,16 +111,28 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
-    android:layout_alignParentBottom="true"
-    android:layout_marginBottom="20dp"
-    android:text="Save" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:text="Save"
+        android:textSize="16sp"
+        android:fontFamily="@font/roboto_bold"
+        android:textAllCaps="false"
+        android:elevation="15dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:layout_gravity="center"
+        app:shapeAppearanceOverlay="@style/Button5"
+        app:backgroundTint="@color/tabLayout_background"
+        />
 
     <!-- Floating Action Button -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/focusLocation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/white"
         android:src="@drawable/here"
+        android:background="@drawable/ripple_effect"
         android:layout_alignParentEnd="true"
         android:layout_above="@id/save"
         android:layout_margin="16dp" />

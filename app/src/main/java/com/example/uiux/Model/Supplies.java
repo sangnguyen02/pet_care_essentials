@@ -1,6 +1,7 @@
 package com.example.uiux.Model;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Supplies {
     private String supplies_id;
@@ -26,6 +27,24 @@ public class Supplies {
         this.category = category;
         this.type = type;
         this.imageUrls = imageUrls;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Supplies supplies = (Supplies) obj;
+        return Objects.equals(supplies_id, supplies.supplies_id) &&
+                Double.compare(supplies.sell_price, sell_price) == 0 &&
+                quantity == supplies.quantity &&
+                Objects.equals(name, supplies.name) &&
+                Objects.equals(description, supplies.description) &&
+                Objects.equals(category, supplies.category);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(supplies_id, name, sell_price, description, category, quantity);
     }
 
     public String getSupplies_id() {

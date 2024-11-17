@@ -15,6 +15,9 @@ public class Pet {
 
     public Pet() {
     }
+    public Pet(String pet_id) {
+        this.pet_id = pet_id;
+    }
 
     public Pet(String pet_id, String pet_name, int age, String gender, int weight, String pet_type, String pet_breed, String color, List<String> imageUrls) {
         this.pet_id = pet_id;

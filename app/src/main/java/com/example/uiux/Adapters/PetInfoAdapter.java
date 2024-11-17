@@ -3,6 +3,7 @@ package com.example.uiux.Adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.Admin.Supplies.EditSuppliesActivity;
+import com.example.uiux.Activities.User.Pet.EditPetInfoActivity;
 import com.example.uiux.Model.Pet;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.R;
@@ -29,7 +31,7 @@ public class PetInfoAdapter  extends RecyclerView.Adapter<PetInfoAdapter.PetInfo
     @NonNull
     @Override
     public PetInfoAdapter.PetInfoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.item_supplies, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_pet_info, parent, false);
         return new  PetInfoAdapter.PetInfoViewHolder(view);
     }
     public PetInfoAdapter(List<Pet> petList, Context context) {
@@ -50,17 +52,21 @@ public class PetInfoAdapter  extends RecyclerView.Adapter<PetInfoAdapter.PetInfo
     class PetInfoViewHolder extends RecyclerView.ViewHolder
     {
         private ImageView petImage;
-        private TextView petName,petAge,petGender, petType, petColor,petBreed;
+        private TextView petName ,petAge,petGender, petType, petColor,petBreed;
+        String accountId;
+        SharedPreferences preferences;
         public PetInfoViewHolder(@NonNull View itemView)
         {
             super(itemView);
             petImage=itemView.findViewById(R.id.img_pet);
             petName=itemView.findViewById(R.id.pet_name);
-            petAge=itemView.findViewById(R.id.pet_age);
-            petGender=itemView.findViewById(R.id.pet_gender);
-            petType=itemView.findViewById(R.id.pet_type);
-            petColor=itemView.findViewById(R.id.pet_color);
-            petBreed=itemView.findViewById(R.id.pet_breed);
+//            petAge=itemView.findViewById(R.id.pet_age);
+//            petGender=itemView.findViewById(R.id.pet_gender);
+//            petType=itemView.findViewById(R.id.pet_type);
+//            petColor=itemView.findViewById(R.id.pet_color);
+//            petBreed=itemView.findViewById(R.id.pet_breed);
+            preferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            accountId = preferences.getString("accountID", null);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -71,7 +77,7 @@ public class PetInfoAdapter  extends RecyclerView.Adapter<PetInfoAdapter.PetInfo
                     new AlertDialog.Builder(context)
                             .setItems(new CharSequence[]{"Edit", "Delete"}, (dialog, which) -> {
                                 if (which == 0) {
-                                    Intent intent = new Intent(context, EditSuppliesActivity.class);
+                                    Intent intent = new Intent(context, EditPetInfoActivity.class);
                                     intent.putExtra("pet_id", pet.getPet_id());
                                     context.startActivity(intent);
 
@@ -85,7 +91,7 @@ public class PetInfoAdapter  extends RecyclerView.Adapter<PetInfoAdapter.PetInfo
                                                 petList.remove(position);
                                                 notifyItemRemoved(position);
                                                 notifyItemRangeChanged(position, petList.size());
-                                                Toast.makeText(context, "Đã xóa thong tin thành công", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(context, "Delete successfully", Toast.LENGTH_SHORT).show();
                                             })
                                             .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
                                                 // Nếu người dùng chọn "Không", đóng dialog
@@ -101,13 +107,14 @@ public class PetInfoAdapter  extends RecyclerView.Adapter<PetInfoAdapter.PetInfo
 
 
         }
+
         public void bind(Pet pet) {
             petName.setText(pet.getPet_name() != null ? pet.getPet_name() : "N/A");
-            petAge.setText(String.valueOf(pet.getAge()));
-            petGender.setText(String.valueOf(pet.getGender()));
-            petType.setText(pet.getPet_type() != null ? pet.getPet_type() : "N/A");
-            petColor.setText(pet.getColor() != null ? pet.getColor() : "N/A");
-            petBreed.setText(pet.getPet_breed() != null ? pet.getPet_breed() : "N/A");
+//            petAge.setText(String.valueOf(pet.getAge()));
+//            petGender.setText(String.valueOf(pet.getGender()));
+//            petType.setText(pet.getPet_type() != null ? pet.getPet_type() : "N/A");
+//            petColor.setText(pet.getColor() != null ? pet.getColor() : "N/A");
+//            petBreed.setText(pet.getPet_breed() != null ? pet.getPet_breed() : "N/A");
 
 
             List<String> imageUrls = pet.getImageUrls();
@@ -128,7 +135,7 @@ public class PetInfoAdapter  extends RecyclerView.Adapter<PetInfoAdapter.PetInfo
         }
 
         private void deletePetInfoFromDatabase(String pet_id) {
-            FirebaseDatabase.getInstance().getReference("Pet").child(pet_id).removeValue();
+            FirebaseDatabase.getInstance().getReference("Pet").child(accountId).child(pet_id).removeValue();
         }
     }
 }

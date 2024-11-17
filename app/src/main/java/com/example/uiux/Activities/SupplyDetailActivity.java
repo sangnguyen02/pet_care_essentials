@@ -36,6 +36,7 @@ import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Detail;
 import com.example.uiux.Model.Supplies_Import;
 import com.example.uiux.R;
+import com.example.uiux.Utils.CurrencyFormatter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -66,7 +67,6 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
     DatabaseReference databaseReference, detailRef, cartRef;
     String accountId;
     String supplyId;
-    String currency;
     String supplyAddToCartImageUrl;
 //    FirebaseAuth mAuth;
     SupplyDetailOptionAdapter supplyDetailOptionAdapter;
@@ -87,7 +87,6 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
         accountId = preferences.getString("accountID", null);
         initWidget();
         // Lấy supply_id từ Intent
-        currency = "VND ";
         supplyId = getIntent().getStringExtra("supply_id");
         if (supplyId != null) {
             loadSupplyDetails(supplyId);
@@ -220,7 +219,7 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
     private void addToCart(String supplyId) {
         if (accountId != null) {
             int quantity = Integer.parseInt(tv_quantity_of_supply.getText().toString());
-            String priceStr = tv_price_add_to_cart.getText().toString().replace(currency, "").trim();
+            String priceStr = tv_price_add_to_cart.getText().toString().replace(getString(R.string.currency_vn), "").trim();
             double price = Double.parseDouble(priceStr);
             String supplyTitle = tv_supply_title.getText().toString();
             String selectedSupplySize = supplyDetailOptionAdapter.getSelectedOptionName();
@@ -296,7 +295,7 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
                     double sellPrice = Double.valueOf(Objects.requireNonNull(supplies.getSell_price()));
 
                     // Set formatted price
-                    tv_supply_price.setText(currency + df.format(sellPrice));
+                    tv_supply_price.setText(CurrencyFormatter.formatCurrency(sellPrice, getString(R.string.currency_vn)));
 
                     // Set quantity without formatting (as it's an integer)
                     tv_total_stock_quantity.setText(String.valueOf(supplies.getQuantity()));
@@ -347,7 +346,7 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
 
     @Override
     public void onSupplyOptionClick(double costPrice, int stockRemain) {
-        tv_price_add_to_cart.setText(currency + String.valueOf(costPrice));
+        tv_price_add_to_cart.setText(CurrencyFormatter.formatCurrency(costPrice, getString(R.string.currency_vn)));
         tv_total_stock_quantity.setText(String.valueOf(stockRemain));
         isOptionSelected = true;
         mcv_minus.setEnabled(true);

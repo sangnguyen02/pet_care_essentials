@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
-    android:background="@color/bg_grey">
+    android:background="@color/light_bg">
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_my_supplies_app_bar"
         android:layout_width="match_parent"

@@ -24,6 +24,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.uiux.Activities.User.Order.OrderPaymentActivity;
+import com.example.uiux.Utils.CurrencyFormatter;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.firebase.database.DataSnapshot;
@@ -188,7 +189,7 @@ public class CartActivity extends AppCompatActivity {
 
         if (remainingItemsToFetch[0] == 0) {
             // Nếu không có item nào được chọn, hiển thị 0
-            tv_total_amount.setText(String.valueOf(totalAmount[0]));
+            tv_total_amount.setText(CurrencyFormatter.formatCurrency(totalAmount[0], getString(R.string.currency_vn)));
             return;
         }
 
@@ -221,7 +222,7 @@ public class CartActivity extends AppCompatActivity {
                     Log.e("FirebaseError", "Error fetching data: " + error.getMessage());
                     remainingItemsToFetch[0]--; // Giảm số lượng items còn lại
                     if (remainingItemsToFetch[0] == 0) {
-                        tv_total_amount.setText(String.valueOf(totalAmount[0])); // Cập nhật với tổng số tiền hiện tại
+                        tv_total_amount.setText(CurrencyFormatter.formatCurrency(totalAmount[0], getString(R.string.currency_vn))); // Cập nhật với tổng số tiền hiện tại
                     }
                 }
             });

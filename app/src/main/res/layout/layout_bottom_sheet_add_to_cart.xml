@@ -6,7 +6,7 @@
     android:layout_height="400dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@color/white"
-    app:strokeWidth="2dp"
+    app:strokeWidth="0dp"
     app:strokeColor="@color/grey"
     app:cardCornerRadius="8dp"
     app:behavior_hideable="true"

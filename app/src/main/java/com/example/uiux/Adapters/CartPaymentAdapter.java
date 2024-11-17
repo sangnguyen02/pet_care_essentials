@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.Supplies_Detail;
 import com.example.uiux.R;
+import com.example.uiux.Utils.CurrencyFormatter;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.firebase.database.DataSnapshot;
@@ -49,9 +50,9 @@ public class CartPaymentAdapter extends RecyclerView.Adapter<CartPaymentAdapter.
         CartItem cartItem = cartPaymentItemList.get(position);
         holder.tvSupplyTitle.setText(cartItem.getSupply_title());
         holder.tvSupplySize.setText(cartItem.getSupply_size());
-        holder.tvSupplyPrice.setText(String.valueOf(cartItem.getSupply_price()));
+        holder.tvSupplyPrice.setText(CurrencyFormatter.formatCurrency(cartItem.getSupply_price(), context.getString(R.string.currency_vn)));
         holder.tvSupplyQuantity.setText(String.valueOf(cartItem.getQuantity()));
-        holder.tvSupplyTotalPrice.setText(String.valueOf(cartItem.getTotalPrice()));
+        holder.tvSupplyTotalPrice.setText(CurrencyFormatter.formatCurrency(cartItem.getTotalPrice(), context.getString(R.string.currency_vn)));
 
         String imageUrls = cartItem.getImageUrl();
         if (imageUrls != null && !imageUrls.isEmpty()) {
