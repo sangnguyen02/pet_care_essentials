@@ -1,371 +1,279 @@
 package com.example.uiux.Activities.Admin.Branch;
 
-import android.os.AsyncTask;
+import static com.mapbox.maps.plugin.animation.CameraAnimationsUtils.getCamera;
+import static com.mapbox.maps.plugin.gestures.GesturesUtils.addOnMapClickListener;
+import static com.mapbox.navigation.base.extensions.RouteOptionsExtensions.applyDefaultNavigationOptions;
+
+import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.uiux.Activities.Admin.Supplies.SuppliesActivity;
 import com.example.uiux.Model.BranchStore;
-import com.example.uiux.Model.District;
-import com.example.uiux.Model.Province;
-import com.example.uiux.Model.Ward;
 import com.example.uiux.R;
+import com.example.uiux.Utils.VectorToBitmapConverter;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mapbox.android.core.location.LocationEngineProvider;
+import com.mapbox.geojson.Point;
+import com.mapbox.maps.CameraBoundsOptions;
+import com.mapbox.maps.CameraOptions;
+import com.mapbox.maps.CoordinateBounds;
+import com.mapbox.maps.MapView;
+import com.mapbox.maps.Style;
+import com.mapbox.maps.extension.style.layers.properties.generated.TextAnchor;
+import com.mapbox.maps.plugin.animation.MapAnimationOptions;
+import com.mapbox.maps.plugin.annotation.AnnotationPlugin;
+import com.mapbox.maps.plugin.annotation.AnnotationPluginImplKt;
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager;
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManagerKt;
+import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions;
+import com.mapbox.navigation.base.options.NavigationOptions;
+import com.mapbox.navigation.core.MapboxNavigation;
+import com.mapbox.navigation.core.lifecycle.MapboxNavigationApp;
+import com.mapbox.navigation.core.trip.session.LocationMatcherResult;
+import com.mapbox.navigation.core.trip.session.LocationObserver;
+import com.mapbox.navigation.ui.maps.location.NavigationLocationProvider;
+import com.mapbox.search.autocomplete.PlaceAutocomplete;
+import com.mapbox.search.autocomplete.PlaceAutocompleteSuggestion;
+import com.mapbox.search.ui.adapter.autocomplete.PlaceAutocompleteUiAdapter;
+import com.mapbox.search.ui.view.CommonSearchViewConfiguration;
+import com.mapbox.search.ui.view.SearchResultsView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
+import kotlin.Unit;
+import kotlin.coroutines.Continuation;
+import kotlin.coroutines.CoroutineContext;
+import kotlin.coroutines.EmptyCoroutineContext;
+
 public class BranchStoreActivity extends AppCompatActivity {
-    private Spinner provinceSpinner, districtSpinner, wardSpinner,statusSpinner;
-    private ArrayAdapter<Province> provinceAdapter;
-    private ArrayAdapter<District> districtAdapter;
-    private ArrayAdapter<Ward> wardAdapter;
-    private TextInputEditText edt_address,edt_branch_name;
+    MapView mapView;
+    FloatingActionButton focusLocationBtn;
+    private final NavigationLocationProvider navigationLocationProvider = new NavigationLocationProvider();
+    private boolean focusLocation = true;
+    private MapboxNavigation mapboxNavigation;
+    private PlaceAutocomplete placeAutocomplete;
+    private SearchResultsView searchResultsView;
+    private PlaceAutocompleteUiAdapter placeAutocompleteUiAdapter;
+    private TextInputEditText searchET;
+    private boolean ignoreNextQueryUpdate = false;
     private DatabaseReference databaseReference;
-    private MaterialButton saveBTN, updateAddressBTN;
-    private ImageView imgv_back;
+    private Spinner statusSpinner;
+    private TextInputEditText branchName;
+    private MaterialButton saveBtn;
     BranchStore branchStore;
+    private Point selectedPoint;
+
+    // Location observer
+    private final LocationObserver locationObserver = new LocationObserver() {
+        @Override
+        public void onNewRawLocation(@NonNull Location location) {}
+
+        @Override
+        public void onNewLocationMatcherResult(@NonNull LocationMatcherResult locationMatcherResult) {
+            Location location = locationMatcherResult.getEnhancedLocation();
+            navigationLocationProvider.changePosition(location, locationMatcherResult.getKeyPoints(), null, null);
+            if (focusLocation) {
+                updateCamera(Point.fromLngLat(location.getLongitude(), location.getLatitude()), (double) location.getBearing());
+            }
+        }
+    };
+
+    private void updateCamera(Point point, Double bearing) {
+        MapAnimationOptions animationOptions = new MapAnimationOptions.Builder().duration(1500L).build();
+        CameraOptions cameraOptions = new CameraOptions.Builder()
+                .center(point).zoom(12.0).bearing(bearing).pitch(45.0).build();
+        getCamera(mapView).easeTo(cameraOptions, animationOptions);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_branch_store);
-        imgv_back = findViewById(R.id.img_back_new_address);
-        provinceSpinner = findViewById(R.id.provinceSpinner);
-        districtSpinner = findViewById(R.id.districtSpinner);
-        wardSpinner = findViewById(R.id.wardSpinner);
-        statusSpinner=findViewById(R.id.statusSpinner);
-        edt_branch_name=findViewById(R.id.edt_branch_name);
-        edt_address =findViewById(R.id.edt_new_address);
-        saveBTN=findViewById(R.id.saveBTN);
+        setContentView(R.layout.activity_test_map);
 
-        //updateAddressBTN=findViewById(R.id.addressUpdate);
+        mapView = findViewById(R.id.mapView);
+        statusSpinner=findViewById(R.id.statusSpinner);
+        branchName=findViewById(R.id.edt_branch_name);
+        saveBtn=findViewById(R.id.save);
+
+        focusLocationBtn = findViewById(R.id.focusLocation);
+        int vectorResId = R.drawable.here; // Replace with the ID of your vector image resource
+        Bitmap bitmap = VectorToBitmapConverter.convertVectorToBitmap(this, vectorResId);
+
+        FectchSpinnerStatus();
         branchStore=new BranchStore();
         databaseReference = FirebaseDatabase.getInstance().getReference("Branch Store");
 
-//        // Sự kiện Chọn tỉnh
-//        ProvinceSelection();
-//        //Sự kiện Chọn quận huyện
-//        DistrictSelection();
-//        //Sự kiện Chọn xã/phường
-//        Wardselection();
-//        FectchSpinnerStatus();
-//
-//        imgv_back.setOnClickListener(view -> {
-//            finish();
-//        });
-//        saveBTN.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                uploadBranchStoreToFirebase();
-//                //Toast.makeText(getApplicationContext(), "Uploaded", Toast.LENGTH_SHORT).show();
-//            }
-//        });
+        NavigationOptions navigationOptions = new NavigationOptions.Builder(this)
+                .accessToken(getString(R.string.mapbox_access_token)).build();
+        MapboxNavigationApp.setup(navigationOptions);
+        mapboxNavigation = new MapboxNavigation(navigationOptions);
+        mapboxNavigation.registerLocationObserver(locationObserver);
+
+        // Autocomplete search setup
+        placeAutocomplete = PlaceAutocomplete.create(getString(R.string.mapbox_access_token));
+        searchET = findViewById(R.id.searchET);
+        searchResultsView = findViewById(R.id.search_results_view);
+        searchResultsView.initialize(new SearchResultsView.Configuration(new CommonSearchViewConfiguration()));
+
+        placeAutocompleteUiAdapter = new PlaceAutocompleteUiAdapter(
+                searchResultsView, placeAutocomplete, LocationEngineProvider.getBestLocationEngine(this)
+        );
+
+        searchET.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (ignoreNextQueryUpdate) {
+                    ignoreNextQueryUpdate = false;
+                } else {
+                    placeAutocompleteUiAdapter.search(charSequence.toString(), new Continuation<Unit>() {
+                        @NonNull @Override public CoroutineContext getContext() { return EmptyCoroutineContext.INSTANCE; }
+
+                        @Override
+                        public void resumeWith(@NonNull Object o) {
+                            runOnUiThread(() -> searchResultsView.setVisibility(View.VISIBLE));
+                        }
+                    });
+                }
+            }
+
+            @Override public void afterTextChanged(Editable editable) {}
+        });
+
+        // Load the map style and set initial position
+        mapView.getMapboxMap().loadStyleUri(Style.SATELLITE, style -> {
+            // Center the map on Vietnam initially
+//            Point vietnamCenter = Point.fromLngLat(108.2068, 16.0471);
+//            updateCamera(vietnamCenter, 0.0);
+
+            CameraBoundsOptions vietnamBounds = new CameraBoundsOptions.Builder()
+                    .bounds(new CoordinateBounds(
+                            Point.fromLngLat(102.14441, 8.179066), // Southwest corner of Vietnam
+                            Point.fromLngLat(109.464639, 23.393395) // Northeast corner of Vietnam
+                    ))
+                    .minZoom(5.0) // Set minimum zoom level
+                    .maxZoom(15.0) // Set maximum zoom level
+                    .build();
+
+            // Áp dụng giới hạn camera để giới hạn khu vực bản đồ chỉ ở Việt Nam
+            mapView.getMapboxMap().setBounds(vietnamBounds);
+            // Thiết lập vị trí camera ban đầu để hiển thị toàn bộ Việt Nam
+            Point vietnamCenter = Point.fromLngLat(108.2068, 16.0471);
+            CameraOptions initialCameraOptions = new CameraOptions.Builder()
+                    .center(vietnamCenter)
+                    .zoom(5.0)
+                    .bearing(0.0)
+                    .pitch(0.0)
+                    .build();
+            mapView.getMapboxMap().setCamera(initialCameraOptions);
+
+            AnnotationPlugin annotationPlugin = AnnotationPluginImplKt.getAnnotations(mapView);
+            PointAnnotationManager pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationPlugin, mapView);
+
+            // Map click to add marker
+            addOnMapClickListener(mapView.getMapboxMap(), point -> {
+                pointAnnotationManager.deleteAll();
+                PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
+                        .withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap).withPoint(point);
+                pointAnnotationManager.create(pointAnnotationOptions);
+                selectedPoint = point; // Set the clicked point as the branch location
+                return true;
+            });
+
+            // Search result selection
+            placeAutocompleteUiAdapter.addSearchListener(new PlaceAutocompleteUiAdapter.SearchListener() {
+                @Override
+                public void onSuggestionsShown(@NonNull List<PlaceAutocompleteSuggestion> list) {}
+
+                @Override
+                public void onSuggestionSelected(@NonNull PlaceAutocompleteSuggestion suggestion) {
+                    ignoreNextQueryUpdate = true;
+                    focusLocation = false;
+                    searchET.setText(suggestion.getName());
+                    searchResultsView.setVisibility(View.GONE);
+
+                    pointAnnotationManager.deleteAll();
+                    PointAnnotationOptions pointAnnotationOptions = new PointAnnotationOptions()
+                            .withTextAnchor(TextAnchor.CENTER).withIconImage(bitmap).withPoint(suggestion.getCoordinate());
+                    pointAnnotationManager.create(pointAnnotationOptions);
+                    selectedPoint=suggestion.getCoordinate();
+                    updateCamera(suggestion.getCoordinate(), 0.0);
+                }
+
+                @Override public void onPopulateQueryClick(@NonNull PlaceAutocompleteSuggestion suggestion) {}
+                @Override public void onError(@NonNull Exception e) {}
+            });
+        });
+
+        focusLocationBtn.setOnClickListener(view -> {
+            focusLocation = true;
+            focusLocationBtn.hide();
+        });
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (selectedPoint == null || searchET.getText().toString().isEmpty()) {
+                    Toast.makeText(BranchStoreActivity.this, "Select a location and enter a branch name.", Toast.LENGTH_SHORT).show();;
+                }
+                else {
+                    uploadBranchStoreToFirebase();
+
+                }
+            }
+        });
+    }
+
+    private void uploadBranchStoreToFirebase()
+    {
+        String id = databaseReference.push().getKey();
+        String name=branchName.getText().toString();
+        String address=searchET.getText().toString();
+        double longtitude= selectedPoint.longitude();
+        double latitude=selectedPoint.latitude();
+        if (id != null) {
+            branchStore.setBranch_Store_id(id);
+            branchStore.setBranch_name(name);
+            branchStore.setAddress_details(address);
+            branchStore.setLongtitude(longtitude);
+            branchStore.setLatitude(latitude);
+            databaseReference.child(id).setValue(branchStore)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(BranchStoreActivity.this, "BranchStore successfully saved", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(BranchStoreActivity.this, "Failed to save BranchStore!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+
 
     }
-//    private void FectchSpinnerStatus() {
-//        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(BranchStoreActivity.this,
-//                R.array.branch_store_status, android.R.layout.simple_spinner_item);
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        statusSpinner.setAdapter(adapter);
-//    }
-//    private void Wardselection() {
-//        wardSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-//                Ward selectedWard = (Ward) adapterView.getItemAtPosition(i);
-//
-//                Toast.makeText(getApplicationContext(), "Select ward: " + selectedWard.getWardName(), Toast.LENGTH_SHORT).show();
-//                branchStore.setWard(selectedWard.getWardId()+"+"+ selectedWard.getWardName());
-//
-//
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> adapterView) {
-//
-//            }
-//        });
-//    }
-//
-//    private void DistrictSelection() {
-//        // Xử lý sự kiện chọn quận/huyện
-//        districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-//                District selectedDistrict = (District) parentView.getItemAtPosition(position);
-//                Toast.makeText(getApplicationContext(), "Select district: " + selectedDistrict.getDistrictName(), Toast.LENGTH_SHORT).show();
-//                branchStore.setDistrict(selectedDistrict.getDistrictId()+"+"+selectedDistrict.getDistrictName());
-//
-//                // Gọi API để lấy danh sách phường/xã theo district_id
-//                new BranchStoreActivity.FetchWardsTask().execute("https://vapi.vnappmob.com/api/province/ward/" + selectedDistrict.getDistrictId());
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parentView) {
-//                // Không có gì được chọn
-//            }
-//        });
-//    }
-//
-//    private void ProvinceSelection() {
-//
-//        new BranchStoreActivity.FetchProvincesTask().execute("https://vapi.vnappmob.com/api/province/");
-//
-//
-//        // Xử lý sự kiện chọn tỉnh
-//        provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-//                Province selectedProvince = (Province) parentView.getItemAtPosition(position);
-//                Toast.makeText(getApplicationContext(), "Select province: " + selectedProvince.getProvinceName(), Toast.LENGTH_SHORT).show();
-//                branchStore.setProvince(selectedProvince.getProvinceId()+"+"+selectedProvince.getProvinceName());
-//
-//                // Gọi API để lấy danh sách quận/huyện theo province_id
-//                new BranchStoreActivity.FetchDistrictsTask().execute("https://vapi.vnappmob.com/api/province/district/" + selectedProvince.getProvinceId());
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parentView) {
-//                // Không có gì được chọn
-//            }
-//        });
-//    }
-//
-//    // AsyncTask để lấy danh sách tỉnh từ API
-//    private class FetchProvincesTask extends AsyncTask<String, Void, List<Province>> {
-//
-//        @Override
-//        protected List<Province> doInBackground(String... strings) {
-//            String urlString = strings[0];
-//            try {
-//                URL url = new URL(urlString);
-//                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-//                urlConnection.setRequestMethod("GET");
-//                urlConnection.setConnectTimeout(5000);
-//
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-//                StringBuilder result = new StringBuilder();
-//                String line;
-//                while ((line = reader.readLine()) != null) {
-//                    result.append(line);
-//                }
-//                reader.close();
-//
-//                return parseProvinces(result.toString());
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(List<Province> provinces) {
-//            super.onPostExecute(provinces);
-//            if (provinces != null) {
-//                // Thêm hint vào danh sách
-//                provinces.add(0, new Province("-1", "Select Province", ""));
-//
-//                provinceAdapter = new ArrayAdapter<>(BranchStoreActivity.this, android.R.layout.simple_spinner_item, provinces);
-//                provinceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                provinceSpinner.setAdapter(provinceAdapter);
-//            } else {
-//                Toast.makeText(BranchStoreActivity.this, "Cannot get provinces data!", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
-//    private void uploadBranchStoreToFirebase() {
-//        String detailAddress = edt_address.getText().toString();
-//        String branchName=edt_branch_name.getText().toString();
-//        if (!detailAddress.isEmpty()&&!branchName.isEmpty()) {
-//            branchStore.setAddress_details(detailAddress);
-//            branchStore.setBranch_name(branchName);
-//            branchStore.setStatus( statusSpinner.getSelectedItemPosition());
-//            String id = databaseReference.push().getKey();
-//            if (id != null) {
-//                branchStore.setBranch_Store_id(id);
-//                databaseReference.child(id).setValue(branchStore)
-//                        .addOnCompleteListener(task -> {
-//                            if (task.isSuccessful()) {
-//                                Toast.makeText(BranchStoreActivity.this, "BranchStore successfully saved", Toast.LENGTH_SHORT).show();
-//                            } else {
-//                                Toast.makeText(BranchStoreActivity.this, "Failed to save BranchStore!", Toast.LENGTH_SHORT).show();
-//                            }
-//                        });
-//            }
-//        } else {
-//            Toast.makeText(BranchStoreActivity.this, "Please enter the detail address!", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-//
-//    // AsyncTask để lấy danh sách quận/huyện từ API
-//    private class FetchDistrictsTask extends AsyncTask<String, Void, List<District>> {
-//
-//        @Override
-//        protected List<District> doInBackground(String... strings) {
-//            String urlString = strings[0];
-//            try {
-//                URL url = new URL(urlString);
-//                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-//                urlConnection.setRequestMethod("GET");
-//                urlConnection.setConnectTimeout(5000);
-//
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-//                StringBuilder result = new StringBuilder();
-//                String line;
-//                while ((line = reader.readLine()) != null) {
-//                    result.append(line);
-//                }
-//                reader.close();
-//
-//                return parseDistricts(result.toString());
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(List<District> districts) {
-//            super.onPostExecute(districts);
-//            if (districts != null) {
-//                // Thêm hint vào danh sách
-//                districts.add(0, new District("-1", "Select District"));
-//
-//                districtAdapter = new ArrayAdapter<>(BranchStoreActivity.this, android.R.layout.simple_spinner_item, districts);
-//                districtAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                districtSpinner.setAdapter(districtAdapter);
-//            } else {
-//                Toast.makeText(BranchStoreActivity.this, "Cannot get districts data!", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
-//    // AsyncTask để lấy danh sách phường/xã từ API
-//    private class FetchWardsTask extends AsyncTask<String, Void, List<Ward>> {
-//
-//        @Override
-//        protected List<Ward> doInBackground(String... strings) {
-//            String urlString = strings[0];
-//            try {
-//                URL url = new URL(urlString);
-//                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-//                urlConnection.setRequestMethod("GET");
-//                urlConnection.setConnectTimeout(5000);
-//
-//                BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-//                StringBuilder result = new StringBuilder();
-//                String line;
-//                while ((line = reader.readLine()) != null) {
-//                    result.append(line);
-//                }
-//                reader.close();
-//
-//                return parseWards(result.toString());
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(List<Ward> wards) {
-//            super.onPostExecute(wards);
-//            if (wards != null) {
-//                // Thêm mục hint vào danh sách
-//                wards.add(0, new Ward("-1", "Select ward"));
-//
-//                wardAdapter = new ArrayAdapter<>(BranchStoreActivity.this, android.R.layout.simple_spinner_item, wards);
-//                wardAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                wardSpinner.setAdapter(wardAdapter);
-//            } else {
-//                Toast.makeText(BranchStoreActivity.this, "Cannot get wards data!", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
-//
-//    // Phân tích JSON thành danh sách các đối tượng Province
-//    private List<Province> parseProvinces(String json) {
-//        List<Province> provinceList = new ArrayList<>();
-//        try {
-//            JSONObject jsonObject = new JSONObject(json);
-//            JSONArray resultsArray = jsonObject.getJSONArray("results");
-//
-//            for (int i = 0; i < resultsArray.length(); i++) {
-//                JSONObject provinceObject = resultsArray.getJSONObject(i);
-//                String id = provinceObject.getString("province_id");
-//                String name = provinceObject.getString("province_name");
-//
-//                Province province = new Province(id, name, "");
-//                provinceList.add(province);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return provinceList;
-//    }
-//
-//    // Phân tích JSON thành danh sách các đối tượng District
-//    private List<District> parseDistricts(String json) {
-//        List<District> districtList = new ArrayList<>();
-//        try {
-//            JSONObject jsonObject = new JSONObject(json);
-//            JSONArray resultsArray = jsonObject.getJSONArray("results");
-//
-//            for (int i = 0; i < resultsArray.length(); i++) {
-//                JSONObject districtObject = resultsArray.getJSONObject(i);
-//                String id = districtObject.getString("district_id");
-//                String name = districtObject.getString("district_name");
-//
-//                District district = new District(id, name);
-//                districtList.add(district);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return districtList;
-//    }
-//
-//    // Phân tích JSON thành danh sách các đối tượng Ward
-//    private List<Ward> parseWards(String json) {
-//        List<Ward> wardList = new ArrayList<>();
-//        try {
-//            JSONObject jsonObject = new JSONObject(json);
-//            JSONArray resultsArray = jsonObject.getJSONArray("results");
-//
-//            for (int i = 0; i < resultsArray.length(); i++) {
-//                JSONObject wardObject = resultsArray.getJSONObject(i);
-//                String id = wardObject.getString("ward_id");
-//                String name = wardObject.getString("ward_name");
-//
-//                Ward ward = new Ward(id, name);
-//                wardList.add(ward);
-//            }
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        return wardList;
-//    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mapboxNavigation.unregisterLocationObserver(locationObserver);
+        mapboxNavigation.onDestroy();
+    }
+    private void FectchSpinnerStatus() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(BranchStoreActivity.this,
+                R.array.branch_store_status, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        statusSpinner.setAdapter(adapter);
+    }
 }
+
