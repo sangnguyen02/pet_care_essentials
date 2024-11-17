@@ -7,11 +7,14 @@
     android:layout_marginTop="8dp"
     android:layout_marginBottom="8dp"
     android:backgroundTint="@color/white"
+    android:outlineSpotShadowColor="@color/light_white"
+    app:cardElevation="10dp"
     app:rippleColor="@color/ripple_color"
     app:cardCornerRadius="10dp"
     app:strokeWidth="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:padding="4dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -22,15 +25,14 @@
             android:layout_marginStart="16dp"
             android:fontFamily="@font/roboto_bold"
             android:text="Branh Name:"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/txtName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="120dp"
+            android:layout_marginStart="22dp"
             android:ellipsize="end"
             android:maxLines="3"
             android:text="Name"
@@ -53,10 +55,11 @@
             android:id="@+id/txtStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="120dp"
+            android:layout_marginStart="60dp"
             android:text="Status"
-            app:layout_constraintTop_toBottomOf="@+id/txtName"
-            app:layout_constraintStart_toEndOf="@+id/textViewStatusLabel" />
+            app:layout_constraintBottom_toBottomOf="@+id/textViewStatusLabel"
+            app:layout_constraintStart_toEndOf="@+id/textViewStatusLabel"
+            app:layout_constraintTop_toTopOf="@+id/textViewStatusLabel" />
 
         <!-- Thêm TextView cho Address -->
         <TextView
@@ -71,14 +74,15 @@
 
         <TextView
             android:id="@+id/txtAddress"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="120dp"
+            android:layout_marginStart="48dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:text="Address"
-            app:layout_constraintTop_toBottomOf="@+id/txtStatus"
-            app:layout_constraintStart_toEndOf="@+id/textViewAddressLabel" />
+            app:layout_constraintBottom_toBottomOf="@+id/textViewAddressLabel"
+            app:layout_constraintStart_toEndOf="@+id/textViewAddressLabel"
+            app:layout_constraintTop_toTopOf="@+id/textViewAddressLabel" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -2,6 +2,7 @@ package com.example.uiux.Activities.User.Pet;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
@@ -13,13 +14,8 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.uiux.Activities.Admin.Supplies.SuppliesActivity;
 import com.example.uiux.Model.Pet;
-import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Type;
 import com.example.uiux.R;
 import com.google.android.material.button.MaterialButton;
@@ -32,7 +28,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,17 +37,18 @@ import java.util.UUID;
 
 public class PetInfoActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView img1, img2, img3, img4, img_back_add_supply;
+    private ImageView img1, img_back_add_pet_profile;
     private TextInputEditText petName,petAge, petWeight, petColor,petBreed;
     private Spinner petGender, petType;
     private MaterialButton petSubmit;
 
     private ProgressDialog progressDialog;
-    private Uri[] imageUris = new Uri[4]; // Array to hold image URIs
+    private Uri[] imageUris = new Uri[1]; // Array to hold image URIs
     // Firebase
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private DatabaseReference petDatabase;
+    String accountId;
 
 
     @Override
@@ -60,35 +56,34 @@ public class PetInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_pet_info);
-        petName = findViewById(R.id.edt_name);
-        petAge = findViewById(R.id.edt_age);
-        petWeight = findViewById(R.id.edt_weight);
-        petSubmit = findViewById(R.id.btnSubmit);
-        petColor = findViewById(R.id.edt_color);
-        petBreed = findViewById(R.id.edt_breed);
 
-        img_back_add_supply = findViewById(R.id.img_back_add_supply);
+
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        accountId = preferences.getString("accountID", null);
+
+        petName = findViewById(R.id.edt_name_add);
+        petAge = findViewById(R.id.edt_age_add);
+        petWeight = findViewById(R.id.edt_weight_add);
+        petSubmit = findViewById(R.id.btnSubmit);
+        petColor = findViewById(R.id.edt_color_add);
+        petBreed = findViewById(R.id.edt_breed_add);
+
+        img_back_add_pet_profile = findViewById(R.id.img_back_add_pet_profile);
         img1 = findViewById(R.id.img1);
-        img2 = findViewById(R.id.img2);
-        img3 = findViewById(R.id.img3);
-        img4 = findViewById(R.id.img4);
-        petGender = findViewById(R.id.spinner_gender);
-        petType = findViewById(R.id.spinner_type);
+        petGender = findViewById(R.id.spinner_gender_add);
+        petType = findViewById(R.id.spinner_type_add);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference("Pet_Image/");
-        petDatabase = FirebaseDatabase.getInstance().getReference("Pet");
+        petDatabase = FirebaseDatabase.getInstance().getReference("Pet").child(accountId);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
         FetchSpinnerGender();
         FetchSpinnerType();
-        img_back_add_supply.setOnClickListener(view -> {finish();});
-        img1.setOnClickListener(view -> openImageChooser(0));
-        img2.setOnClickListener(view -> openImageChooser(1));
-        img3.setOnClickListener(view -> openImageChooser(2));
-        img4.setOnClickListener(view -> openImageChooser(3));
+        img_back_add_pet_profile.setOnClickListener(view -> {finish();});
+        img1.setOnClickListener(view -> openImageChooser());
 
         petSubmit.setOnClickListener(view -> {
-            if (imageUris != null && !Objects.requireNonNull(petName.getText()).toString().isEmpty()&& !Objects.requireNonNull(petAge.getText()).toString().isEmpty()
+            if (imageUris != null && !Objects.requireNonNull(petName.getText()).toString().isEmpty() && !Objects.requireNonNull(petAge.getText()).toString().isEmpty()
                     && !Objects.requireNonNull(petWeight.getText()).toString().isEmpty() && !Objects.requireNonNull(petBreed.getText()).toString().isEmpty() && !Objects.requireNonNull(petColor.getText()).toString().isEmpty()) {
                 uploadImageAndAddPet();
             } else {
@@ -130,16 +125,16 @@ public class PetInfoActivity extends AppCompatActivity {
         String petId = petDatabase.push().getKey(); // Generate unique ID
         Pet pet= new Pet();
         pet.setPet_id(petId);
-        pet.setPet_name( Objects.requireNonNull(petName.getText()).toString());
+        pet.setPet_name(Objects.requireNonNull(petName.getText()).toString());
         pet.setColor( Objects.requireNonNull(petColor.getText()).toString());
         pet.setAge(Integer.valueOf(String.valueOf(petAge.getText().toString())));
-        pet.setWeight(Integer.valueOf(String.valueOf(petAge.getText().toString())));
-        pet.setPet_breed( petBreed.getText().toString());
+        pet.setWeight(Integer.valueOf(String.valueOf(petWeight.getText().toString())));
+        pet.setPet_breed(petBreed.getText().toString());
         pet.setGender(petGender.getSelectedItem().toString());
         pet.setPet_type( petType.getSelectedItem().toString());
         pet.setImageUrls(imageUrls);
 
-        petDatabase.child(petId).setValue(petId).addOnCompleteListener(task -> {
+        petDatabase.child(petId).setValue(pet).addOnCompleteListener(task -> {
             progressDialog.dismiss();
             if (task.isSuccessful()) {
                 Toast.makeText(PetInfoActivity.this, "Pet added successfully!", Toast.LENGTH_SHORT).show();
@@ -159,19 +154,8 @@ public class PetInfoActivity extends AppCompatActivity {
         petAge.setText("");
         for (int i = 0; i < imageUris.length; i++) {
             imageUris[i] = null; // Clear image URIs
-            switch (i) {
-                case 0:
-                    img1.setImageResource(R.drawable.logo); // Set to a placeholder image
-                    break;
-                case 1:
-                    img2.setImageResource(R.drawable.logo);
-                    break;
-                case 2:
-                    img3.setImageResource(R.drawable.logo);
-                    break;
-                case 3:
-                    img4.setImageResource(R.drawable.logo);
-                    break;
+            if (i == 0) {
+                img1.setImageResource(R.drawable.logo); // Set to a placeholder image
             }
         }
     }
@@ -209,11 +193,11 @@ public class PetInfoActivity extends AppCompatActivity {
         petGender.setAdapter(adapter);
     }
 
-    private void openImageChooser(int index) {
+    private void openImageChooser() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST + index);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
     @Override
@@ -225,19 +209,8 @@ public class PetInfoActivity extends AppCompatActivity {
             int imageIndex = requestCode - PICK_IMAGE_REQUEST; // Adjust index based on requestCode
             if (imageIndex >= 0 && imageIndex < imageUris.length) { // Ensure index is within bounds
                 imageUris[imageIndex] = selectedImageUri; // Store selected URI in the array
-                switch (imageIndex) {
-                    case 0:
-                        img1.setImageURI(selectedImageUri);
-                        break;
-                    case 1:
-                        img2.setImageURI(selectedImageUri);
-                        break;
-                    case 2:
-                        img3.setImageURI(selectedImageUri);
-                        break;
-                    case 3:
-                        img4.setImageURI(selectedImageUri);
-                        break;
+                if (imageIndex == 0) {
+                    img1.setImageURI(selectedImageUri);
                 }
             }
         }

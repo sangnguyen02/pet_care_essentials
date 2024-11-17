@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uiux.Model.DeliveryMethod;
 import com.example.uiux.R;
+import com.example.uiux.Utils.CurrencyFormatter;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 
 import java.util.List;
@@ -19,11 +20,21 @@ public class DeliveryMethodAdapter extends RecyclerView.Adapter<DeliveryMethodAd
     private Context context;
     private List<DeliveryMethod> deliveryMethods;
     private int selectedPosition = -1;
+    private OnDeliveryMethodSelectedListener listener;
 
     public DeliveryMethodAdapter(Context context, List<DeliveryMethod> deliveryMethods) {
         this.context = context;
         this.deliveryMethods = deliveryMethods;
     }
+
+    public interface OnDeliveryMethodSelectedListener {
+        void onDeliveryMethodSelected(double cost);
+    }
+
+    public void setOnDeliveryMethodSelectedListener(OnDeliveryMethodSelectedListener listener) {
+        this.listener = listener;
+    }
+
 
     @NonNull
     @Override
@@ -37,7 +48,7 @@ public class DeliveryMethodAdapter extends RecyclerView.Adapter<DeliveryMethodAd
         DeliveryMethod deliveryMethod = deliveryMethods.get(position);
 
         holder.delivery_method_title.setText(deliveryMethod.getTitle());
-        holder.delivery_method_cost.setText(String.valueOf(deliveryMethod.getCost()));
+        holder.delivery_method_cost.setText(CurrencyFormatter.formatCurrency(deliveryMethod.getCost(), context.getString(R.string.currency_vn)));
 
         holder.radio_delivery_method.setChecked(position == selectedPosition);
 
@@ -49,6 +60,10 @@ public class DeliveryMethodAdapter extends RecyclerView.Adapter<DeliveryMethodAd
             // Notify changes only for the affected items
             notifyItemChanged(previousSelectedPosition);
             notifyItemChanged(selectedPosition);
+
+            if (listener != null) {
+                listener.onDeliveryMethodSelected(deliveryMethod.getCost());
+            }
         });
     }
 

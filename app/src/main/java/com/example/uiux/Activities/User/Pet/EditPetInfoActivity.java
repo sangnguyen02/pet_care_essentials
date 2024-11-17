@@ -2,6 +2,7 @@ package com.example.uiux.Activities.User.Pet;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -47,53 +48,52 @@ import java.util.Objects;
 
 public class EditPetInfoActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView img1, img2, img3, img4, img_back_add_supply;
+    private ImageView img1, img_back_edit_pet;
     private TextInputEditText petName,petAge, petWeight, petColor,petBreed;
     private Spinner petGender, petType;
     private MaterialButton petSave;
 
     private ProgressDialog progressDialog;
-    private Uri[] imageUris = new Uri[4]; // Array to hold image URIs
+    private Uri[] imageUris = new Uri[1]; // Array to hold image URIs
     // Firebase
     private FirebaseStorage storage;
     private StorageReference storageReference;
     private DatabaseReference petDatabase;
     private String pet_id;
+    String accountId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_edit_pet_info);
-        petName = findViewById(R.id.edt_name);
-        petAge = findViewById(R.id.edt_age);
-        petWeight = findViewById(R.id.edt_weight);
-        petSave = findViewById(R.id.btnSubmit);
-        petColor = findViewById(R.id.edt_color);
-        petBreed = findViewById(R.id.edt_breed);
 
-        img_back_add_supply = findViewById(R.id.img_back_add_supply);
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        accountId = preferences.getString("accountID", null);
+        pet_id = getIntent().getStringExtra("pet_id");
+
+        petName = findViewById(R.id.edt_name_edit);
+        petAge = findViewById(R.id.edt_age_edit);
+        petWeight = findViewById(R.id.edt_weight_edit);
+        petSave = findViewById(R.id.btnSubmit);
+        petColor = findViewById(R.id.edt_color_edit);
+        petBreed = findViewById(R.id.edt_breed_edit);
+
+        img_back_edit_pet = findViewById(R.id.img_back_edit_pet);
         img1 = findViewById(R.id.img1);
-        img2 = findViewById(R.id.img2);
-        img3 = findViewById(R.id.img3);
-        img4 = findViewById(R.id.img4);
-        petGender = findViewById(R.id.spinner_gender);
-        petType = findViewById(R.id.spinner_type);
+        petGender = findViewById(R.id.spinner_gender_edit);
+        petType = findViewById(R.id.spinner_type_edit);
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference("Pet_Image/");
-        petDatabase = FirebaseDatabase.getInstance().getReference("Pet");
+        petDatabase = FirebaseDatabase.getInstance().getReference("Pet").child(accountId).child(pet_id);
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Uploading...");
         FetchSpinnerGender();
         FetchSpinnerType();
-        img_back_add_supply.setOnClickListener(view -> {finish();});
+        img_back_edit_pet.setOnClickListener(view -> {finish();});
         img1.setOnClickListener(view -> openImageChooser(0));
-        img2.setOnClickListener(view -> openImageChooser(1));
-        img3.setOnClickListener(view -> openImageChooser(2));
-        img4.setOnClickListener(view -> openImageChooser(3));
-        pet_id = getIntent().getStringExtra("pet_id");
-        petDatabase = FirebaseDatabase.getInstance().getReference("Pet").child(pet_id);
-        storage = FirebaseStorage.getInstance();
+
+        //storage = FirebaseStorage.getInstance();
         loadPetData();
         petSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,12 +108,18 @@ public class EditPetInfoActivity extends AppCompatActivity {
         String updatedColor = petColor.getText().toString().trim();
         Integer updateWeight = Integer.valueOf(petWeight.getText().toString().trim());
         Integer updateAge = Integer.valueOf(petAge.getText().toString().trim());
+        String breed = petBreed.getText().toString().trim();
+        String selectedGender = petGender.getSelectedItem().toString();
+        String selectedType = petType.getSelectedItem().toString();
 
         // Cập nhật dữ liệu cơ bản của danh mục (trừ ảnh)
         petDatabase.child("pet_name").setValue(updatedName);
-        petDatabase.child("pet_color").setValue(updatedColor);
+        petDatabase.child("color").setValue(updatedColor);
         petDatabase.child("pet_weight").setValue(updateWeight);
-        petDatabase.child("pet_age").setValue(updateAge);
+        petDatabase.child("age").setValue(updateAge);
+        petDatabase.child("gender").setValue(selectedGender);
+        petDatabase.child("pet_breed").setValue(breed);
+        petDatabase.child("pet_type").setValue(selectedType);
 
 
 
@@ -145,7 +151,7 @@ public class EditPetInfoActivity extends AppCompatActivity {
                                     petDatabase.child("imageUrls").setValue(newImageUrls)
                                             .addOnCompleteListener(task -> {
                                                 if (task.isSuccessful()) {
-                                                    Toast.makeText(EditPetInfoActivity.this, "Supplies updated successfully", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(EditPetInfoActivity.this, "Pet profile updated successfully", Toast.LENGTH_SHORT).show();
                                                 } else {
                                                     Toast.makeText(EditPetInfoActivity.this, "Failed to update image URLs", Toast.LENGTH_SHORT).show();
                                                 }
@@ -212,8 +218,10 @@ public class EditPetInfoActivity extends AppCompatActivity {
                     petAge.setText(String.valueOf(pet.getAge()));
                     petWeight.setText(String.valueOf(pet.getWeight()));
                     petBreed.setText(pet.getPet_breed());
-                    int status = Integer.parseInt(pet.getGender());
-                    petGender.setSelection(status);
+                    petColor.setText(pet.getColor());
+//                    int status = Integer.parseInt(pet.getGender());
+//                    petGender.setSelection(status);
+                    setSpinnerValue(petGender, pet.getGender());
                     // Khi load dữ liệu từ Firebase
                     String typeFromDb = pet.getPet_type();
                     int index2=getPositionByName(petType,typeFromDb);
@@ -223,19 +231,8 @@ public class EditPetInfoActivity extends AppCompatActivity {
                         List<String> imageUrls = pet.getImageUrls();
                         for (int i = 0; i < imageUrls.size(); i++) {
                             if (imageUrls.get(i) != null) {
-                                switch (i) {
-                                    case 0:
-                                        Glide.with(EditPetInfoActivity.this).load(imageUrls.get(i)).into(img1);
-                                        break;
-                                    case 1:
-                                        Glide.with(EditPetInfoActivity.this).load(imageUrls.get(i)).into(img2);
-                                        break;
-                                    case 2:
-                                        Glide.with(EditPetInfoActivity.this).load(imageUrls.get(i)).into(img3);
-                                        break;
-                                    case 3:
-                                        Glide.with(EditPetInfoActivity.this).load(imageUrls.get(i)).into(img4);
-                                        break;
+                                if (i == 0) {
+                                    Glide.with(EditPetInfoActivity.this).load(imageUrls.get(i)).into(img1);
                                 }
                             }
                         }
@@ -274,7 +271,7 @@ public class EditPetInfoActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST + index);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -285,19 +282,8 @@ public class EditPetInfoActivity extends AppCompatActivity {
             int imageIndex = requestCode - PICK_IMAGE_REQUEST; // Adjust index based on requestCode
             if (imageIndex >= 0 && imageIndex < imageUris.length) { // Ensure index is within bounds
                 imageUris[imageIndex] = selectedImageUri; // Store selected URI in the array
-                switch (imageIndex) {
-                    case 0:
-                        img1.setImageURI(selectedImageUri);
-                        break;
-                    case 1:
-                        img2.setImageURI(selectedImageUri);
-                        break;
-                    case 2:
-                        img3.setImageURI(selectedImageUri);
-                        break;
-                    case 3:
-                        img4.setImageURI(selectedImageUri);
-                        break;
+                if (imageIndex == 0) {
+                    img1.setImageURI(selectedImageUri);
                 }
             }
         }

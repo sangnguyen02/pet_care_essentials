@@ -97,4 +97,10 @@
     <string name="shipping_standard">Standard</string>
     <string name="shipping_express">Express</string>
     <string name="shipping_expedited">Expedited</string>
+    <string name="pet_profile">Pet Profile</string>
+
+
+    <string name="currency_vn">đ</string>
+    <string name="search">Search</string>
+    <string name="not_found">Not found</string>
 </resources>

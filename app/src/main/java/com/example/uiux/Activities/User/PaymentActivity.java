@@ -30,6 +30,8 @@ import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.DeliveryMethod;
 import com.example.uiux.Model.PaymentMethod;
 import com.example.uiux.R;
+import com.example.uiux.Utils.CurrencyFormatter;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -42,8 +44,9 @@ import java.util.List;
 
 public class PaymentActivity extends AppCompatActivity {
     MaterialCardView mcv_payment_address;
+    MaterialButton btn_order;
     ImageView img_back_payment;
-    TextView tv_buyer_name, tv_buyer_phone, tv_address_detail, tv_ward_district_province;
+    TextView tv_buyer_name, tv_buyer_phone, tv_address_detail, tv_ward_district_province, tv_total_payment;
     RecyclerView rcv_cart_payment, rcv_payment_method, rcv_delivery_method;
     CartPaymentAdapter cartPaymentAdapter;
     PaymentMethodAdapter paymentMethodAdapter;
@@ -53,6 +56,7 @@ public class PaymentActivity extends AppCompatActivity {
     List<CartItem> cartPaymentItemList = new ArrayList<>();
     List<PaymentMethod> paymentMethodList = new ArrayList<>();
     List<DeliveryMethod> deliveryMethodList = new ArrayList<>();
+    Double totalPayment = 0.0;
 
     private ActivityResultLauncher<Intent> addressLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -98,11 +102,12 @@ public class PaymentActivity extends AppCompatActivity {
     private void initWidget() {
         img_back_payment = findViewById(R.id.img_back_payment);
         img_back_payment.setOnClickListener(view -> finish());
-
+        btn_order = findViewById(R.id.btn_order);
         tv_buyer_name = findViewById(R.id.tv_buyer_name);
         tv_buyer_phone = findViewById(R.id.tv_buyer_phone);
         tv_address_detail = findViewById(R.id.tv_address_detail);
         tv_ward_district_province = findViewById(R.id.tv_ward_district_province);
+        tv_total_payment = findViewById(R.id.tv_total_payment);
         rcv_cart_payment = findViewById(R.id.rcv_cart_payment);
         rcv_cart_payment.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         cartPaymentAdapter = new CartPaymentAdapter(this, cartPaymentItemList);
@@ -139,6 +144,11 @@ public class PaymentActivity extends AppCompatActivity {
         deliveryMethodList.add(new DeliveryMethod(3, getString(R.string.shipping_expedited), 30000));
         deliveryMethodAdapter = new DeliveryMethodAdapter(this, deliveryMethodList);
         rcv_delivery_method.setAdapter(deliveryMethodAdapter);
+        updateTotalPayment(totalPayment);
+        deliveryMethodAdapter.setOnDeliveryMethodSelectedListener(cost -> {
+            double totalWithDeliveryCost = totalPayment + cost;
+            updateTotalPayment(totalWithDeliveryCost);
+        });
 
 
     }
@@ -157,7 +167,9 @@ public class PaymentActivity extends AppCompatActivity {
                     CartItem cartItem = snapshot.getValue(CartItem.class);
                     if (cartItem != null) {
                         cartPaymentItemList.add(cartItem);
-                        cartPaymentAdapter.notifyDataSetChanged(); // Cập nhật adapter sau khi thêm item
+                        cartPaymentAdapter.notifyDataSetChanged();
+                        totalPayment += cartItem.getTotalPrice();
+                        tv_total_payment.setText(CurrencyFormatter.formatCurrency(totalPayment, getString(R.string.currency_vn)));
                     }
                 }
 
@@ -167,6 +179,11 @@ public class PaymentActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+    private void updateTotalPayment(double total) {
+        // Cập nhật TextView tổng tiền
+        String currencyFormattedTotal = CurrencyFormatter.formatCurrency(total, getString(R.string.currency_vn));
+        tv_total_payment.setText(currencyFormattedTotal);
     }
 
     private void loadAccountInfo(String accountId) {

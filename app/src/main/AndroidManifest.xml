@@ -18,6 +18,7 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -43,6 +44,7 @@
             android:exported="false" />
         <activity
             android:name=".Activities.Admin.Discount.DiscountActivity"
+            android:name=".Activities.User.SearchActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.User.Pet.UpdatePetInfoActivity"
@@ -170,7 +172,7 @@
         <activity
             android:name=".Activities.User.MainActivityUser"
             android:exported="false"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".Activities.SplashActivity"
             android:exported="true"
