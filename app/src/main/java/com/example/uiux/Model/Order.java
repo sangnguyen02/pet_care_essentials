@@ -1,12 +1,14 @@
 package com.example.uiux.Model;
 
 import java.util.Date;
+import java.util.List;
 
 public class Order {
     private String order_id;
-    private double date_order;
-    private Date expected_delivery_date;
-    private  Date delivery_date;
+    private String date_order;
+    private String expected_delivery_date;
+    private  String delivery_date;
+    private List<CartItem> cart_items_ordered;
     private double total_price;
     private  String name_customer;
     private  String phone_number;
@@ -19,7 +21,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(String order_id, double date_order, Date expected_delivery_date, Date delivery_date, double total_price, String name_customer, String phone_number, String email, String account_id, int is_completed, String address, int status) {
+    public Order(String order_id, String date_order, String expected_delivery_date, String delivery_date, double total_price, String name_customer, String phone_number, String email, String account_id, int is_completed, String address, int status) {
         this.order_id = order_id;
         this.date_order = date_order;
         this.expected_delivery_date = expected_delivery_date;
@@ -33,6 +35,24 @@ public class Order {
         this.address = address;
         this.status = status;
     }
+    @Override
+    public String toString() {
+        return "Order{" +
+                "order_id='" + order_id + '\'' +
+                ", date_order='" + date_order + '\'' +
+                ", expected_delivery_date='" + expected_delivery_date + '\'' +
+                ", delivery_date='" + delivery_date + '\'' +
+                ", cart_items_ordered=" + cart_items_ordered +
+                ", total_price=" + total_price +
+                ", name_customer='" + name_customer + '\'' +
+                ", phone_number='" + phone_number + '\'' +
+                ", email='" + email + '\'' +
+                ", account_id='" + account_id + '\'' +
+                ", is_completed=" + is_completed +
+                ", address='" + address + '\'' +
+                ", status=" + status +
+                '}';
+    }
 
     public String getOrder_id() {
         return order_id;
@@ -42,28 +62,36 @@ public class Order {
         this.order_id = order_id;
     }
 
-    public double getDate_order() {
+    public String getDate_order() {
         return date_order;
     }
 
-    public void setDate_order(double date_order) {
+    public void setDate_order(String date_order) {
         this.date_order = date_order;
     }
 
-    public Date getExpected_delivery_date() {
+    public String getExpected_delivery_date() {
         return expected_delivery_date;
     }
 
-    public void setExpected_delivery_date(Date expected_delivery_date) {
+    public void setExpected_delivery_date(String expected_delivery_date) {
         this.expected_delivery_date = expected_delivery_date;
     }
 
-    public Date getDelivery_date() {
+    public String getDelivery_date() {
         return delivery_date;
     }
 
-    public void setDelivery_date(Date delivery_date) {
+    public void setDelivery_date(String delivery_date) {
         this.delivery_date = delivery_date;
+    }
+
+    public List<CartItem> getCart_items_ordered() {
+        return cart_items_ordered;
+    }
+
+    public void setCart_items_ordered(List<CartItem> cart_items_ordered) {
+        this.cart_items_ordered = cart_items_ordered;
     }
 
     public double getTotal_price() {
