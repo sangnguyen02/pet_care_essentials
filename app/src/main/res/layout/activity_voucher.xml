@@ -12,6 +12,8 @@
         android:padding="16dp">
 
         <!-- Category Spinner -->
+
+        <!-- Status Spinner -->
         <Spinner
             android:id="@+id/category_spinner"
             android:layout_width="match_parent"
@@ -19,7 +21,6 @@
             android:layout_marginBottom="8dp"
             android:spinnerMode="dropdown" />
 
-        <!-- Status Spinner -->
         <Spinner
             android:id="@+id/status_spinner"
             android:layout_width="match_parent"

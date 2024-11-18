@@ -1,0 +1,52 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:background="@drawable/ripple_effect"
+    android:layout_marginBottom="8dp">
+
+    <TextView
+        android:id="@+id/tv_voucher_code"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="Mã: SALE10" />
+
+    <TextView
+        android:id="@+id/tv_voucher_category"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:text="Danh mục"
+        android:textSize="14sp"
+        android:textColor="#555555" />
+
+    <TextView
+        android:id="@+id/tv_voucher_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:text="Giảm 10% - Tối đa 50.000đ"
+        android:textSize="14sp"
+        android:textColor="#555555" />
+    <TextView
+        android:id="@+id/tv_voucher_minimum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:text="Đơn tối thiểu"
+        android:textSize="14sp"
+        android:textColor="#555555" />
+
+    <TextView
+        android:id="@+id/tv_voucher_validity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="4dp"
+        android:text="HSD: 31/12/2023"
+        android:textSize="12sp"
+        android:textColor="#777777" />
+</LinearLayout>

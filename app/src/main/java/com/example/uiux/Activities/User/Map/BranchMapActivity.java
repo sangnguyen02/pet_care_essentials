@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.uiux.Activities.Admin.Branch.TestMapActivity;
+import com.example.uiux.Activities.Admin.Branch.BranchStoreActivity;
 import com.example.uiux.Activities.Admin.MainActivityAdmin;
 import com.example.uiux.Model.BranchStore;
 import com.example.uiux.R;
@@ -166,7 +166,7 @@ public class BranchMapActivity extends AppCompatActivity {
         booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(BranchMapActivity.this, TestMapActivity.class);
+                Intent intent=new Intent(BranchMapActivity.this, BranchStoreActivity.class);
                 startActivity(intent);
             }
         });

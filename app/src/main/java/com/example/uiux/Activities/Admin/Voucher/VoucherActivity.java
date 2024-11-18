@@ -124,6 +124,7 @@ public class VoucherActivity extends AppCompatActivity {
     private void FetchSpinnerCategory() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Category");
+
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -134,6 +135,8 @@ public class VoucherActivity extends AppCompatActivity {
                         cateList.add(category.getName());
                     }
                 }
+                cateList.add("Ship");
+                cateList.add("All");
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(VoucherActivity.this, android.R.layout.simple_spinner_item, cateList);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 category_spinner.setAdapter(adapter);

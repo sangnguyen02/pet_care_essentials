@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,6 +22,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.uiux.Activities.User.DisplayVoucher.DisplayVoucherActivity;
+import com.example.uiux.Activities.User.Order.OrderPaymentActivity;
 import com.example.uiux.Activities.User.Profile.UpdateAddressActivity;
 import com.example.uiux.Adapters.CartAdapter;
 import com.example.uiux.Adapters.CartPaymentAdapter;
@@ -29,6 +33,8 @@ import com.example.uiux.Model.Account_Address;
 import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.DeliveryMethod;
 import com.example.uiux.Model.PaymentMethod;
+import com.example.uiux.Model.Supplies;
+import com.example.uiux.Model.Voucher;
 import com.example.uiux.R;
 import com.example.uiux.Utils.CurrencyFormatter;
 import com.google.android.material.button.MaterialButton;
@@ -41,9 +47,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 
 public class PaymentActivity extends AppCompatActivity {
-    MaterialCardView mcv_payment_address;
+    MaterialCardView mcv_payment_address,mcv_voucher;
     MaterialButton btn_order;
     ImageView img_back_payment;
     TextView tv_buyer_name, tv_buyer_phone, tv_address_detail, tv_ward_district_province, tv_total_payment;
@@ -57,6 +65,17 @@ public class PaymentActivity extends AppCompatActivity {
     List<PaymentMethod> paymentMethodList = new ArrayList<>();
     List<DeliveryMethod> deliveryMethodList = new ArrayList<>();
     Double totalPayment = 0.0;
+    double totalWithDeliveryCost=0.0;
+
+    Double totalDiscountedPayment = 0.0;
+    String selectedVoucher="";
+    private  double standardCost=6000;
+    private  double expressCost=15000;
+    private  double expeditedCost=30000;
+    private double  deliveryCost=0;
+    List<String>categoryList= new ArrayList<>();
+    private Voucher voucher;
+
 
     private ActivityResultLauncher<Intent> addressLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -65,6 +84,8 @@ public class PaymentActivity extends AppCompatActivity {
                     Intent data = result.getData();
                     if (data != null) {
                         String selectedAddress = data.getStringExtra("selected_address");
+                        selectedVoucher = getIntent().getStringExtra("selected_voucher");
+                        Log.e("SElected",selectedVoucher);
                         if(selectedAddress != null) {
                             loadAddressFromPayment(selectedAddress);
                         }
@@ -73,6 +94,23 @@ public class PaymentActivity extends AppCompatActivity {
                 }
             }
     );
+//    private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResult(
+//            new ActivityResultContracts.StartActivityForResult(),
+//            result -> {
+//                if (result.getResultCode() == Activity.RECEIVER_EXPORTED) {
+//                    Intent data = result.getData();
+//                    if (data != null) {
+//                         selectedVoucher = getIntent().getStringExtra("selected_voucher");
+//                        Log.e("SElected",selectedVoucher);
+//                        if(selectedVoucher != null) {
+//                            LoadVoucher(selectedVoucher);
+//                            Log.e("SElected",selectedVoucher);
+//                        }
+//
+//                    }
+//                }
+//            }
+//    );
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +123,27 @@ public class PaymentActivity extends AppCompatActivity {
 
 
         initWidget();
+
+        mcv_voucher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent voucherIntent= new Intent(PaymentActivity.this, DisplayVoucherActivity.class);
+//                voucherIntent.putExtra("category",category);
+                addressLauncher.launch(voucherIntent);
+                UpdateTotalPrice();
+
+            }
+        });
+
+        btn_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent gotoOrderPayment= new Intent(PaymentActivity.this, OrderPaymentActivity.class);
+                gotoOrderPayment.putExtra("totalPrice",totalDiscountedPayment);
+                startActivity(gotoOrderPayment);
+            }
+        });
         if (!accountId.isEmpty()) {
             loadAccountInfo(accountId);
         }
@@ -93,8 +152,12 @@ public class PaymentActivity extends AppCompatActivity {
         ArrayList<String> selectedSupplies = getIntent().getStringArrayListExtra("selected_supplies");
         if (selectedSupplies != null) {
             loadSelectedItems(selectedSupplies);
-        }
 
+        }
+        for (int i=0;i<categoryList.size();i++)
+        {
+          Log.e("Check",categoryList.get(0))  ;
+        }
 
     }
 
@@ -112,13 +175,7 @@ public class PaymentActivity extends AppCompatActivity {
         rcv_cart_payment.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         cartPaymentAdapter = new CartPaymentAdapter(this, cartPaymentItemList);
         rcv_cart_payment.setAdapter(cartPaymentAdapter);
-//        tv_total_amount = findViewById(R.id.tv_total_amount_price);
-
-
-
-//        btn_buy.setOnClickListener(view -> {
-//
-//        });
+        mcv_voucher=findViewById(R.id.mcv_voucher);
 
         mcv_payment_address = findViewById(R.id.mcv_payment_address);
         mcv_payment_address.setOnClickListener(view -> {
@@ -139,28 +196,27 @@ public class PaymentActivity extends AppCompatActivity {
         // Delivery method
         rcv_delivery_method = findViewById(R.id.rcv_delivery_method);
         rcv_delivery_method.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        deliveryMethodList.add(new DeliveryMethod(1, getString(R.string.shipping_standard), 6000));
-        deliveryMethodList.add(new DeliveryMethod(2, getString(R.string.shipping_express), 15000));
-        deliveryMethodList.add(new DeliveryMethod(3, getString(R.string.shipping_expedited), 30000));
+        deliveryMethodList.add(new DeliveryMethod(1, getString(R.string.shipping_standard), standardCost));
+        deliveryMethodList.add(new DeliveryMethod(2, getString(R.string.shipping_express), expressCost));
+        deliveryMethodList.add(new DeliveryMethod(3, getString(R.string.shipping_expedited), expeditedCost));
         deliveryMethodAdapter = new DeliveryMethodAdapter(this, deliveryMethodList);
         rcv_delivery_method.setAdapter(deliveryMethodAdapter);
         updateTotalPayment(totalPayment);
         deliveryMethodAdapter.setOnDeliveryMethodSelectedListener(cost -> {
-            double totalWithDeliveryCost = totalPayment + cost;
+
+             totalWithDeliveryCost =cost+ totalPayment ;
+            deliveryCost=cost;
             updateTotalPayment(totalWithDeliveryCost);
         });
 
-
     }
-
-
-
     private void loadSelectedItems(ArrayList<String> supplies) {
         for (String supply : supplies) {
             // Truy vấn từ Firebase dựa trên supply_id để lấy thông tin item
             DatabaseReference itemRef = FirebaseDatabase.getInstance().getReference("Cart")
                     .child(accountId).child(supply);
-
+            DatabaseReference suppRef = FirebaseDatabase.getInstance().getReference("Supplies")
+                    .child(accountId).child(supply);
             itemRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -178,8 +234,26 @@ public class PaymentActivity extends AppCompatActivity {
                     Log.e("FirebaseError", "Error fetching data: " + error.getMessage());
                 }
             });
+
+            suppRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                    Supplies cartItem = snapshot.getValue(Supplies.class);
+                    if (cartItem != null) {
+                        categoryList.add(cartItem.getCategory());
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
     }
+
     private void updateTotalPayment(double total) {
         // Cập nhật TextView tổng tiền
         String currencyFormattedTotal = CurrencyFormatter.formatCurrency(total, getString(R.string.currency_vn));
@@ -259,5 +333,82 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
     }
+    private void LoadVoucher(String selectedVouchers)
+    {
+
+            DatabaseReference voucherRef = FirebaseDatabase.getInstance().getReference("Voucher").child(selectedVouchers);
+            voucherRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                     voucher= snapshot.getValue(Voucher.class);
+                     Log.e("Voucher",voucher.getCategory());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+    }
+
+    private void UpdateTotalPrice()
+    {
+//        DatabaseReference voucherRef=FirebaseDatabase.getInstance().getReference("Voucher");
+//        voucherRef.child(selectedVoucher).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                if(snapshot.exists())
+//                {
+//                    Voucher voucher=snapshot.getValue(Voucher.class);
+//
+//                }
+//                else {
+//                    // If no voucher is found, just show a message or keep the original total
+//                    Toast.makeText(PaymentActivity.this, "Voucher not found or expired.", Toast.LENGTH_SHORT).show();
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Log.e("FirebaseError", "Error fetching voucher data: " + error.getMessage());
+//
+//            }
+//        });
+        if(voucher!=null)
+        {
+            // Assuming that the voucher is a discount amount
+            double discountPercent  = voucher.getDiscount_percent();
+            double discountAmount;
+            double totalWithDiscount;
+            Log.e("Check",voucher.getCategory());
+            if(voucher.getCategory()=="Ship")
+            {
+
+                discountAmount=deliveryCost*(discountPercent/100);
+                Log.e("Check", String.valueOf(discountAmount));
+                totalWithDiscount=totalWithDeliveryCost-discountAmount;
+
+            }
+            else
+            {
+                // Calculate the discount amount
+                discountAmount = totalPayment * (discountPercent / 100.0);
+                // Apply discount to total payment
+                totalWithDiscount = totalPayment - discountAmount;
+
+            }
+            totalDiscountedPayment=totalWithDiscount;
+            Log.e("Check", String.valueOf(totalDiscountedPayment));
+            updateTotalPayment(totalWithDiscount);
+        }
+        else
+        {
+            Log.e("NULL","NULL");
+        }
+    }
+
+
 
 }

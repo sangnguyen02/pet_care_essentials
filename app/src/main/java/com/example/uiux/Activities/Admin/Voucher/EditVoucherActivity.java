@@ -46,7 +46,6 @@ public class EditVoucherActivity extends AppCompatActivity {
     private Calendar calendar = Calendar.getInstance();
     private ProgressDialog progressDialog;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
     private DatabaseReference voucherRef;
 
     @Override
