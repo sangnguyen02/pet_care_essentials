@@ -220,6 +220,7 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
         if (accountId != null) {
             int quantity = Integer.parseInt(tv_quantity_of_supply.getText().toString());
             String priceStr = tv_price_add_to_cart.getText().toString().replace(getString(R.string.currency_vn), "").trim();
+            priceStr = priceStr.replace(".", "").trim();
             double price = Double.parseDouble(priceStr);
             String supplyTitle = tv_supply_title.getText().toString();
             String selectedSupplySize = supplyDetailOptionAdapter.getSelectedOptionName();

@@ -52,6 +52,21 @@
                 app:layout_constraintTop_toTopOf="@+id/img_back_edit_pet"
                 tools:ignore="HardcodedText" />
 
+            <ImageView
+                android:id="@+id/img_delete_edit_pet"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/ripple_effect"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/delete"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
@@ -285,7 +300,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:id="@+id/btnSubmit"
-                android:text="ADD"
+                android:text="Save"
                 android:textSize="16sp"
                 android:fontFamily="@font/roboto_bold"
                 android:textAllCaps="false"

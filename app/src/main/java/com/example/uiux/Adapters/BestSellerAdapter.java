@@ -17,6 +17,7 @@ import com.example.uiux.Activities.User.Profile.EditAddressActivity;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Review;
 import com.example.uiux.R;
+import com.example.uiux.Utils.CurrencyFormatter;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -83,7 +84,7 @@ public class BestSellerAdapter extends RecyclerView.Adapter<BestSellerAdapter.Be
              double sellPrice = Double.valueOf(Objects.requireNonNull(supplies.getSell_price()));
 
              // Set the formatted price
-             tvPrice.setText(df.format(sellPrice));
+             tvPrice.setText(CurrencyFormatter.formatCurrency(sellPrice, context.getString(R.string.currency_vn)));
 
              // Set rating
              tvRating.setText("5");

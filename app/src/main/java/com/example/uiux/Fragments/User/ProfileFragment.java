@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -19,10 +20,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.User.CartActivity;
+import com.example.uiux.Activities.User.Order.OrderActivity;
 import com.example.uiux.Activities.User.Pet.UpdatePetInfoActivity;
 import com.example.uiux.Activities.User.Profile.PhoneUpdateProfileActivity;
 import com.example.uiux.Activities.User.Profile.SettingsActivity;
 import com.example.uiux.R;
+import com.example.uiux.Utils.OrderStatus;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +37,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
     View rootView;
+    ConstraintLayout to_pay, to_ship, to_receive, to_rate;
     MaterialCardView mcv_help_center, mcv_pet_profile;
     String phone;
     String accountId;
@@ -95,6 +99,24 @@ public class ProfileFragment extends Fragment {
             startActivity(goToPetProfile);
         });
 
+        to_pay.setOnClickListener(view -> {
+            Intent goToOrderStatus = new Intent(rootView.getContext(), OrderActivity.class);
+            goToOrderStatus.putExtra("targetTab", OrderStatus.PENDING); // Tab Đang xác nhận
+            startActivity(goToOrderStatus);
+        });
+
+        to_ship.setOnClickListener(view -> {
+            Intent goToOrderStatus = new Intent(rootView.getContext(), OrderActivity.class);
+            goToOrderStatus.putExtra("targetTab", OrderStatus.PREPARING); // Tab Đang chuẩn bị
+            startActivity(goToOrderStatus);
+        });
+
+        to_receive.setOnClickListener(view -> {
+            Intent goToOrderStatus = new Intent(rootView.getContext(), OrderActivity.class);
+            goToOrderStatus.putExtra("targetTab", OrderStatus.SHIPPING); // Tab Đang giao
+            startActivity(goToOrderStatus);
+        });
+
 
 
         return rootView;
@@ -115,6 +137,10 @@ public class ProfileFragment extends Fragment {
         tv_username = rootView.findViewById(R.id.tv_username);
         mcv_help_center = rootView.findViewById(R.id.mcv_help_center);
         mcv_pet_profile = rootView.findViewById(R.id.mcv_pet_profile);
+        to_pay = rootView.findViewById(R.id.to_pay);
+        to_ship = rootView.findViewById(R.id.to_ship);
+        to_receive = rootView.findViewById(R.id.to_receive);
+        to_rate = rootView.findViewById(R.id.to_rate);
     }
 
     void displayNoOfCartItem() {

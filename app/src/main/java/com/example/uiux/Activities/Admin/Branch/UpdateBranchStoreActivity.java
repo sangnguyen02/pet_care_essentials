@@ -62,7 +62,7 @@ public class UpdateBranchStoreActivity extends AppCompatActivity {
         loadAddresses();
 
         mcv_add_store.setOnClickListener(view -> {
-            Intent gotoAdd=new Intent(UpdateBranchStoreActivity.this, TestMapActivity.class);
+            Intent gotoAdd=new Intent(UpdateBranchStoreActivity.this, BranchStoreActivity.class);
 //            gotoAdd.putExtra("account_id",accountId);
             startActivity(gotoAdd);
         });

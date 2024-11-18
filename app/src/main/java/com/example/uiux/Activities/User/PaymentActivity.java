@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -20,6 +22,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.uiux.Activities.User.Order.OrderActivity;
+import com.example.uiux.Activities.User.Order.OrderPaymentActivity;
+import com.example.uiux.Activities.User.Order.PaymentNotificationActivity;
 import com.example.uiux.Activities.User.Profile.UpdateAddressActivity;
 import com.example.uiux.Adapters.CartAdapter;
 import com.example.uiux.Adapters.CartPaymentAdapter;
@@ -28,9 +33,14 @@ import com.example.uiux.Adapters.PaymentMethodAdapter;
 import com.example.uiux.Model.Account_Address;
 import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.DeliveryMethod;
+import com.example.uiux.Model.Order;
 import com.example.uiux.Model.PaymentMethod;
 import com.example.uiux.R;
 import com.example.uiux.Utils.CurrencyFormatter;
+import com.example.uiux.Utils.OrderStatus;
+import com.example.uiux.ZaloPay.Api.CreateOrder;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.database.DataSnapshot;
@@ -39,8 +49,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import vn.zalopay.sdk.Environment;
+import vn.zalopay.sdk.ZaloPayError;
+import vn.zalopay.sdk.ZaloPaySDK;
+import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class PaymentActivity extends AppCompatActivity {
     MaterialCardView mcv_payment_address;
@@ -52,6 +73,7 @@ public class PaymentActivity extends AppCompatActivity {
     PaymentMethodAdapter paymentMethodAdapter;
     DeliveryMethodAdapter deliveryMethodAdapter;
     SharedPreferences preferences;
+    DatabaseReference orderRef;
     String accountId;
     List<CartItem> cartPaymentItemList = new ArrayList<>();
     List<PaymentMethod> paymentMethodList = new ArrayList<>();
@@ -82,6 +104,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         accountId = preferences.getString("accountID", null);
+        orderRef = FirebaseDatabase.getInstance().getReference("Order").child(accountId);
 
 
         initWidget();
@@ -94,6 +117,8 @@ public class PaymentActivity extends AppCompatActivity {
         if (selectedSupplies != null) {
             loadSelectedItems(selectedSupplies);
         }
+
+
 
 
     }
@@ -151,6 +176,168 @@ public class PaymentActivity extends AppCompatActivity {
         });
 
 
+
+
+        // Order
+        btn_order.setOnClickListener(view -> {
+            DeliveryMethod selectedDeliveryMethod = deliveryMethodAdapter.getSelectedPaymentMethod();
+            if (selectedDeliveryMethod == null) {
+                Toast.makeText(PaymentActivity.this, "Please select a delivery method.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            PaymentMethod selectedPaymentMethod = paymentMethodAdapter.getSelectedPaymentMethod();
+            if (selectedPaymentMethod == null) {
+                Toast.makeText(PaymentActivity.this, "Please select a payment method.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            order_create();
+        });
+
+
+    }
+
+    private void order_create() {
+        DeliveryMethod selectedDeliveryMethod = deliveryMethodAdapter.getSelectedPaymentMethod();
+        if (selectedDeliveryMethod == null) {
+            Toast.makeText(PaymentActivity.this, "Please select delivery method.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String expectedDeliveryDate = setExpected_delivery_date(
+                new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date()),
+                selectedDeliveryMethod.getId()
+        );
+
+        String orderId = orderRef.push().getKey();
+        List<String> supply_combined_key = setSupply_combined_key();
+        if (orderId == null) {
+            Toast.makeText(getApplicationContext(), "Failed to generate order ID.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Date dateOrder = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String formattedDate = dateFormat.format(dateOrder);
+
+        Order order = new Order();
+        order.setOrder_id(orderId);
+        order.setCart_items_ordered(cartPaymentItemList);
+        order.setDate_order(formattedDate);
+        order.setExpected_delivery_date(expectedDeliveryDate);
+        order.setDelivery_date("");
+        order.setTotal_price(totalPayment);
+        order.setName_customer(tv_buyer_name.getText().toString());
+        order.setPhone_number(tv_buyer_phone.getText().toString());
+        order.setAccount_id(accountId);
+        order.setIs_completed(0);
+        order.setAddress(tv_address_detail.getText().toString() + ", " + tv_ward_district_province.getText().toString());
+        order.setStatus(OrderStatus.PENDING);
+        orderRef.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    // Dữ liệu đã được lưu thành công
+                    Toast.makeText(getApplicationContext(), "Order placed successfully.", Toast.LENGTH_SHORT).show();
+                } else {
+                    // Lỗi khi lưu dữ liệu
+                    Toast.makeText(getApplicationContext(), "Failed to place order.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        })
+
+        ;
+
+        Intent intent1 = new Intent(PaymentActivity.this, OrderActivity.class);
+        intent1.putExtra("result","1");
+        startActivity(intent1);
+    }
+
+    private void order() {
+        StrictMode.ThreadPolicy policy = new
+                StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        ZaloPaySDK.init(553, Environment.SANDBOX);
+        CreateOrder orderApi = new CreateOrder();
+        try {
+            JSONObject data = orderApi.createOrder(tv_total_payment.getText().toString());
+            //lblZpTransToken.setVisibility(View.VISIBLE);
+            String code = data.getString("returncode");
+            Toast.makeText(getApplicationContext(), "return_code: " + code, Toast.LENGTH_LONG).show();
+
+            if (code.equals("-5")) {
+                // lblZpTransToken.setText("zptranstoken");
+                // txtToken.setText(data.getString("zptranstoken"));
+                String token = data.getString("zptranstoken");
+                ZaloPaySDK.getInstance().payOrder(PaymentActivity.this, token, "demozpdk://app", new PayOrderListener()
+                {
+
+                    @Override
+                    public void onPaymentSucceeded(String s, String s1, String s2) {
+
+
+
+                    }
+
+                    @Override
+                    public void onPaymentCanceled(String s, String s1) {
+                        Toast.makeText(getApplicationContext(), "Payment failed." + code, Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
+                        Toast.makeText(getApplicationContext(), "Payment errored." + code, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                //IsDone();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private List<String> setSupply_combined_key() {
+        List<String> supplyIds = new ArrayList<>();
+        for (CartItem cartItem : cartPaymentItemList) {
+            supplyIds.add(cartItem.getCombinedKey()); // Giả định `CartItem` có phương thức `getSupplyId()`
+        }
+        return supplyIds;
+    }
+
+    private String setExpected_delivery_date(String orderDate, int deliveryMethodId) {
+        // Dựa trên deliveryMethodId, xác định số ngày giao hàng
+        int additionalDays = 0;
+        switch (deliveryMethodId) {
+            case 1: // Standard
+                additionalDays = 7;
+                break;
+            case 2: // Express
+                additionalDays = 4;
+                break;
+            case 3: // Expedited
+                additionalDays = 1;
+                break;
+        }
+
+        // Parse orderDate thành đối tượng Date
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        try {
+            Date orderDateParsed = dateFormat.parse(orderDate);
+            if (orderDateParsed != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(orderDateParsed);
+                calendar.add(Calendar.DAY_OF_YEAR, additionalDays);
+                return dateFormat.format(calendar.getTime());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orderDate; // Trả lại ngày đặt hàng nếu không parse được
     }
 
 

@@ -28,6 +28,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.User.Order.OrderActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.Admin.Discount.EditDiscountActivity"
             android:exported="false" />
         <activity
@@ -42,8 +45,8 @@
         <activity
             android:name=".Activities.Admin.Discount.UpdateDiscountActivity"
             android:exported="false" />
+        <activity android:name=".Activities.Admin.Discount.DiscountActivity" />
         <activity
-            android:name=".Activities.Admin.Discount.DiscountActivity"
             android:name=".Activities.User.SearchActivity"
             android:exported="false" />
         <activity
@@ -60,9 +63,6 @@
             android:exported="false" />
         <activity
             android:name=".Activities.User.Map.RouteBranchActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activities.Admin.Branch.TestMapActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.User.Map.BranchMapActivity"

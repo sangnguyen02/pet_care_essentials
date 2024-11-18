@@ -48,7 +48,7 @@ import java.util.Objects;
 
 public class EditPetInfoActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
-    private ImageView img1, img_back_edit_pet;
+    private ImageView img1, img_back_edit_pet, img_delete_edit_pet;
     private TextInputEditText petName,petAge, petWeight, petColor,petBreed;
     private Spinner petGender, petType;
     private MaterialButton petSave;
@@ -80,6 +80,7 @@ public class EditPetInfoActivity extends AppCompatActivity {
         petBreed = findViewById(R.id.edt_breed_edit);
 
         img_back_edit_pet = findViewById(R.id.img_back_edit_pet);
+        img_delete_edit_pet = findViewById(R.id.img_delete_edit_pet);
         img1 = findViewById(R.id.img1);
         petGender = findViewById(R.id.spinner_gender_edit);
         petType = findViewById(R.id.spinner_type_edit);
@@ -90,7 +91,8 @@ public class EditPetInfoActivity extends AppCompatActivity {
         progressDialog.setMessage("Uploading...");
         FetchSpinnerGender();
         FetchSpinnerType();
-        img_back_edit_pet.setOnClickListener(view -> {finish();});
+        img_back_edit_pet.setOnClickListener(view -> finish());
+        img_delete_edit_pet.setOnClickListener(view -> deletePetInfoFromDatabase());
         img1.setOnClickListener(view -> openImageChooser(0));
 
         //storage = FirebaseStorage.getInstance();
@@ -102,6 +104,10 @@ public class EditPetInfoActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void deletePetInfoFromDatabase() {
+        petDatabase.removeValue();
     }
     private void savePetData() {
         String updatedName = petName.getText().toString().trim();

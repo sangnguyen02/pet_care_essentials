@@ -5,9 +5,9 @@ import java.util.Locale;
 
 public class CurrencyFormatter {
     public static String formatCurrency(double amount, String currencySymbol) {
-        // Format the amount to 0 decimal places and add commas
-        NumberFormat formatter = NumberFormat.getInstance(Locale.GERMANY);
-        formatter.setMaximumFractionDigits(0);
+        // Sử dụng định dạng số phù hợp với Việt Nam
+        NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
+        formatter.setMaximumFractionDigits(0);  // Không hiển thị phần thập phân
         return String.format("%s %s", currencySymbol, formatter.format(amount));
     }
 }

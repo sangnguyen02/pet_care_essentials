@@ -212,7 +212,7 @@ public class CartActivity extends AppCompatActivity {
                     // Kiểm tra nếu đã lấy xong tất cả item
                     remainingItemsToFetch[0]--;
                     if (remainingItemsToFetch[0] == 0) {
-                        tv_total_amount.setText(String.valueOf(totalAmount[0])); // Cập nhật TextView với tổng số tiền
+                        tv_total_amount.setText(CurrencyFormatter.formatCurrency(totalAmount[0], getString(R.string.currency_vn))); // Cập nhật TextView với tổng số tiền
                     }
                 }
 

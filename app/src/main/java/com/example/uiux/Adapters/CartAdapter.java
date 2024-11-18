@@ -54,6 +54,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
         holder.tvSupplyTitle.setText(cartItem.getSupply_title());
         holder.tvSupplySize.setText(cartItem.getSupply_size());
         holder.tvSupplyPrice.setText(CurrencyFormatter.formatCurrency(cartItem.getSupply_price(), context.getString(R.string.currency_vn)));
+//        holder.tvSupplyPrice.setText(String.valueOf(cartItem.getSupply_price()));
         holder.tvSupplyQuantity.setText(String.valueOf(cartItem.getQuantity()));
 
         // Set up checkbox listener to track selected items
