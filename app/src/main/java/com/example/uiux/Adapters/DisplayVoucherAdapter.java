@@ -3,6 +3,7 @@ package com.example.uiux.Adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,13 +65,28 @@ public class DisplayVoucherAdapter extends RecyclerView.Adapter<DisplayVoucherAd
                 int position = getAdapterPosition();
                 Voucher voucher = voucherList.get(position);
 
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra("selected_voucher", voucher.getVoucher_id());
-                    ((Activity) context).setResult(Activity.RECEIVER_EXPORTED, resultIntent);
-                    Log.e("Finish","Finish");
-                    ((Activity) context).finish();
+                // Kiểm tra nếu voucher chưa được chọn
+                if (voucher != null) {
+                    // Lưu voucher ID vào SharedPreferences
+                    SharedPreferences preferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("selected_voucher", voucher.getVoucher_id()); // Lưu voucher ID
+                    editor.apply(); // Áp dụng thay đổi
 
+                    // Trả kết quả về Activity
+                    Intent resultIntent = new Intent();
+                    ((Activity) context).setResult(Activity.RESULT_OK, resultIntent); // Activity.RECEIVER_EXPORTED có thể không đúng
+                    Log.e("Selected voucher", voucher.getVoucher_id());
+                    Log.e("Finish", "Finish");
+
+                    // Kết thúc Activity
+                    ((Activity) context).finish();
+                } else {
+                    // Nếu không có voucher, bạn có thể xử lý ở đây (ví dụ: thông báo)
+                    Log.e("Voucher", "No voucher selected");
+                }
             });
+
         }
 
         public void bind(Voucher voucher) {

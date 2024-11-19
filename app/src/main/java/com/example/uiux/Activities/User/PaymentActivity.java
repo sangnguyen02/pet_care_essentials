@@ -1,6 +1,7 @@
 package com.example.uiux.Activities.User;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -60,10 +61,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import vn.zalopay.sdk.Environment;
 import vn.zalopay.sdk.ZaloPayError;
@@ -89,13 +93,14 @@ public class PaymentActivity extends AppCompatActivity {
     double totalWithDeliveryCost=0.0;
 
     Double totalDiscountedPayment = 0.0;
-    String selectedVoucher="";
+
     private  double standardCost=6000;
     private  double expressCost=15000;
     private  double expeditedCost=30000;
     private double  deliveryCost=0;
     List<String>categoryList= new ArrayList<>();
     private Voucher voucher;
+    String categoryType = "not value";
 
 
     private ActivityResultLauncher<Intent> addressLauncher = registerForActivityResult(
@@ -105,33 +110,44 @@ public class PaymentActivity extends AppCompatActivity {
                     Intent data = result.getData();
                     if (data != null) {
                         String selectedAddress = data.getStringExtra("selected_address");
-                        selectedVoucher = getIntent().getStringExtra("selected_voucher");
-                        Log.e("SElected",selectedVoucher);
+
+                        Log.e("ID ",selectedAddress);
+
                         if(selectedAddress != null) {
                             loadAddressFromPayment(selectedAddress);
                         }
 
                     }
+                    else
+                    {
+                        Log.e("CHeck null","NUll");
+                    }
                 }
             }
     );
-//    private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResult(
-//            new ActivityResultContracts.StartActivityForResult(),
-//            result -> {
-//                if (result.getResultCode() == Activity.RECEIVER_EXPORTED) {
-//                    Intent data = result.getData();
-//                    if (data != null) {
-//                         selectedVoucher = getIntent().getStringExtra("selected_voucher");
-//                        Log.e("SElected",selectedVoucher);
-//                        if(selectedVoucher != null) {
-//                            LoadVoucher(selectedVoucher);
-//                            Log.e("SElected",selectedVoucher);
-//                        }
-//
-//                    }
-//                }
-//            }
-//    );
+
+private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResult(
+        new ActivityResultContracts.StartActivityForResult(),
+        result -> {
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                Intent data = result.getData();
+                if (data != null) {
+                    // Sau khi nhận được voucher ID từ DisplayVoucherActivity, bạn cập nhật lại giá
+                    SharedPreferences preferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                    String selectedVoucher = preferences.getString("selected_voucher", null);
+                    if (selectedVoucher != null) {
+                        Log.e("Selected Voucher ID", selectedVoucher);
+                        LoadVoucher(selectedVoucher);  // Tải thông tin voucher nếu cần
+                        UpdateTotalPrice(selectedVoucher);  // Cập nhật tổng giá khi có voucher
+                    }
+                } else {
+                    Log.e("Voucher", "No voucher selected or null data");
+                }
+            } else {
+                Log.e("Voucher", "Activity didn't return RESULT_OK");
+            }
+        }
+);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,9 +167,12 @@ public class PaymentActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 Intent voucherIntent= new Intent(PaymentActivity.this, DisplayVoucherActivity.class);
-//                voucherIntent.putExtra("category",category);
-                addressLauncher.launch(voucherIntent);
-                UpdateTotalPrice();
+                Log.e("Cate type",categoryType);
+                voucherIntent.putExtra("category",categoryType);
+                voucherLauncher.launch(voucherIntent);
+
+//                }
+
 
             }
         });
@@ -172,10 +191,14 @@ public class PaymentActivity extends AppCompatActivity {
 
 
         ArrayList<String> selectedSupplies = getIntent().getStringArrayListExtra("selected_supplies");
+
         if (selectedSupplies != null) {
             loadSelectedItems(selectedSupplies);
 
         }
+        Intent intent = getIntent();
+        categoryType=intent.getStringExtra("categoryType");
+        Log.e("Check TYpe Cate",categoryType);
         for (int i=0;i<categoryList.size();i++)
         {
           Log.e("Check",categoryList.get(0))  ;
@@ -184,6 +207,7 @@ public class PaymentActivity extends AppCompatActivity {
 
 
     }
+
 
 
     private void initWidget() {
@@ -254,7 +278,6 @@ public class PaymentActivity extends AppCompatActivity {
 
 
     }
-
     private void order_create() {
         DeliveryMethod selectedDeliveryMethod = deliveryMethodAdapter.getSelectedPaymentMethod();
         if (selectedDeliveryMethod == null) {
@@ -311,7 +334,6 @@ public class PaymentActivity extends AppCompatActivity {
         intent1.putExtra("result","1");
         startActivity(intent1);
     }
-
     private void order() {
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -358,7 +380,6 @@ public class PaymentActivity extends AppCompatActivity {
         }
 
     }
-
     private List<String> setSupply_combined_key() {
         List<String> supplyIds = new ArrayList<>();
         for (CartItem cartItem : cartPaymentItemList) {
@@ -366,7 +387,6 @@ public class PaymentActivity extends AppCompatActivity {
         }
         return supplyIds;
     }
-
     private String setExpected_delivery_date(String orderDate, int deliveryMethodId) {
         // Dựa trên deliveryMethodId, xác định số ngày giao hàng
         int additionalDays = 0;
@@ -441,12 +461,13 @@ public class PaymentActivity extends AppCompatActivity {
         }
     }
 
+
+
     private void updateTotalPayment(double total) {
         // Cập nhật TextView tổng tiền
         String currencyFormattedTotal = CurrencyFormatter.formatCurrency(total, getString(R.string.currency_vn));
         tv_total_payment.setText(currencyFormattedTotal);
     }
-
     private void loadAccountInfo(String accountId) {
         DatabaseReference accountRef = FirebaseDatabase.getInstance().getReference("Accounts").child(accountId);
         DatabaseReference addressRef = FirebaseDatabase.getInstance().getReference("Account_Address").child(accountId);
@@ -494,7 +515,6 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
     }
-
     private void loadAddressFromPayment(String accountAddressId) {
         DatabaseReference addressRef = FirebaseDatabase.getInstance().getReference("Account_Address").child(accountAddressId);
 
@@ -538,62 +558,59 @@ public class PaymentActivity extends AppCompatActivity {
             });
 
     }
-
-    private void UpdateTotalPrice()
+    private void UpdateTotalPrice(String selectedVoucher )
     {
-//        DatabaseReference voucherRef=FirebaseDatabase.getInstance().getReference("Voucher");
-//        voucherRef.child(selectedVoucher).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                if(snapshot.exists())
-//                {
-//                    Voucher voucher=snapshot.getValue(Voucher.class);
-//
-//                }
-//                else {
-//                    // If no voucher is found, just show a message or keep the original total
-//                    Toast.makeText(PaymentActivity.this, "Voucher not found or expired.", Toast.LENGTH_SHORT).show();
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Log.e("FirebaseError", "Error fetching voucher data: " + error.getMessage());
-//
-//            }
-//        });
-        if(voucher!=null)
-        {
-            // Assuming that the voucher is a discount amount
-            double discountPercent  = voucher.getDiscount_percent();
-            double discountAmount;
-            double totalWithDiscount;
-            Log.e("Check",voucher.getCategory());
-            if(voucher.getCategory()=="Ship")
-            {
+        DatabaseReference voucherRef=FirebaseDatabase.getInstance().getReference("Voucher");
+        voucherRef.child(selectedVoucher).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists())
+                {
+                    Voucher voucher=snapshot.getValue(Voucher.class);
+                    if(voucher!=null)
+                    {
+                        // Assuming that the voucher is a discount amount
+                        double discountPercent  = voucher.getDiscount_percent();
+                        double discountAmount;
+                        double totalWithDiscount;
+                        if("Ship".equals(voucher.getCategory()))
+                        {
+                            discountAmount=deliveryCost*(discountPercent/100);
+                            totalWithDiscount=totalWithDeliveryCost-discountAmount;
 
-                discountAmount=deliveryCost*(discountPercent/100);
-                Log.e("Check", String.valueOf(discountAmount));
-                totalWithDiscount=totalWithDeliveryCost-discountAmount;
+                        }
+                        else
+                        {
+                            // Calculate the discount amount
+                            discountAmount = totalPayment * (discountPercent / 100.0);
+                            // Apply discount to total payment
+                            totalWithDiscount = totalPayment - discountAmount+deliveryCost;
 
-            }
-            else
-            {
-                // Calculate the discount amount
-                discountAmount = totalPayment * (discountPercent / 100.0);
-                // Apply discount to total payment
-                totalWithDiscount = totalPayment - discountAmount;
+                        }
+                        totalDiscountedPayment=totalWithDiscount;
+                        Log.e("Check", String.valueOf(totalDiscountedPayment));
+                        updateTotalPayment(totalWithDiscount);
+                    }
+                    else
+                    {
+                        Log.e("NULL","NULL");
+                    }
+
+                }
+                else {
+                    // If no voucher is found, just show a message or keep the original total
+                    Toast.makeText(PaymentActivity.this, "Voucher not found or expired.", Toast.LENGTH_SHORT).show();
+                }
 
             }
-            totalDiscountedPayment=totalWithDiscount;
-            Log.e("Check", String.valueOf(totalDiscountedPayment));
-            updateTotalPayment(totalWithDiscount);
-        }
-        else
-        {
-            Log.e("NULL","NULL");
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseError", "Error fetching voucher data: " + error.getMessage());
+
+            }
+        });
+
     }
 
 

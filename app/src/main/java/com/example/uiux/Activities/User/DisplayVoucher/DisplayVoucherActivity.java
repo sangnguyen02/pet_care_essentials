@@ -50,7 +50,7 @@ public class DisplayVoucherActivity extends AppCompatActivity {
 
     private void loadDisplayVoucher() {
         // Lấy category từ Intent
-      //  String category = getIntent().getStringExtra("category");
+        String category = getIntent().getStringExtra("category");
 
         // Get Firebase reference to "Voucher" node
         databaseReference = FirebaseDatabase.getInstance().getReference("Voucher");
@@ -66,9 +66,13 @@ public class DisplayVoucherActivity extends AppCompatActivity {
                     Voucher voucher = voucherSnapshot.getValue(Voucher.class);
                     if (voucher != null) {
                         // Kiểm tra xem category của voucher có khớp với category nhận được từ Intent không
-                        //voucher.getCategory().equals(category)||
-                        if (voucher.getCategory().equals("Ship")||voucher.getCategory().equals("All")) {
-                            voucherList.add(voucher); // Thêm voucher vào danh sách nếu category trùng khớp
+                        //||
+                        if (voucher.getCategory().equals(category)||voucher.getCategory().equals("Ship")||voucher.getCategory().equals("All")) {
+                            if(voucher.getRemaining_quantity()>0)
+                            {
+                                voucherList.add(voucher); // Thêm voucher vào danh sách nếu category trùng khớp
+                            }
+
                         }
                     }
                 }

@@ -160,25 +160,23 @@ public class CartActivity extends AppCompatActivity {
         });
 
         btn_buy.setOnClickListener(view -> {
-            goToPayment();
+            List<CartItem> selectedItems = cartAdapter.getSelectedItems();
+            if (selectedItems.isEmpty()) {
+                Toast.makeText(CartActivity.this, "Please select at least one item to proceed to payment.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Kiểm tra category của các item
+            getCategoryForSupplies(selectedItems);
         });
+
     }
 
     void goToPayment() {
-        List<CartItem> selectedItems = cartAdapter.getSelectedItems();
-        ArrayList<String> selectedSupplies = new ArrayList<>();
 
-        for (CartItem item : selectedItems) {
-            selectedSupplies.add(item.getCombinedKey());
-        }
-
-        if (selectedSupplies.isEmpty()) {
-            Toast.makeText(this, "Please select at least one item to proceed to payment.", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         Intent intent = new Intent(CartActivity.this, PaymentActivity.class);
-        intent.putStringArrayListExtra("selected_supplies", selectedSupplies);
+
         startActivity(intent);
     }
 
@@ -251,6 +249,70 @@ public class CartActivity extends AppCompatActivity {
             });
         }
     }
+    public void getCategoryForSupplies(List<CartItem> selectedItems) {
+        List<String> supplyIds = new ArrayList<>();
+        for (CartItem item : selectedItems) {
+            supplyIds.add(item.getSupply_id());
+        }
+
+        DatabaseReference supplyRef = FirebaseDatabase.getInstance().getReference("Supplies");
+        List<String> categories = new ArrayList<>();
+
+        for (String supplyId : supplyIds) {
+            supplyRef.child(supplyId).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    // Lấy thông tin category của sản phẩm
+                    String category = snapshot.child("category").getValue(String.class);
+
+                    if (category != null && !categories.contains(category)) {
+                        categories.add(category);
+                    }
+
+                    // Kiểm tra xem đã có đủ dữ liệu từ tất cả các sản phẩm
+                    if (categories.size() == supplyIds.size()) {
+                        checkCategoryMatch(categories);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.e("FirebaseError", "Error fetching supply data: " + error.getMessage());
+                }
+            });
+        }
+    }
+
+    private void checkCategoryMatch(List<String> categories) {
+        if (categories.size() == 1) {
+            // Tất cả các sản phẩm có cùng category
+            String category = categories.get(0);
+            // Thực hiện logic tiếp theo, ví dụ: putExtra category vào Intent
+            goToPayment(category);
+        } else {
+            // Các sản phẩm không cùng category
+            goToPayment("not value");
+        }
+    }
+
+    private void goToPayment(String category) {
+        List<CartItem> selectedItems = cartAdapter.getSelectedItems();
+        ArrayList<String> selectedSupplies = new ArrayList<>();
+
+        for (CartItem item : selectedItems) {
+            selectedSupplies.add(item.getCombinedKey());
+        }
+
+        if (selectedSupplies.isEmpty()) {
+            Toast.makeText(this, "Please select at least one item to proceed to payment.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Intent intent = new Intent(CartActivity.this, PaymentActivity.class);
+        intent.putStringArrayListExtra("selected_supplies", selectedSupplies);
+        intent.putExtra("categoryType", category);
+        startActivity(intent);
+    }
+
 
     private void removeFromFirebase(CartItem cartItem) {
         // Xóa item khỏi Firebase dựa trên accountId và khóa kết hợp (combinedKey)
