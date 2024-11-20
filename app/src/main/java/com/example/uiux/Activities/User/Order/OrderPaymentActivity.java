@@ -48,7 +48,6 @@ public class OrderPaymentActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Double total = intent.getDoubleExtra("totalPrice", (double) 0);
         String totalString = String.format("%.0f", total);
-        Toast.makeText(getApplicationContext(),totalString , Toast.LENGTH_LONG).show();
         txtTongTien.setText(Double.toString(total));
 
         btnThanhToan.setOnClickListener(new View.OnClickListener() {
@@ -57,6 +56,38 @@ public class OrderPaymentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 CreateOrder orderApi = new CreateOrder();
+//                try {
+//                    JSONObject data = orderApi.createOrder(totalString);
+//                    String code = data.getString("return_code");
+//                    if (code.equals("1")) {
+//                        String token = data.getString("zp_trans_token");
+//                        ZaloPaySDK.getInstance().payOrder(OrderPayment.this, token, "demozpdk://app", new PayOrderListener() {
+//                            @Override
+//                            public void onPaymentSucceeded(String s, String s1, String s2) {
+//                                Intent intent1 = new Intent(OrderPayment.this, PaymentNotification.class);
+//                                intent1.putExtra("result", "Thanh toán thành công");
+//                                startActivity(intent1);
+//                            }
+//
+//                            @Override
+//                            public void onPaymentCanceled(String s, String s1) {
+//                                Intent intent1 = new Intent(OrderPayment.this, PaymentNotification.class);
+//                                intent1.putExtra("result", "Hủy thanh toán");
+//                                startActivity(intent1);
+//                            }
+//
+//                            @Override
+//                            public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
+//                                Intent intent1 = new Intent(OrderPayment.this, PaymentNotification.class);
+//                                intent1.putExtra("result", "Lỗi thanh toán");
+//                                startActivity(intent1);
+//                            }
+//                        });
+//                    }
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
                 try {
                     JSONObject data = orderApi.createOrder(totalString);
                     //lblZpTransToken.setVisibility(View.VISIBLE);
@@ -64,6 +95,8 @@ public class OrderPaymentActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "return_code: " + code, Toast.LENGTH_LONG).show();
 
                     if (code.equals("1")) {
+                        // lblZpTransToken.setText("zptranstoken");
+                        // txtToken.setText(data.getString("zptranstoken"));
                         String token = data.getString("zptranstoken");
                         ZaloPaySDK.getInstance().payOrder(OrderPaymentActivity.this, token, "demozpdk://app", new PayOrderListener()
                         {
