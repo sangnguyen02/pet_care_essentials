@@ -1,9 +1,11 @@
 package com.example.uiux.Activities.User;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -16,6 +18,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -154,6 +157,11 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         EdgeToEdge.enable(this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_payment);
+        StrictMode.ThreadPolicy policy = new
+                StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        // ZaloPay SDK Init
+        ZaloPaySDK.init(553, Environment.SANDBOX);
 
         preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         accountId = preferences.getString("accountID", null);
@@ -178,8 +186,11 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         });
 
         btn_order.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View view) {
+
                 Intent gotoOrderPayment= new Intent(PaymentActivity.this, OrderPaymentActivity.class);
                 gotoOrderPayment.putExtra("totalPrice",totalDiscountedPayment);
                 startActivity(gotoOrderPayment);
@@ -261,20 +272,20 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
 
 
         // Order
-        btn_order.setOnClickListener(view -> {
-            DeliveryMethod selectedDeliveryMethod = deliveryMethodAdapter.getSelectedPaymentMethod();
-            if (selectedDeliveryMethod == null) {
-                Toast.makeText(PaymentActivity.this, "Please select a delivery method.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            PaymentMethod selectedPaymentMethod = paymentMethodAdapter.getSelectedPaymentMethod();
-            if (selectedPaymentMethod == null) {
-                Toast.makeText(PaymentActivity.this, "Please select a payment method.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            order_create();
-        });
+//        btn_order.setOnClickListener(view -> {
+//            DeliveryMethod selectedDeliveryMethod = deliveryMethodAdapter.getSelectedPaymentMethod();
+//            if (selectedDeliveryMethod == null) {
+//                Toast.makeText(PaymentActivity.this, "Please select a delivery method.", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//
+//            PaymentMethod selectedPaymentMethod = paymentMethodAdapter.getSelectedPaymentMethod();
+//            if (selectedPaymentMethod == null) {
+//                Toast.makeText(PaymentActivity.this, "Please select a payment method.", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+//            order_create();
+//        });
 
 
     }
@@ -466,6 +477,7 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
     private void updateTotalPayment(double total) {
         // Cập nhật TextView tổng tiền
         String currencyFormattedTotal = CurrencyFormatter.formatCurrency(total, getString(R.string.currency_vn));
+        totalDiscountedPayment=total;
         tv_total_payment.setText(currencyFormattedTotal);
     }
     private void loadAccountInfo(String accountId) {
@@ -612,6 +624,7 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         });
 
     }
+
 
 
 
