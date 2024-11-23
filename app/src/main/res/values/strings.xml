@@ -80,6 +80,17 @@
         <item>Disable</item>
     </string-array>
 
+    <string-array name="order_status">
+        <item>Chờ xác nhận đơn hàng </item>
+        <item>Đã xác nhận đơn hàng</item>
+        <item>Đang giao hàng</item>
+        <item>Đã giao hàng</item>
+        <item>Hủy đơn hàng</item>
+        <item>Chờ xác nhận trả hàng</item>
+        <item>Đã xác nhận trả hàng</item>
+        <item>Trả hàng thành công</item>
+    </string-array>
+
 
     <string name="delete_cart_item_title">Delete Item</string>
     <string name="delete_cart_item_message">Are you sure you want to remove this product from the cart?</string>

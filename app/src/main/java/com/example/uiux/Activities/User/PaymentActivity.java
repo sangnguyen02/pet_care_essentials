@@ -1,9 +1,11 @@
 package com.example.uiux.Activities.User;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
@@ -16,6 +18,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
@@ -101,6 +104,7 @@ public class PaymentActivity extends AppCompatActivity {
     List<String>categoryList= new ArrayList<>();
     private Voucher voucher;
     String categoryType = "not value";
+    String voucherId=null;
 
 
     private ActivityResultLauncher<Intent> addressLauncher = registerForActivityResult(
@@ -135,6 +139,7 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
                     // Sau khi nhận được voucher ID từ DisplayVoucherActivity, bạn cập nhật lại giá
                     SharedPreferences preferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                     String selectedVoucher = preferences.getString("selected_voucher", null);
+                    voucherId=selectedVoucher;
                     if (selectedVoucher != null) {
                         Log.e("Selected Voucher ID", selectedVoucher);
                         LoadVoucher(selectedVoucher);  // Tải thông tin voucher nếu cần
@@ -154,10 +159,15 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         EdgeToEdge.enable(this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_payment);
+        StrictMode.ThreadPolicy policy = new
+                StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        // ZaloPay SDK Init
+        ZaloPaySDK.init(553, Environment.SANDBOX);
 
         preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         accountId = preferences.getString("accountID", null);
-        orderRef = FirebaseDatabase.getInstance().getReference("Order").child(accountId);
+
 
 
         initWidget();
@@ -180,9 +190,9 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         btn_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent gotoOrderPayment= new Intent(PaymentActivity.this, OrderPaymentActivity.class);
-                gotoOrderPayment.putExtra("totalPrice",totalDiscountedPayment);
-                startActivity(gotoOrderPayment);
+
+                SendData();
+
             }
         });
         if (!accountId.isEmpty()) {
@@ -259,26 +269,12 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
 
 
 
-
-        // Order
-        btn_order.setOnClickListener(view -> {
-            DeliveryMethod selectedDeliveryMethod = deliveryMethodAdapter.getSelectedPaymentMethod();
-            if (selectedDeliveryMethod == null) {
-                Toast.makeText(PaymentActivity.this, "Please select a delivery method.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            PaymentMethod selectedPaymentMethod = paymentMethodAdapter.getSelectedPaymentMethod();
-            if (selectedPaymentMethod == null) {
-                Toast.makeText(PaymentActivity.this, "Please select a payment method.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            order_create();
-        });
-
-
     }
-    private void order_create() {
+    private void SendData() {
+        orderRef = FirebaseDatabase.getInstance().getReference("Order");
+
+        Intent gotoOrderPayment= new Intent(PaymentActivity.this, OrderPaymentActivity.class);
+
         DeliveryMethod selectedDeliveryMethod = deliveryMethodAdapter.getSelectedPaymentMethod();
         if (selectedDeliveryMethod == null) {
             Toast.makeText(PaymentActivity.this, "Please select delivery method.", Toast.LENGTH_SHORT).show();
@@ -289,103 +285,54 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
                 new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date()),
                 selectedDeliveryMethod.getId()
         );
+        gotoOrderPayment.putExtra("expectedDeliveryDate",expectedDeliveryDate);
 
         String orderId = orderRef.push().getKey();
-        List<String> supply_combined_key = setSupply_combined_key();
         if (orderId == null) {
             Toast.makeText(getApplicationContext(), "Failed to generate order ID.", Toast.LENGTH_SHORT).show();
             return;
+        }
+        else
+        {
+            gotoOrderPayment.putExtra("orderId",orderId);
+            Log.e("ID",orderId);
         }
         Date dateOrder = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         String formattedDate = dateFormat.format(dateOrder);
 
-        Order order = new Order();
+        gotoOrderPayment.putExtra("formattedDate",formattedDate);
+        gotoOrderPayment.putExtra("voucherId",voucherId);
+       // order.setCart_items_ordered(cartPaymentItemList);
+        gotoOrderPayment.putExtra("totalPrice",totalDiscountedPayment);
+        gotoOrderPayment.putExtra("name",tv_buyer_name.getText().toString());
+        gotoOrderPayment.putExtra("phone",tv_buyer_phone.getText().toString());
+        gotoOrderPayment.putExtra("accountId",accountId);
+        gotoOrderPayment.putExtra("quantity", String.valueOf(cartPaymentItemList.size()));
+
+        Order order=new Order();
         order.setOrder_id(orderId);
         order.setCart_items_ordered(cartPaymentItemList);
-        order.setDate_order(formattedDate);
-        order.setExpected_delivery_date(expectedDeliveryDate);
-        order.setDelivery_date("");
-        order.setTotal_price(totalPayment);
-        order.setName_customer(tv_buyer_name.getText().toString());
-        order.setPhone_number(tv_buyer_phone.getText().toString());
-        order.setAccount_id(accountId);
-        order.setIs_completed(0);
-        order.setAddress(tv_address_detail.getText().toString() + ", " + tv_ward_district_province.getText().toString());
-        order.setStatus(OrderStatus.PENDING);
+
         orderRef.child(orderId).setValue(order).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    // Dữ liệu đã được lưu thành công
-                    Toast.makeText(getApplicationContext(), "Order placed successfully.", Toast.LENGTH_SHORT).show();
+                    Log.d("Order", "Order successfully created in Firebase.");
                 } else {
-                    // Lỗi khi lưu dữ liệu
-                    Toast.makeText(getApplicationContext(), "Failed to place order.", Toast.LENGTH_SHORT).show();
+                    Log.e("Order", "Failed to create order: " + task.getException().getMessage());
                 }
+
             }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getApplicationContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        })
+        });
 
-        ;
 
-        Intent intent1 = new Intent(PaymentActivity.this, OrderActivity.class);
-        intent1.putExtra("result","1");
-        startActivity(intent1);
-    }
-    private void order() {
-        StrictMode.ThreadPolicy policy = new
-                StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        ZaloPaySDK.init(553, Environment.SANDBOX);
-        CreateOrder orderApi = new CreateOrder();
-        try {
-            JSONObject data = orderApi.createOrder(tv_total_payment.getText().toString());
-            //lblZpTransToken.setVisibility(View.VISIBLE);
-            String code = data.getString("returncode");
-            Toast.makeText(getApplicationContext(), "return_code: " + code, Toast.LENGTH_LONG).show();
-
-            if (code.equals("-5")) {
-                // lblZpTransToken.setText("zptranstoken");
-                // txtToken.setText(data.getString("zptranstoken"));
-                String token = data.getString("zptranstoken");
-                ZaloPaySDK.getInstance().payOrder(PaymentActivity.this, token, "demozpdk://app", new PayOrderListener()
-                {
-
-                    @Override
-                    public void onPaymentSucceeded(String s, String s1, String s2) {
+        gotoOrderPayment.putExtra("address",tv_address_detail.getText().toString() + ", " + tv_ward_district_province.getText().toString());
 
 
 
-                    }
+        startActivity(gotoOrderPayment);
 
-                    @Override
-                    public void onPaymentCanceled(String s, String s1) {
-                        Toast.makeText(getApplicationContext(), "Payment failed." + code, Toast.LENGTH_SHORT).show();
-
-                    }
-
-                    @Override
-                    public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
-                        Toast.makeText(getApplicationContext(), "Payment errored." + code, Toast.LENGTH_SHORT).show();
-                    }
-                });
-                //IsDone();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-    private List<String> setSupply_combined_key() {
-        List<String> supplyIds = new ArrayList<>();
-        for (CartItem cartItem : cartPaymentItemList) {
-            supplyIds.add(cartItem.getCombinedKey()); // Giả định `CartItem` có phương thức `getSupplyId()`
-        }
-        return supplyIds;
     }
     private String setExpected_delivery_date(String orderDate, int deliveryMethodId) {
         // Dựa trên deliveryMethodId, xác định số ngày giao hàng
@@ -460,12 +407,10 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
             });
         }
     }
-
-
-
     private void updateTotalPayment(double total) {
         // Cập nhật TextView tổng tiền
         String currencyFormattedTotal = CurrencyFormatter.formatCurrency(total, getString(R.string.currency_vn));
+        totalDiscountedPayment=total;
         tv_total_payment.setText(currencyFormattedTotal);
     }
     private void loadAccountInfo(String accountId) {
@@ -611,6 +556,11 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
             }
         });
 
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        ZaloPaySDK.getInstance().onResult(intent);
     }
 
 

@@ -28,7 +28,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
-            android:name=".Activities.User.DisplayVoucher.DisplayVoucherActivity"/>
+            android:name=".Activities.User.Order.UpdateOrderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.User.Order.EditOrderActivity"
+            android:exported="false" />
+        <activity android:name=".Activities.User.DisplayVoucher.DisplayVoucherActivity" />
         <activity
             android:name=".Activities.User.Order.OrderActivity"
             android:exported="false" />

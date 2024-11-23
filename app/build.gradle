@@ -67,7 +67,7 @@ dependencies {
     implementation libs.material3
     implementation fileTree(dir: 'C:\\Mobile\\Zalo', include: ['*.aar', '*.jar'], exclude: [])
     //implementation fileTree(dir: 'C:\\Mobile\\Zalo', include: ['*.aar', '*.jar'], exclude: [])
-//    implementation fileTree(dir: 'E:\\Downloads\\Zalo', include: ['*.aar', '*.jar'], exclude: [])
+    implementation fileTree(dir: 'E:\\Downloads\\Zalo', include: ['*.aar', '*.jar'], exclude: [])
 // Change this file for your app
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit

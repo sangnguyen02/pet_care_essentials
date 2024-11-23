@@ -19,6 +19,7 @@ import com.example.uiux.Activities.Admin.Supplies.SuppliesImportActivity;
 import com.example.uiux.Activities.Admin.Type.TypeActivity;
 import com.example.uiux.Activities.Admin.Voucher.UpdateVoucherActivity;
 import com.example.uiux.Activities.SplashActivity;
+import com.example.uiux.Activities.User.Order.UpdateOrderActivity;
 import com.example.uiux.R;
 
 import com.google.android.material.card.MaterialCardView;
@@ -97,7 +98,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         service_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(MainActivityAdmin.this, UpdateServiceActivity.class);
+                Intent intent=new Intent(MainActivityAdmin.this, UpdateOrderActivity.class);
                 startActivity(intent);
             }
         });

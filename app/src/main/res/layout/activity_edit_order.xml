@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:text="N/A" />
     </LinearLayout>
-    <!-- Địa chỉ -->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -152,6 +152,43 @@
             android:layout_height="wrap_content"
             android:text="N/A" />
     </LinearLayout>
+    <!-- Ngày giao hàng dự kiến -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Ngày giao hàng thực tế:" />
+
+        <TextView
+            android:id="@+id/textViewDeliveryDateValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="N/A" />
+    </LinearLayout>
+    <!-- Địa chỉ -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <!-- Spinner for Province -->
+        <Spinner
+            android:id="@+id/statusSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@color/white"
+            />
+    </LinearLayout>
 
     <!-- Tổng tiền -->
     <LinearLayout
@@ -172,13 +209,23 @@
             android:layout_height="wrap_content"
             android:text="N/A" />
     </LinearLayout>
-
-    <!-- Nút Thanh Toán -->
-    <Button
-        android:id="@+id/buttonThanhToan"
-        android:layout_width="wrap_content"
+    <!-- Save Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveBTN"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Thanh toán bằng Zalo Pay" />
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="center"
+        android:elevation="15dp"
+        android:fontFamily="@font/roboto_bold"
+        android:gravity="center"
+        android:text="SAVE"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        />
+
 
 </LinearLayout>
