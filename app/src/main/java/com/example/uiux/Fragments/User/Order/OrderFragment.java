@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -59,9 +60,8 @@ public class OrderFragment extends Fragment {
         orderRef = FirebaseDatabase.getInstance().getReference("Order").child(accountId);
 
         initWidget();
-
+        Log.e("Status from order activity", String.valueOf(status));
         loadOrderByStatus(status);
-        Log.e("Status", String.valueOf(status));
 
         Log.e("Order List", orderList.toString());
 
@@ -80,6 +80,7 @@ public class OrderFragment extends Fragment {
         rcv_order = rootView.findViewById(R.id.rcv_order);
         orderList = new ArrayList<>();
         orderAdapter = new OrderAdapter(orderList, rootView.getContext());
+        rcv_order.setLayoutManager(new LinearLayoutManager(rootView.getContext(), RecyclerView.VERTICAL, false));
         rcv_order.setAdapter(orderAdapter);
     }
 
@@ -88,7 +89,7 @@ public class OrderFragment extends Fragment {
         orderList.clear();
 
         // Lấy dữ liệu từ Firebase theo accountId
-        orderRef.orderByChild("status").equalTo(status)  // Lọc theo trường 'status' (Giả sử có trường này trong Firebase)
+        orderRef.orderByChild("status").equalTo(status)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -101,7 +102,7 @@ public class OrderFragment extends Fragment {
                         }
                         // Cập nhật RecyclerView với dữ liệu mới
                         orderAdapter.notifyDataSetChanged();
-                        Log.e("Order List", orderList.toString());
+                        Log.e("Order List Ở order fragment", orderList.toString());
                     }
 
                     @Override

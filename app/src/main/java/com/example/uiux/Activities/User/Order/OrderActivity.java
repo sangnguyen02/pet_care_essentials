@@ -1,6 +1,8 @@
 package com.example.uiux.Activities.User.Order;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +22,7 @@ public class OrderActivity extends AppCompatActivity {
     TabLayout tabLayout_order;
     ViewPager2 viewPager_order;
     OrderStatusAdapter orderStatusAdapter;
+    ImageView img_back_order;
 
 
     @Override
@@ -32,8 +35,10 @@ public class OrderActivity extends AppCompatActivity {
         initWidget();
 
         int targetTab = getIntent().getIntExtra("targetTab", -1);
+        Log.e("Order Activity", "Chưa vào");
 
         if (targetTab < 0 || targetTab > OrderStatus.RETURNED) {
+            Log.e("Trạng thái pending", "Đã vô PENDING");
             targetTab = OrderStatus.PENDING;
         }
 
@@ -44,6 +49,8 @@ public class OrderActivity extends AppCompatActivity {
 
 
     void initWidget() {
+        img_back_order = findViewById(R.id.img_back_order);
+        img_back_order.setOnClickListener(view -> finish());
         tabLayout_order = findViewById(R.id.tabLayout_order);
         viewPager_order = findViewById(R.id.viewPager_order);
         orderStatusAdapter = new OrderStatusAdapter(getSupportFragmentManager(), getLifecycle());

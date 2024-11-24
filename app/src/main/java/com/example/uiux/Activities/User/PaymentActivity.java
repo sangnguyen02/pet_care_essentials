@@ -158,14 +158,14 @@ public class PaymentActivity extends AppCompatActivity {
             }
         });
 
-        btn_order.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent gotoOrderPayment= new Intent(PaymentActivity.this, OrderPaymentActivity.class);
-                gotoOrderPayment.putExtra("totalPrice",totalDiscountedPayment);
-                startActivity(gotoOrderPayment);
-            }
-        });
+//        btn_order.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent gotoOrderPayment= new Intent(PaymentActivity.this, OrderPaymentActivity.class);
+//                gotoOrderPayment.putExtra("totalPrice",totalDiscountedPayment);
+//                startActivity(gotoOrderPayment);
+//            }
+//        });
         if (!accountId.isEmpty()) {
             loadAccountInfo(accountId);
         }
