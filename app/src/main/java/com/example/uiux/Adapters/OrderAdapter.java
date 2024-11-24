@@ -35,11 +35,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(OrderViewHolder holder, int position) {
         Order order = orders.get(position);
         Log.e("ORDER", "Binding order: " + order.getOrder_id());
-//        CartPaymentAdapter orderChildAdapter = new CartPaymentAdapter(holder.itemView.getContext(), order.getCart_items_ordered());
-//        holder.rcv_order_child.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), RecyclerView.VERTICAL, false));
-//        holder.rcv_order_child.setAdapter(orderChildAdapter);
+        CartPaymentAdapter orderChildAdapter = new CartPaymentAdapter(holder.itemView.getContext(), order.getCart_items_ordered());
+        holder.rcv_order_child.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), RecyclerView.VERTICAL, false));
+        holder.rcv_order_child.setAdapter(orderChildAdapter);
 
-        holder.label_total_items.setText(String.valueOf(getItemCount()));
+        holder.label_total_items.setText("Total items: " + String.valueOf(getItemCount()));
         holder.tv_order_item_total_price.setText(CurrencyFormatter.formatCurrency(order.getTotal_price(), context.getString(R.string.currency_vn)));
         // Thêm các phần tử khác tùy thuộc vào layout item_order
     }
@@ -55,7 +55,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         public OrderViewHolder(View itemView) {
             super(itemView);
-//            rcv_order_child = itemView.findViewById(R.id.rcv_order_child);
+            rcv_order_child = itemView.findViewById(R.id.rcv_order_child);
             label_total_items = itemView.findViewById(R.id.label_total_items);
             tv_order_item_total_price = itemView.findViewById(R.id.tv_order_item_total_price);
         }

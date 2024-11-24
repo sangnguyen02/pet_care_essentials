@@ -156,10 +156,10 @@ public class ProfileFragment extends Fragment {
                     // Hiển thị số lượng item trong giỏ
                     tv_number_of_cart_item_at_profile.setVisibility(View.VISIBLE);
                     tv_number_of_cart_item_at_profile.setText(String.valueOf(itemCount));
-                    img_cart_at_profile.setVisibility(View.VISIBLE);
+                    img_red_circle_at_profile.setVisibility(View.VISIBLE);
                 } else {
                     tv_number_of_cart_item_at_profile.setVisibility(View.GONE);
-                    img_cart_at_profile.setVisibility(View.GONE);
+                    img_red_circle_at_profile.setVisibility(View.GONE);
                 }
             }
 
