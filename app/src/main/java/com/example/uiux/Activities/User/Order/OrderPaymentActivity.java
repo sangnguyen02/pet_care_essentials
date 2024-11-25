@@ -38,7 +38,7 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class OrderPaymentActivity extends AppCompatActivity {
     TextView txtSoluong, txtTongTien,txtName,txtPhone,txtEmail,txtAddress,txtOrderDate,txtExpectedDeliveryDate;
-    Button btnThanhToan;
+    Button btnThanhToan,btnConfirm,btnWallet;
     String accountId;
     Double total;
     String orderId;
@@ -69,6 +69,9 @@ public class OrderPaymentActivity extends AppCompatActivity {
          accountId = getIntent().getStringExtra("accountId");
         String address = getIntent().getStringExtra("address");
         String quantity = getIntent().getStringExtra("quantity");
+        int index = getIntent().getIntExtra("payment_index",0);
+        Log.e("index", String.valueOf(index));
+
 
         String totalString = String.format("%.0f", total);
         txtTongTien.setText(Double.toString(total));
@@ -79,6 +82,49 @@ public class OrderPaymentActivity extends AppCompatActivity {
         txtOrderDate.setText(formattedDate);
         txtPhone.setText(phone);
         fetchEmailFromFirebase(accountId);
+        if(index==1)
+        {
+            btnThanhToan.setVisibility(View.GONE);
+            btnConfirm.setVisibility(View.VISIBLE);
+            btnWallet.setVisibility(View.GONE);
+
+        }else if(index==0)
+        {
+            btnThanhToan.setVisibility(View.VISIBLE);
+            btnConfirm.setVisibility(View.GONE);
+            btnWallet.setVisibility(View.GONE);
+        }
+        else
+        {
+            btnThanhToan.setVisibility(View.GONE);
+            btnConfirm.setVisibility(View.GONE);
+            btnWallet.setVisibility(View.VISIBLE);
+        }
+        btnConfirm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (voucherId!=null)
+                {
+                    updateVoucherQuantity(voucherId);
+                }
+                updateOrder(orderId,0);
+                Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
+                intent1.putExtra("result","Xac nhan thanh cong");
+                startActivity(intent1);
+
+            }
+        });
+        btnWallet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//
+//                Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
+//                intent1.putExtra("result","Xac nhan thanh cong");
+//                startActivity(intent1);
+            }
+        });
+
+
 
         btnThanhToan.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -107,8 +153,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
                                 {
                                     updateVoucherQuantity(voucherId);
                                 }
-
-                                updateOrder(orderId);
+                                updateOrder(orderId,1);
                                 startActivity(intent1);
 
                             }
@@ -151,8 +196,11 @@ public class OrderPaymentActivity extends AppCompatActivity {
         txtOrderDate = findViewById(R.id.textViewOrderDateValue);
         txtExpectedDeliveryDate = findViewById(R.id.textViewExpectedDeliveryDateValue);
         txtSoluong=findViewById(R.id.textViewQuantity);
+        btnConfirm=findViewById(R.id.buttonConfirm);
+        btnWallet=findViewById(R.id.buttonWallet);
+
     }
-    private void updateOrder(String orderId) {
+    private void updateOrder(String orderId,int index) {
         DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference("Order").child(orderId);
         orderRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -170,7 +218,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
                         order.setDelivery_date(""); // Điều này cần phải kiểm tra lại nếu có giá trị thực tế
                         order.setTotal_price(total);
                         order.setName_customer(txtName.getText().toString());
-                        order.setIs_completed(0); // Có thể cần kiểm tra lại status này
+                        order.setIs_completed_payment(index); // Da thanh toan
                         order.setStatus(0); // Cập nhật trạng thái đúng nếu cần
 
                         // Cập nhật vào Firebase

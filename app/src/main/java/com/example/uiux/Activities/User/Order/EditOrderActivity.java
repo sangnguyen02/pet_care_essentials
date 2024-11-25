@@ -61,7 +61,7 @@ public class EditOrderActivity extends AppCompatActivity {
         saveBtn.setOnClickListener(v -> {
             if(statusSpinner.getSelectedItemPosition()==3)
             {
-                order.setIs_completed(1);
+               // order.setIs_completed(1);
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
                 String currentDateAndTime = sdf.format(new Date());
 

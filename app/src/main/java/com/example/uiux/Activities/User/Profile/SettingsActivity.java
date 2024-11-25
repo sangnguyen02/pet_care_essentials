@@ -2,20 +2,15 @@ package com.example.uiux.Activities.User.Profile;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.uiux.Activities.EntryActivity;
 import com.example.uiux.Activities.SplashActivity;
+import com.example.uiux.Activities.User.AccountWallet.DisplayAccountWallet;
+import com.example.uiux.Activities.User.AccountWallet.RegisterWalletActivity;
 import com.example.uiux.R;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -23,7 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class SettingsActivity extends AppCompatActivity {
     String accountId;
-    MaterialCardView mcv_address_setting, mcv_sign_out;
+    MaterialCardView mcv_address_setting, mcv_sign_out,mcv_wallet,mcv_view_wallet;
     ImageView img_back_settings;
     FirebaseAuth mAuth;
     @Override
@@ -46,6 +41,15 @@ public class SettingsActivity extends AppCompatActivity {
             gotoAddress.putExtra("account_id",accountId);
             startActivity(gotoAddress);
         });
+        mcv_wallet.setOnClickListener(view -> {
+            Intent gotoWallet= new Intent(SettingsActivity.this, RegisterWalletActivity.class);
+            gotoWallet.putExtra("account_id",accountId);
+            startActivity(gotoWallet);
+        });
+        mcv_view_wallet.setOnClickListener(view -> {
+            Intent gotoWallet= new Intent(SettingsActivity.this, DisplayAccountWallet.class);
+            startActivity(gotoWallet);
+        });
 
         mcv_sign_out.setOnClickListener(view -> {
             signOutUser();
@@ -57,6 +61,8 @@ public class SettingsActivity extends AppCompatActivity {
         img_back_settings = findViewById(R.id.img_back_settings);
         mcv_address_setting = findViewById(R.id.mcv_address_setting);
         mcv_sign_out = findViewById(R.id.mcv_sign_out);
+        mcv_wallet=findViewById(R.id.mcv_register_wallet);
+        mcv_view_wallet=findViewById(R.id.mcv_view_wallet);
     }
 
     private void signOutUser() {

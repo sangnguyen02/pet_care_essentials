@@ -19,7 +19,7 @@ import java.util.List;
 public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdapter.PaymentMethodViewHolder> {
     private Context context;
     private List<PaymentMethod> paymentMethods;
-    private int selectedPosition = -1;
+    private int selectedPosition = 0;
 
     public PaymentMethodAdapter(Context context, List<PaymentMethod> paymentMethods) {
         this.context = context;

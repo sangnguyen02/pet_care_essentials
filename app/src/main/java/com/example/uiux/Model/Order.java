@@ -14,9 +14,17 @@ public class Order {
     private  String phone_number;
     private  String email;
     private  String account_id;
-    private  int is_completed;
+    private  int is_completed_payment;
     private String address;
     private  int status;
+
+    public int getIs_completed_payment() {
+        return is_completed_payment;
+    }
+
+    public void setIs_completed_payment(int is_completed_payment) {
+        this.is_completed_payment = is_completed_payment;
+    }
 
     public Order() {
     }
@@ -31,7 +39,7 @@ public class Order {
         this.phone_number = phone_number;
         this.email = email;
         this.account_id = account_id;
-        this.is_completed = is_completed;
+        this.is_completed_payment = is_completed;
         this.address = address;
         this.status = status;
     }
@@ -48,7 +56,7 @@ public class Order {
                 ", phone_number='" + phone_number + '\'' +
                 ", email='" + email + '\'' +
                 ", account_id='" + account_id + '\'' +
-                ", is_completed=" + is_completed +
+                ", is_completed=" + is_completed_payment +
                 ", address='" + address + '\'' +
                 ", status=" + status +
                 '}';
@@ -134,13 +142,6 @@ public class Order {
         this.account_id = account_id;
     }
 
-    public int getIs_completed() {
-        return is_completed;
-    }
-
-    public void setIs_completed(int is_completed) {
-        this.is_completed = is_completed;
-    }
 
     public String getAddress() {
         return address;

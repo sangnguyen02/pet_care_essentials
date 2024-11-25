@@ -105,6 +105,7 @@ public class PaymentActivity extends AppCompatActivity {
     private Voucher voucher;
     String categoryType = "not value";
     String voucherId=null;
+    int payment_index;
 
 
     private ActivityResultLauncher<Intent> addressLauncher = registerForActivityResult(
@@ -246,10 +247,12 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         // Payment method
         rcv_payment_method = findViewById(R.id.rcv_payment_method);
         rcv_payment_method.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        paymentMethodList.add(new PaymentMethod(1, getString(R.string.zalo_method), R.drawable.zalopay));
-        paymentMethodList.add(new PaymentMethod(2,getString(R.string.cod_method), R.drawable.cod));
+        paymentMethodList.add(new PaymentMethod(0, getString(R.string.zalo_method), R.drawable.zalopay));
+        paymentMethodList.add(new PaymentMethod(1,getString(R.string.cod_method), R.drawable.cod));
+        paymentMethodList.add(new PaymentMethod(2,"Wallet",R.drawable.zalopay));
         paymentMethodAdapter = new PaymentMethodAdapter(this, paymentMethodList);
         rcv_payment_method.setAdapter(paymentMethodAdapter);
+
 
         // Delivery method
         rcv_delivery_method = findViewById(R.id.rcv_delivery_method);
@@ -273,7 +276,9 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
     private void SendData() {
         orderRef = FirebaseDatabase.getInstance().getReference("Order");
 
+
         Intent gotoOrderPayment= new Intent(PaymentActivity.this, OrderPaymentActivity.class);
+
 
         DeliveryMethod selectedDeliveryMethod = deliveryMethodAdapter.getSelectedPaymentMethod();
         if (selectedDeliveryMethod == null) {
@@ -309,6 +314,10 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         gotoOrderPayment.putExtra("phone",tv_buyer_phone.getText().toString());
         gotoOrderPayment.putExtra("accountId",accountId);
         gotoOrderPayment.putExtra("quantity", String.valueOf(cartPaymentItemList.size()));
+        payment_index=paymentMethodAdapter.getSelectedPaymentMethod().getId();
+        Log.e("Tusf", String.valueOf(payment_index));
+        gotoOrderPayment.putExtra("payment_index",payment_index);
+
 
         Order order=new Order();
         order.setOrder_id(orderId);

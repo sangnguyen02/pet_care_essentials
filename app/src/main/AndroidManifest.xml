@@ -16,6 +16,10 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <queries>
+        <package android:name="com.example.myWallet" />
+    </queries>
+
 
     <application
         android:name=".MyApp"
@@ -27,6 +31,13 @@
         android:roundIcon="@mipmap/ic_app_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
+
+        <activity
+            android:name=".Activities.User.AccountWallet.AccountWalletActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.User.AccountWallet.RegisterWalletActivity"
+            android:exported="false" />
         <activity
             android:name=".Activities.User.Order.UpdateOrderActivity"
             android:exported="false" />
@@ -93,6 +104,22 @@
                     android:host="app"
                     android:scheme="demozpdk" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activities.User.AccountWallet.DisplayAccountWallet"
+            android:exported="true"
+           >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="app"
+                    android:scheme="demozpdk" />
+            </intent-filter>
+
         </activity>
         <activity
             android:name=".Activities.Admin.Branch.UpdateBranchStoreActivity"

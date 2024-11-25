@@ -180,5 +180,17 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:text="Thanh toán bằng Zalo Pay" />
+    <Button
+        android:id="@+id/buttonWallet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Thanh toán bằng Wallet" />
+    <Button
+        android:id="@+id/buttonConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Xác nhận" />
 
 </LinearLayout>
