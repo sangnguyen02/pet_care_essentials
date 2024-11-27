@@ -22,7 +22,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.uiux.Activities.Admin.MainActivityAdmin;
+import com.example.uiux.Activities.Admin.Type.TypeActivity;
 import com.example.uiux.Activities.User.Order.PaymentNotificationActivity;
+import com.example.uiux.Activities.User.Order.PaypalActivity;
 import com.example.uiux.Model.AccountWallet;
 import com.example.uiux.Model.Order;
 import com.example.uiux.Model.Voucher;
@@ -50,7 +53,6 @@ public class DisplayAccountWallet extends AppCompatActivity {
 
     // Firebase Database Reference
     private DatabaseReference walletRef;
-    private DatabaseReference walletHistoryRef;
     private String wallet_Id;
 
     @Override
@@ -75,19 +77,11 @@ public class DisplayAccountWallet extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Intent để mở ứng dụng MyWallet
-                Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.example.myWallet");
-
-                if (launchIntent != null) {
-                    // Gửi dữ liệu kèm theo
-                    launchIntent.putExtra("balanceAmount", etBalance.getText().toString());
-                    launchIntent.putExtra("accountId", accountId);
-
-                    // Mở ứng dụng MyWallet
-                    startActivity(launchIntent);
-                } else {
-                    // Ứng dụng MyWallet không được cài đặt
-                    Toast.makeText(DisplayAccountWallet.this, "Ứng dụng MyWallet chưa được cài đặt.", Toast.LENGTH_SHORT).show();
-                }
+                Intent intent=new Intent(DisplayAccountWallet.this, PaypalActivity.class);
+                intent.putExtra("account_id",accountId);
+                intent.putExtra("wallet_id",wallet_Id);
+                intent.putExtra("balance", etBalance.getText().toString());
+                startActivity(intent);
             }
         });
 
@@ -95,47 +89,7 @@ public class DisplayAccountWallet extends AppCompatActivity {
 
 
     }
-//    private void UpdateBalance() {
-//        String addAmountStr = etBalance.getText().toString();
-//        if (addAmountStr.isEmpty()) {
-//            Toast.makeText(this, "Enter a valid amount!", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        double addAmount = Double.parseDouble(addAmountStr);
-//
-//        walletRef.child(wallet_Id).addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                AccountWallet wallet = snapshot.getValue(AccountWallet.class);
-//                if (wallet != null) {
-//                    double newBalance = wallet.getBalance() + addAmount;
-//                    wallet.setBalance(newBalance);
-//
-//                    walletRef.child(wallet_Id).setValue(wallet)
-//                            .addOnSuccessListener(aVoid -> {
-//                                txtBalance.setText(String.format("Balance: %.2f", newBalance));
-//                                Toast.makeText(DisplayAccountWallet.this, "Balance updated successfully!", Toast.LENGTH_SHORT).show();
-//                            })
-//                            .addOnFailureListener(e -> {
-//                                Toast.makeText(DisplayAccountWallet.this, "Failed to update balance!", Toast.LENGTH_SHORT).show();
-//                            });
-//                } else {
-//                    Toast.makeText(DisplayAccountWallet.this, "Wallet not found!", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//                Toast.makeText(DisplayAccountWallet.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
-//
-//    private void CreateHistoryMessage()
-//    {
-//
-//    }
+
 
     private void LoadBalance() {
         // Kiểm tra nếu accountId null

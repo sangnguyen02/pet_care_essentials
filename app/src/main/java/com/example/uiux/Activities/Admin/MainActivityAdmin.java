@@ -19,6 +19,7 @@ import com.example.uiux.Activities.Admin.Supplies.SuppliesImportActivity;
 import com.example.uiux.Activities.Admin.Type.TypeActivity;
 import com.example.uiux.Activities.Admin.Voucher.UpdateVoucherActivity;
 import com.example.uiux.Activities.SplashActivity;
+import com.example.uiux.Activities.User.Order.PaypalActivity;
 import com.example.uiux.Activities.User.Order.UpdateOrderActivity;
 import com.example.uiux.R;
 
@@ -77,7 +78,7 @@ public class MainActivityAdmin extends AppCompatActivity {
 
 
         category_btn.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivityAdmin.this, UpdateCategoryActivity.class);
+            Intent intent = new Intent(MainActivityAdmin.this, PaypalActivity.class);
             startActivity(intent);
         });
 

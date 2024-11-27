@@ -42,6 +42,10 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.1'
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     packaging {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
@@ -102,6 +106,9 @@ dependencies {
     implementation 'com.mapbox.maps:android:10.15.0'
     implementation 'com.mapbox.navigation:android:2.15.2'
     implementation "com.mapbox.search:mapbox-search-android-ui:1.0.0-rc.6"
+
+    implementation('com.paypal.checkout:android-sdk:1.1.0')
+
 
 
 
