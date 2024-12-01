@@ -81,7 +81,7 @@ public class PaymentActivity extends AppCompatActivity {
     MaterialCardView mcv_payment_address,mcv_voucher;
     MaterialButton btn_order;
     ImageView img_back_payment;
-    TextView tv_buyer_name, tv_buyer_phone, tv_address_detail, tv_ward_district_province, tv_total_payment;
+    TextView tv_buyer_name, tv_buyer_phone, tv_address_detail, tv_ward_district_province, tv_total_payment, tv_vouncher_selected, tv_vouncher_discount_amount;
     RecyclerView rcv_cart_payment, rcv_payment_method, rcv_delivery_method;
     CartPaymentAdapter cartPaymentAdapter;
     PaymentMethodAdapter paymentMethodAdapter;
@@ -106,6 +106,7 @@ public class PaymentActivity extends AppCompatActivity {
     String categoryType = "not value";
     String voucherId=null;
     int payment_index;
+    String voucherCode = "";
 
 
     private ActivityResultLauncher<Intent> addressLauncher = registerForActivityResult(
@@ -141,6 +142,8 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
                     SharedPreferences preferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                     String selectedVoucher = preferences.getString("selected_voucher", null);
                     voucherId=selectedVoucher;
+
+
                     if (selectedVoucher != null) {
                         Log.e("Selected Voucher ID", selectedVoucher);
                         LoadVoucher(selectedVoucher);  // Tải thông tin voucher nếu cần
@@ -235,6 +238,8 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         cartPaymentAdapter = new CartPaymentAdapter(this, cartPaymentItemList);
         rcv_cart_payment.setAdapter(cartPaymentAdapter);
         mcv_voucher=findViewById(R.id.mcv_voucher);
+        tv_vouncher_selected = findViewById(R.id.tv_vouncher_selected);
+        tv_vouncher_discount_amount = findViewById(R.id.tv_vouncher_discount_amount);
 
         mcv_payment_address = findViewById(R.id.mcv_payment_address);
         mcv_payment_address.setOnClickListener(view -> {
@@ -340,7 +345,7 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
 
 
 
-        startActivity(gotoOrderPayment);
+        //startActivity(gotoOrderPayment);
 
     }
     private String setExpected_delivery_date(String orderDate, int deliveryMethodId) {
@@ -503,6 +508,8 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                      voucher= snapshot.getValue(Voucher.class);
                      Log.e("Voucher",voucher.getCategory());
+                     voucherCode = voucher.getCode().toString();
+                     tv_vouncher_selected.setText(voucherCode);
                 }
 
                 @Override
@@ -531,17 +538,20 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
                         {
                             discountAmount=deliveryCost*(discountPercent/100);
                             totalWithDiscount=totalWithDeliveryCost-discountAmount;
+                            tv_vouncher_discount_amount.setText("Saved " + CurrencyFormatter.formatCurrency(discountAmount, getString(R.string.currency_vn)));
 
                         }
                         else
                         {
                             // Calculate the discount amount
                             discountAmount = totalPayment * (discountPercent / 100.0);
+                            tv_vouncher_discount_amount.setText("Saved" + CurrencyFormatter.formatCurrency(discountAmount, getString(R.string.currency_vn)));
                             // Apply discount to total payment
                             totalWithDiscount = totalPayment - discountAmount+deliveryCost;
 
                         }
                         totalDiscountedPayment=totalWithDiscount;
+
                         Log.e("Check", String.valueOf(totalDiscountedPayment));
                         updateTotalPayment(totalWithDiscount);
                     }

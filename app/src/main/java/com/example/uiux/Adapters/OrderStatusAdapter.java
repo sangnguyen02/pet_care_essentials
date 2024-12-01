@@ -19,10 +19,11 @@ public class OrderStatusAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        Fragment fragment = new OrderFragment();
+        OrderFragment fragment = new OrderFragment();
         Bundle args = new Bundle();
         args.putString(OrderFragment.TITLE, OrderStatus.getStatusName(position));
         args.putInt("status", position);
+//        Log.e("OrderActivity", "Creating fragment with status: " + position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -32,3 +33,6 @@ public class OrderStatusAdapter extends FragmentStateAdapter {
         return 6;
     }
 }
+
+
+

@@ -214,7 +214,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="@string/best_seller_product"
+                        android:text="@string/supplies"
                         android:textColor="@color/black"
                         android:fontFamily="@font/roboto_bold"
                         android:textSize="18sp"
@@ -225,9 +225,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:textSize="13sp"
                         android:textAlignment="textEnd"
                         android:text="@string/main_see_all"
-                        android:textColor="@color/primary"/>
+                        android:textColor="@color/grey"/>
                 </LinearLayout>
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -259,6 +260,36 @@
             </LinearLayout>
 
         </ScrollView>
+
+        <!-- Lottie Animation View -->
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/fab_container"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="16dp"
+            android:elevation="8dp"
+            app:rippleColor="@color/light_grey"
+            app:cardCornerRadius="36dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@color/light_coral"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/fab_chatbot"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_rawRes="@raw/chatbot" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

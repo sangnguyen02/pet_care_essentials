@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/light_bg"
+    android:backgroundTintMode="src_over"
+    app:cardCornerRadius="20dp"
+    android:outlineSpotShadowColor="@color/light_bg"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp"
+    android:layout_margin="8dp">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/img_avatar_review"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:elevation="30dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/user"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/materialCardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="24dp"
+            android:outlineSpotShadowColor="@color/light_bg"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="8dp"
+            app:strokeWidth="0dp"
+            app:cardElevation="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_review_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="28dp"
+                    android:fontFamily="@font/roboto_bold"
+                    android:text="Sang"
+                    android:textColor="@color/black"
+                    android:textSize="16sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar_user"
+                    android:layout_width="wrap_content"
+                    android:layout_height="22dp"
+                    android:layout_marginTop="8dp"
+                    android:numStars="4"
+                    android:progressDrawable="@drawable/star"
+                    android:stepSize="1"
+                    app:layout_constraintStart_toStartOf="@+id/tv_review_username"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_review_username" />
+
+                <TextView
+                    android:id="@+id/tv_review_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/roboto_flex"
+                    android:text="November, 30 2024"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/ratingBar_user"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/ratingBar_user" />
+
+                <TextView
+                    android:id="@+id/tv_review_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/roboto_flex"
+                    android:text="I like this supply."
+                    android:textColor="@color/black"
+                    android:textSize="13sp"
+                    android:ellipsize="end"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/ratingBar_user"
+                    app:layout_constraintTop_toBottomOf="@+id/ratingBar_user" />
+
+
+
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</com.google.android.material.card.MaterialCardView>

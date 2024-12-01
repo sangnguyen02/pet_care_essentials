@@ -20,6 +20,7 @@
     <color name="dotBanner">#D3D3D3</color>
     <color name="light_coral">#ffb6c9</color>
     <color name="red">#b3261e</color>
+    <color name="star">#fec006</color>
 
     <color name="bottom_nav_item_color">
         <!-- Color for inactive items -->

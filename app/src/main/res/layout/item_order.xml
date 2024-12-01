@@ -67,6 +67,9 @@
             app:layout_constraintBottom_toBottomOf="@+id/label_total_items"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/label_total_items" />
+
+
+
         
     </androidx.constraintlayout.widget.ConstraintLayout>
     

@@ -278,6 +278,7 @@
                     android:minLines="3"
                     android:maxLines="10"
                     android:scrollbars="vertical"
+                    android:scrollbarSize="0dp"
                     android:gravity="top|start"
                     android:overScrollMode="always" />
             </com.google.android.material.textfield.TextInputLayout>
