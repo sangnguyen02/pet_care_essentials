@@ -104,7 +104,7 @@ public class DisplayAccountWallet extends AppCompatActivity {
         // Gọi phương thức LoadBalance
         loadBalance();
         loadUserProfile();
-//        loadWalletHistory();
+        loadWalletHistory();
 
         btnAddBalance.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -235,7 +235,7 @@ public class DisplayAccountWallet extends AppCompatActivity {
         });
     }
 
-    void loadWalletHistory() {
+    private void loadWalletHistory() {
         Log.e("Wallet ID trong history", wallet_Id);
 
         walletHistoryRef.orderByChild("wallet_id").equalTo(wallet_Id).addValueEventListener(new ValueEventListener() {
