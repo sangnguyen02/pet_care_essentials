@@ -170,24 +170,11 @@ public class DisplayAccountWallet extends AppCompatActivity {
         }
 
         // Truy vấn Firebase để tìm ví theo account_id
-        walletRef.orderByChild("wallet_id").equalTo(wallet_Id).addListenerForSingleValueEvent(new ValueEventListener() {
+        walletRef.child(wallet_Id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                // Duyệt qua tất cả các Wallet
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    AccountWallet wallet = snapshot.getValue(AccountWallet.class);
-//                    if (wallet != null && wallet.getAccount_id().equals(accountId)) {
-//                        wallet_Id=wallet.getWallet_id();
-//                        txtBalance.setText(CurrencyFormatter.formatCurrency(wallet.getBalance(), getString(R.string.currency_vn)));
-//                        break;
-//                    }
-//                    else {
-//                        // Không tìm thấy ví cho account_id
-//                        txtBalance.setText("No wallet found for this account.");
-//                    }
-//                }
                 if(dataSnapshot.exists()) {
                     AccountWallet wallet = dataSnapshot.getValue(AccountWallet.class);
                     txtBalance.setText(CurrencyFormatter.formatCurrency(wallet.getBalance(), getString(R.string.currency_vn)));
