@@ -5,12 +5,14 @@ public class WalletHistory
     private String wallet_history_id;
     private  String wallet_id;
     private String message;
+    private String status;
     private  String date;
 
-    public WalletHistory(String wallet_history_id, String wallet_id, String message, String date) {
+    public WalletHistory(String wallet_history_id, String wallet_id, String message, String status, String date) {
         this.wallet_history_id = wallet_history_id;
         this.wallet_id = wallet_id;
         this.message = message;
+        this.status = status;
         this.date = date;
     }
 
@@ -39,6 +41,14 @@ public class WalletHistory
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getDate() {

@@ -90,8 +90,8 @@ public class AllSuppliesAdapter extends RecyclerView.Adapter<AllSuppliesAdapter.
              if (imageUrls != null && !imageUrls.isEmpty()) {
                  Glide.with(itemView.getContext())
                          .load(imageUrls.get(0))
-                         .placeholder(R.drawable.banner1)
-                         .error(R.drawable.guest)
+                         .placeholder(R.drawable.product_sample)
+                         .error(R.drawable.product_sample)
                          .into(imgAllSupplies);
              } else {
                  imgAllSupplies.setImageResource(R.drawable.product_sample);

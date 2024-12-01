@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.uiux.R;
+import com.example.uiux.Utils.CurrencyFormatter;
 import com.google.android.material.chip.Chip;
 
 import java.util.List;
@@ -17,11 +18,21 @@ import java.util.List;
 public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceViewHolder> {
     private List<String> balanceList;
     private Context context;
+    private OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(String balance);
+    }
 
     public BalanceAdapter(List<String> balanceList, Context context) {
         this.balanceList = balanceList;
         this.context = context;
     }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
+
 
     @NonNull
     @Override
@@ -33,7 +44,14 @@ public class BalanceAdapter extends RecyclerView.Adapter<BalanceAdapter.BalanceV
     @Override
     public void onBindViewHolder(@NonNull BalanceViewHolder holder, int position) {
         String balanceText = balanceList.get(position);
-        holder.tv_item_balance.setText(balanceText);
+        double amount = Double.parseDouble(balanceText);
+        holder.tv_item_balance.setText(CurrencyFormatter.formatCurrency(amount, holder.itemView.getContext().getString(R.string.currency_vn)));
+
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(balanceText);
+            }
+        });
     }
 
     @Override

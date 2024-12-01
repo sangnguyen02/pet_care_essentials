@@ -1,7 +1,9 @@
 package com.example.uiux.Activities.User.Order;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -50,6 +52,8 @@ public class PaypalActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         setContentView(R.layout.activity_paypal);
 
         paymentButtonContainer = findViewById(R.id.payment_button_container);
@@ -100,7 +104,7 @@ public class PaypalActivity extends AppCompatActivity {
                                 Log.d(TAG, String.format("CaptureOrderResult: %s", result));
                                 Toast.makeText(PaypalActivity.this, "Successful", Toast.LENGTH_SHORT).show();
                                 UpdateBalance(amount);
-                                CreateHistory("Add + "+amount+ " VND");
+                                CreateHistory(amount);
                             }
                         });
                     }
@@ -166,12 +170,14 @@ public class PaypalActivity extends AppCompatActivity {
         history.setWallet_history_id(walletHistoryId);
         history.setWallet_id(wallet_Id);
         history.setMessage(message);
+        history.setStatus("+");
         history.setDate(currentDate);
 
         // Lưu vào Firebase
         wallet_history.child(walletHistoryId).setValue(history)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "History created successfully!", Toast.LENGTH_SHORT).show();
+                    finish();
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Failed to create history: " + e.getMessage(), Toast.LENGTH_SHORT).show();
