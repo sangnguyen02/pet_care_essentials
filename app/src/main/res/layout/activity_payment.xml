@@ -74,7 +74,7 @@
                 android:id="@+id/mcv_payment_address"
                 android:layout_width="match_parent"
                 android:layout_height="144dp"
-                android:layout_margin="4dp"
+                android:layout_margin="8dp"
                 android:outlineSpotShadowColor="@color/light_white"
                 app:cardElevation="20dp"
                 app:cardCornerRadius="4dp"
@@ -232,6 +232,7 @@
                 android:id="@+id/rcv_delivery_method"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="4dp"
                 android:clipToPadding="false"
                 tools:itemCount="2"
                 android:nestedScrollingEnabled="true"
@@ -256,13 +257,15 @@
                     android:layout_height="match_parent"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
                     >
 
                     <ImageView
                         android:id="@+id/img_icon_vouncher"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="0dp"
+                        android:layout_marginStart="8dp"
                         android:src="@drawable/vouncher"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -292,6 +295,31 @@
                         android:src="@drawable/arrow"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_vouncher_selected"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text=""
+                        android:textSize="12sp"
+                        android:textColor="@color/grey"
+                        android:fontFamily="@font/roboto_flex"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/label_vouncher"
+                        app:layout_constraintTop_toTopOf="parent" />
+                    <TextView
+                        android:id="@+id/tv_vouncher_discount_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:text=""
+                        android:textSize="12sp"
+                        android:textColor="@color/grey"
+                        android:fontFamily="@font/roboto_flex"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/tv_vouncher_selected"
                         app:layout_constraintTop_toTopOf="parent" />
 
 

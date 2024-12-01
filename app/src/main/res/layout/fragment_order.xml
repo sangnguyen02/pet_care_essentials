@@ -11,10 +11,10 @@
         android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/tv_pending"
+            android:id="@+id/tv_empty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pending"
+            android:text="Empty"
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

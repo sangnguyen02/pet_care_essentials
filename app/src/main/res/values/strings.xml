@@ -16,7 +16,7 @@
     <string name="main_welcome">Welcome</string>
     <string name="main_categories">Categories</string>
     <string name="main_see_all">See all</string>
-    <string name="best_seller_product">Best Seller</string>
+    <string name="supplies">Supplies</string>
     <string name="home">Home</string>
     <string name="cart">Cart</string>
     <string name="wishlist">Wishlist</string>
@@ -114,4 +114,5 @@
     <string name="currency_vn">đ</string>
     <string name="search">Search</string>
     <string name="not_found">Not found</string>
+    <string name="empty">Empty</string>
 </resources>

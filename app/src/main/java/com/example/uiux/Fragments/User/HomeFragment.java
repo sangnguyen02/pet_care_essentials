@@ -25,7 +25,10 @@ import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.example.uiux.Activities.AllSuppliesActivity;
 import com.example.uiux.Activities.User.CartActivity;
+import com.example.uiux.Activities.User.ChatBotActivity;
 import com.example.uiux.Activities.User.SearchActivity;
 import com.example.uiux.Adapters.BannerAdapter;
 import com.example.uiux.Adapters.BestSellerAdapter;
@@ -48,13 +51,16 @@ import com.google.firebase.storage.StorageReference;
 import com.tbuonomo.viewpagerdotsindicator.DotsIndicator;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class HomeFragment extends Fragment {
     View rootView;
     SearchView search_view;
-    TextView tv_number_of_cart_item, animated_text_hint;
+    LottieAnimationView fab_chatbot;
+    TextView tv_number_of_cart_item, animated_text_hint, tv_see_all_bestSeller;
     ImageView cart, iv_red_circle;
     ViewPager2 mViewPager2;
     DotsIndicator dotsIndicator;
@@ -100,6 +106,16 @@ public class HomeFragment extends Fragment {
     }
 
     void initWidget() {
+        tv_see_all_bestSeller = rootView.findViewById(R.id.tv_see_all_bestSeller);
+        tv_see_all_bestSeller.setOnClickListener(view -> {
+            Intent goToAllProduct = new Intent(rootView.getContext(), AllSuppliesActivity.class);
+            startActivity(goToAllProduct);
+        });
+        fab_chatbot = rootView.findViewById(R.id.fab_chatbot);
+        fab_chatbot.setOnClickListener(view -> {
+            Intent goToChat = new Intent(rootView.getContext(), ChatBotActivity.class);
+            startActivity(goToChat);
+        });
         search_view = rootView.findViewById(R.id.search_view);
         animated_text_hint = rootView.findViewById(R.id.animated_text_hint);
         cart = rootView.findViewById(R.id.iv_cart);
@@ -245,9 +261,8 @@ public class HomeFragment extends Fragment {
         });
     }
     private void getBestSellerItems() {
-        // Assuming you have already initialized mListBestSeller
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Supplies");
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.limitToFirst(6).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 mListBestSeller = new ArrayList<>();
@@ -256,7 +271,7 @@ public class HomeFragment extends Fragment {
                     mListBestSeller.add(supply);
                 }
 
-                // Get reviews
+                // Lấy dữ liệu đánh giá
                 DatabaseReference reviewsRef = FirebaseDatabase.getInstance().getReference("Supplies_Review");
                 reviewsRef.addValueEventListener(new ValueEventListener() {
                     @Override
@@ -267,6 +282,7 @@ public class HomeFragment extends Fragment {
                             reviewList.add(review);
                         }
 
+                        // Cập nhật Adapter với danh sách sản phẩm và đánh giá
                         progressBar_bestSeller.setVisibility(View.GONE);
                         BestSellerAdapter adapter = new BestSellerAdapter(mListBestSeller, reviewList, getContext());
                         rcv_best_seller.setAdapter(adapter);
@@ -285,5 +301,8 @@ public class HomeFragment extends Fragment {
             }
         });
     }
+
+
+
 
 }

@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.example.uiux.Fragments.User.CaringFragment;
 import com.example.uiux.Fragments.User.HomeFragment;
 import com.example.uiux.Fragments.User.ProfileFragment;
@@ -25,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class MainActivityUser extends AppCompatActivity {
     ActivityMainUserBinding binding;
+//    LottieAnimationView fab_chatbot;
     String phone;
     DatabaseReference accountRef;
     @Override
@@ -34,6 +36,8 @@ public class MainActivityUser extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         binding = ActivityMainUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        initWidget();
+
         replaceFragment(new HomeFragment());
 //        BadgeDrawable badgeDrawable = binding.bottomNavigationView.getOrCreateBadge(R.id.cart_screen);
 //        badgeDrawable.setVisible(true);
@@ -79,6 +83,10 @@ public class MainActivityUser extends AppCompatActivity {
 
             return true;
         });
+    }
+
+    void initWidget() {
+//        fab_chatbot = findViewById(R.id.fab_chatbot);
     }
 
     void replaceFragment(Fragment fragment) {

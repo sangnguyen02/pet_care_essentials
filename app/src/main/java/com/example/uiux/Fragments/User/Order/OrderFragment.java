@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class OrderFragment extends Fragment {
     public static final String TITLE = "title";
@@ -36,6 +37,7 @@ public class OrderFragment extends Fragment {
     SharedPreferences preferences;
     String accountId;
     RecyclerView rcv_order;
+    TextView tv_empty;
     OrderAdapter orderAdapter;
     int status;
     List<Order> orderList;
@@ -51,19 +53,16 @@ public class OrderFragment extends Fragment {
         }
 
         if (getArguments() != null) {
-            Log.e("STATUS Có", String.valueOf(status));
-            status = getArguments().getInt("status"); // Lấy trạng thái từ vị trí
+           // Log.e("STATUS Có", String.valueOf(status));
+            status = getArguments().getInt("status");
         }
-//        Log.e("STATUS Không", "Không");
         preferences =  getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         accountId = preferences.getString("accountID", null);
-        orderRef = FirebaseDatabase.getInstance().getReference("Order").child(accountId);
+        orderRef = FirebaseDatabase.getInstance().getReference("Order");
 
         initWidget();
-        Log.e("Status from order activity", String.valueOf(status));
+       // Log.e("Status from order activity", String.valueOf(status));
         loadOrderByStatus(status);
-
-        Log.e("Order List", orderList.toString());
 
         return rootView;
     }
@@ -72,11 +71,21 @@ public class OrderFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         assert getArguments() != null;
-        ((TextView)view.findViewById(R.id.tv_pending)).setText(getArguments().getString(TITLE));
+        ((TextView)view.findViewById(R.id.tv_empty)).setText(R.string.empty);
+    }
+
+    public void updateStatus(int newStatus) {
+        if (this.status != newStatus) {
+            this.status = newStatus;
+            loadOrderByStatus(newStatus);
+        }
     }
 
 
+
+
     void initWidget() {
+        tv_empty = rootView.findViewById(R.id.tv_empty);
         rcv_order = rootView.findViewById(R.id.rcv_order);
         orderList = new ArrayList<>();
         orderAdapter = new OrderAdapter(orderList, rootView.getContext());
@@ -85,32 +94,43 @@ public class OrderFragment extends Fragment {
     }
 
     void loadOrderByStatus(int status) {
+        if (orderList == null) {
+            orderList = new ArrayList<>();
+        }
         // Reset danh sách đơn hàng
         orderList.clear();
 
+
         // Lấy dữ liệu từ Firebase theo accountId
-        orderRef.orderByChild("status").equalTo(status)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        // Duyệt qua các đơn hàng
-                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                            Order order = snapshot.getValue(Order.class);
-                            if (order != null) {
-                                orderList.add(order);  // Thêm đơn hàng vào danh sách
-                            }
+//        orderRef.orderByChild("status").equalTo(status)
+        orderRef.orderByChild("account_id").equalTo(accountId)
+            .addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    orderList.clear();
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Order order = snapshot.getValue(Order.class);
+                        if (order != null && order.getStatus() == status) {
+                            orderList.add(order);
                         }
-                        // Cập nhật RecyclerView với dữ liệu mới
-                        orderAdapter.notifyDataSetChanged();
-                        Log.e("Order List Ở order fragment", orderList.toString());
+                    }
+                    orderAdapter.notifyDataSetChanged();
+
+
+                    if(orderList.isEmpty()) {
+                        tv_empty.setVisibility(View.VISIBLE);
+                    } else {
+                        tv_empty.setVisibility(View.GONE);
                     }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        // Xử lý lỗi nếu có
-                        Log.e("Firebase Error", databaseError.getMessage());
-                    }
-                });
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.e("Firebase Error", databaseError.getMessage());
+                }
+            }
+        );
     }
 
 }

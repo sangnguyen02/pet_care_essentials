@@ -39,7 +39,7 @@ public class DisplayVoucherActivity extends AppCompatActivity {
 
 
         // Set up RecyclerView
-        recyclerView = findViewById(R.id.rcv_my_address); // ID from XML layout
+        recyclerView = findViewById(R.id.rcv_my_vouncher); // ID from XML layout
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         displayVoucherAdapter = new DisplayVoucherAdapter(voucherList, this);
         recyclerView.setAdapter(displayVoucherAdapter);

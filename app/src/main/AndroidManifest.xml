@@ -28,6 +28,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux">
         <activity
+            android:name=".Activities.AllSuppliesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.User.Review.SupplyReviewActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".Activities.User.ChatBotActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.User.Order.UpdateOrderActivity"
             android:exported="false" />
         <activity

@@ -47,4 +47,19 @@
         <item name="android:singleLine">true</item>
     </style>
 
+    <style name="CardCornerRadius" parent="Widget.MaterialComponents.CardView">
+        <!-- Using shapeAppearance to set corner radius for each corner -->
+        <item name="shapeAppearance">@style/CustomCardShapeAppearance</item>
+    </style>
+
+    <style name="CustomCardShapeAppearance">
+        <!-- Set the individual corner radius -->
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerFamilyTopLeft">@dimen/corner_radius_top_left</item>
+        <item name="cornerFamilyTopRight">@dimen/corner_radius_top_right</item>
+        <item name="cornerFamilyBottomLeft">@dimen/corner_radius_bottom_left</item>
+        <item name="cornerFamilyBottomRight">@dimen/corner_radius_bottom_right</item>
+    </style>
+
+
 </resources>
