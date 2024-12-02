@@ -34,8 +34,6 @@ public class OrderActivity extends AppCompatActivity {
         initWidget();
 
 
-
-
         int targetTab = getIntent().getIntExtra("targetTab", -1);
         Log.e("Order Activity", "Chưa vào");
 

@@ -7,12 +7,12 @@ public class InfoCancelOrder {
     private String order_id;
     private int type;//Cancellation reasons available
     private String other_type;
-    private Date date;
+    private String date;
 
     public InfoCancelOrder() {
     }
 
-    public InfoCancelOrder(String info_cancel_id, String order_id, int type, String other_type, Date date) {
+    public InfoCancelOrder(String info_cancel_id, String order_id, int type, String other_type, String date) {
         this.info_cancel_id = info_cancel_id;
         this.order_id = order_id;
         this.type = type;
@@ -52,11 +52,11 @@ public class InfoCancelOrder {
         this.other_type = other_type;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }

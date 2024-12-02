@@ -29,6 +29,12 @@
         android:theme="@style/Theme.Uiux"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".Activities.User.CancelOrder.UserCancelOrderActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.User.ReturnOrder.UserReturnOrderActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.User.AccountWallet.ConfirmPINActivity"
             android:exported="false" />
         <activity
@@ -119,7 +125,7 @@
         </activity>
         <activity
             android:name=".Activities.User.AccountWallet.DisplayAccountWallet"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".Activities.Admin.Branch.UpdateBranchStoreActivity"
             android:exported="false" />
