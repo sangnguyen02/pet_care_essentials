@@ -29,6 +29,12 @@
         android:theme="@style/Theme.Uiux"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".Activities.Admin.Order.DisplayReturnActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.Admin.Order.ApproveReturnOrderActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.User.CancelOrder.UserCancelOrderActivity"
             android:exported="false" />
         <activity

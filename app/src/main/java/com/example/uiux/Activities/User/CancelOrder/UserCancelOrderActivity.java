@@ -136,7 +136,7 @@ public class UserCancelOrderActivity extends AppCompatActivity {
     }
 
     // Hàm kiểm tra thanh toán của đơn hàng
-    private void checkPayment(String orderId) { 
+    private void checkPayment(String orderId) {
         orderRef.child(orderId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
