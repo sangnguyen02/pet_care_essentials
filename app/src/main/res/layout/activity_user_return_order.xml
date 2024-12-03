@@ -7,4 +7,117 @@
     android:layout_height="match_parent"
     tools:context=".Activities.User.ReturnOrder.UserReturnOrderActivity">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:orientation="vertical">
+
+            <!-- GridLayout chứa các ảnh minh họa -->
+            <GridLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:columnCount="2"
+                android:rowCount="2">
+
+                <!-- First Image -->
+                <ImageView
+                    android:id="@+id/img1"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/grey"
+                    android:scaleType="centerCrop" />
+
+                <!-- Second Image -->
+                <ImageView
+                    android:id="@+id/img2"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/grey"
+                    android:scaleType="centerCrop" />
+
+                <!-- Third Image -->
+                <ImageView
+                    android:id="@+id/img3"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/grey"
+                    android:scaleType="centerCrop" />
+
+                <!-- Fourth Image -->
+                <ImageView
+                    android:id="@+id/img4"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_margin="8dp"
+                    android:background="@color/grey"
+                    android:scaleType="centerCrop" />
+            </GridLayout>
+
+            <!-- RadioGroup để hiển thị danh sách lý do -->
+            <RadioGroup
+                android:id="@+id/rg_return_reasons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- Các lý do có sẵn -->
+                <RadioButton
+                    android:id="@+id/rb_reason1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tôi đặt nhầm sản phẩm" />
+
+                <RadioButton
+                    android:id="@+id/rb_reason2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thời gian giao hàng quá lâu" />
+
+                <RadioButton
+                    android:id="@+id/rb_reason3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tìm thấy sản phẩm tương tự với giá tốt hơn" />
+
+                <RadioButton
+                    android:id="@+id/rb_other_reason"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lý do khác" />
+            </RadioGroup>
+
+            <!-- TextBox để nhập lý do khác (ẩn ban đầu) -->
+            <EditText
+                android:id="@+id/et_other_reason"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nhập lý do của bạn"
+                android:visibility="gone"
+                android:inputType="text"
+                android:layout_marginTop="16dp" />
+
+            <!-- Nút xác nhận hủy đơn hàng -->
+            <Button
+                android:id="@+id/btn_return_order"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Trả đơn hàng" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

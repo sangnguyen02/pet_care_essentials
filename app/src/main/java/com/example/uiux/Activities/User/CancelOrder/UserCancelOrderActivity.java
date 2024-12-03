@@ -127,6 +127,7 @@ public class UserCancelOrderActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Hủy đơn hàng thành công", Toast.LENGTH_SHORT).show();
                         checkPayment(orderId);
+                        updateOrderStatus(4);
                         finish();
                     } else {
                         Toast.makeText(this, "Hủy đơn hàng thất bại", Toast.LENGTH_SHORT).show();
@@ -135,7 +136,7 @@ public class UserCancelOrderActivity extends AppCompatActivity {
     }
 
     // Hàm kiểm tra thanh toán của đơn hàng
-    private void checkPayment(String orderId) {
+    private void checkPayment(String orderId) { 
         orderRef.child(orderId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -236,6 +237,23 @@ public class UserCancelOrderActivity extends AppCompatActivity {
                         Toast.makeText(UserCancelOrderActivity.this, "Ghi lại lịch sử giao dịch thất bại", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    private void updateOrderStatus(int newStatus) {
+        if (orderId == null || orderId.isEmpty()) {
+            Log.e("UpdateOrderStatus", "Order ID is null or empty.");
+            return;
+        }
+
+        // Cập nhật trường "status" trong đơn hàng
+        orderRef.child(orderId).child("status").setValue(newStatus).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Log.d("UpdateOrderStatus", "Order status updated to: " + newStatus);
+                Toast.makeText(this, "Trạng thái đơn hàng đã được cập nhật.", Toast.LENGTH_SHORT).show();
+            } else {
+                Log.e("UpdateOrderStatus", "Failed to update order status: " + task.getException());
+                Toast.makeText(this, "Cập nhật trạng thái đơn hàng thất bại.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
