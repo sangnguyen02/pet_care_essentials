@@ -28,9 +28,31 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".Activities.OrderDetailActivity"
-            android:exported="false" />
+            android:exported="false" 
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activities.Admin.Order.DisplayReturnActivity"
+            android:exported="false" 
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activities.Admin.Order.ApproveReturnOrderActivity"
+            android:exported="false" 
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activities.User.CancelOrder.UserCancelOrderActivity"
+            android:exported="false" 
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activities.User.ReturnOrder.UserReturnOrderActivity"
+            android:exported="false" 
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Activities.User.AccountWallet.ConfirmPINActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.User.Order.PaypalActivity"
             android:exported="false"

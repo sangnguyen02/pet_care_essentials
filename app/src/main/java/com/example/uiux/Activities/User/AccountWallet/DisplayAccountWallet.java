@@ -16,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -104,21 +106,17 @@ public class DisplayAccountWallet extends AppCompatActivity {
         // Gọi phương thức LoadBalance
         loadBalance();
         loadUserProfile();
-//        loadWalletHistory();
+        loadWalletHistory();
 
         btnAddBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Intent để mở ứng dụng MyWallet
-                Intent intent=new Intent(DisplayAccountWallet.this, PaypalActivity.class);
-                intent.putExtra("account_id",accountId);
-                intent.putExtra("wallet_id",wallet_Id);
-                intent.putExtra("balance", etBalance.getText().toString());
-                startActivity(intent);
+                // Mở ConfirmPINActivity để xác nhận mã PIN
+                Intent intent = new Intent(DisplayAccountWallet.this, ConfirmPINActivity.class);
+                intent.putExtra("wallet_id", wallet_Id);
+                confirmPINLauncher.launch(intent);
             }
         });
-
-
 
 
     }
@@ -170,24 +168,11 @@ public class DisplayAccountWallet extends AppCompatActivity {
         }
 
         // Truy vấn Firebase để tìm ví theo account_id
-        walletRef.orderByChild("wallet_id").equalTo(wallet_Id).addListenerForSingleValueEvent(new ValueEventListener() {
+        walletRef.child(wallet_Id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
 
-                // Duyệt qua tất cả các Wallet
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    AccountWallet wallet = snapshot.getValue(AccountWallet.class);
-//                    if (wallet != null && wallet.getAccount_id().equals(accountId)) {
-//                        wallet_Id=wallet.getWallet_id();
-//                        txtBalance.setText(CurrencyFormatter.formatCurrency(wallet.getBalance(), getString(R.string.currency_vn)));
-//                        break;
-//                    }
-//                    else {
-//                        // Không tìm thấy ví cho account_id
-//                        txtBalance.setText("No wallet found for this account.");
-//                    }
-//                }
                 if(dataSnapshot.exists()) {
                     AccountWallet wallet = dataSnapshot.getValue(AccountWallet.class);
                     txtBalance.setText(CurrencyFormatter.formatCurrency(wallet.getBalance(), getString(R.string.currency_vn)));
@@ -248,7 +233,7 @@ public class DisplayAccountWallet extends AppCompatActivity {
         });
     }
 
-    void loadWalletHistory() {
+    private void loadWalletHistory() {
         Log.e("Wallet ID trong history", wallet_Id);
 
         walletHistoryRef.orderByChild("wallet_id").equalTo(wallet_Id).addValueEventListener(new ValueEventListener() {
@@ -280,4 +265,19 @@ public class DisplayAccountWallet extends AppCompatActivity {
         loadBalance();
 //        loadWalletHistory();
     }
+    // Xử lý kết quả từ ConfirmPINActivity
+    private final ActivityResultLauncher<Intent> confirmPINLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    // Nếu PIN đúng, chuyển sang PaypalActivity
+                    Intent intent = new Intent(DisplayAccountWallet.this, PaypalActivity.class);
+                    intent.putExtra("account_id", accountId);
+                    intent.putExtra("wallet_id", wallet_Id);
+                    intent.putExtra("balance", etBalance.getText().toString());
+                    startActivity(intent);
+                } else {
+                    // Nếu PIN sai hoặc người dùng hủy
+                    Toast.makeText(this, "PIN không hợp lệ hoặc bạn đã hủy.", Toast.LENGTH_SHORT).show();
+                }
+            });
 }
