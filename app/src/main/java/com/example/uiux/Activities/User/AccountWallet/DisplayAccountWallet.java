@@ -154,7 +154,7 @@ public class DisplayAccountWallet extends AppCompatActivity {
         });
         rcv_balance.setAdapter(balanceAdapter);
 
-        rcv_wallet_transactions.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rcv_wallet_transactions.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
         walletTransactionsAdapter = new WalletTransactionsAdapter(transactionList, this);
         rcv_wallet_transactions.setAdapter(walletTransactionsAdapter);
     }
