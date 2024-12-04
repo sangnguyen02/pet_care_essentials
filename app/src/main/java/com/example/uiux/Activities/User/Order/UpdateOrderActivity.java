@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -33,7 +34,7 @@ import java.util.List;
 public class UpdateOrderActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private OrderAdminAdapter orderAdminAdapter;
-    private ImageView imgv_back_add_store;
+    private ImageView img_back_order_status;
     private MaterialCardView mcv_add_store;
     private List<Order> orderList = new ArrayList<>();
     private DatabaseReference databaseReference;
@@ -42,10 +43,11 @@ public class UpdateOrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_update_order);
 
         initWidget();
-        imgv_back_add_store.setOnClickListener(view -> finish());
+        img_back_order_status.setOnClickListener(view -> finish());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -56,7 +58,7 @@ public class UpdateOrderActivity extends AppCompatActivity {
         loadOrder();
     }
     void initWidget() {
-        imgv_back_add_store = findViewById(R.id.img_back_my_store);
+        img_back_order_status = findViewById(R.id.img_back_order_status);
         recyclerView = findViewById(R.id.rcv_my_store);
         mcv_add_store = findViewById(R.id.mcv_add_store);
     }
@@ -69,7 +71,6 @@ public class UpdateOrderActivity extends AppCompatActivity {
                 for (DataSnapshot suppSnapshot : snapshot.getChildren()) {
                     Order order = suppSnapshot.getValue(Order.class);
                     orderList.add(order);
-                    Log.e("Order add",order.getOrder_id());
                 }
                 orderAdminAdapter.notifyDataSetChanged();
             }

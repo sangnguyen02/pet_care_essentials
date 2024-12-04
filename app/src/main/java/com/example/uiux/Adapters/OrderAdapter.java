@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.uiux.Activities.OrderDetailActivity;
 import com.example.uiux.Activities.User.Review.SupplyReviewActivity;
 import com.example.uiux.Model.Order;
 import com.example.uiux.R;
@@ -44,6 +45,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
         holder.label_total_items.setText("Total items: " + String.valueOf(getItemCount()));
         holder.tv_order_item_total_price.setText(CurrencyFormatter.formatCurrency(order.getTotal_price(), context.getString(R.string.currency_vn)));
+
+
+        holder.itemView.setOnClickListener(view -> {
+            Intent intent = new Intent(context, OrderDetailActivity.class);
+            intent.putExtra("order_id", order.getOrder_id());
+            context.startActivity(intent);
+        });
 
     }
 

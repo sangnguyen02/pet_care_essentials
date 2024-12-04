@@ -15,6 +15,7 @@
         android:layout_height="112dp"
         android:scaleType="centerCrop"
         android:layout_marginTop="80dp"
+        android:background="@drawable/bg_logo"
         android:src="@drawable/logo_main"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -69,7 +70,7 @@
                 app:tabIndicatorFullWidth="true"
                 app:tabIndicatorGravity="stretch"
                 app:tabMode="fixed"
-                app:tabRippleColor="@color/primary"
+                app:tabRippleColor="@color/light_grey"
                 app:tabSelectedTextColor="@color/white"
                 app:tabTextAppearance="@style/CustomTabText" />
 

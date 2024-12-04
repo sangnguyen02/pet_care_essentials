@@ -5,7 +5,7 @@
     android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/light_bg"
     tools:context=".Activities.SupplyDetailActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -200,13 +200,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
-                            app:layout_constraintBottom_toBottomOf="@+id/tv_rating"
-                            app:layout_constraintStart_toEndOf="@+id/tv_rating"
-                            app:layout_constraintTop_toTopOf="@+id/tv_rating"
+                            app:layout_constraintBottom_toBottomOf="@+id/tv_rating_supply_detail"
+                            app:layout_constraintStart_toEndOf="@+id/tv_rating_supply_detail"
+                            app:layout_constraintTop_toTopOf="@+id/tv_rating_supply_detail"
                             app:srcCompat="@drawable/star" />
 
                         <TextView
-                            android:id="@+id/tv_rating"
+                            android:id="@+id/tv_rating_supply_detail"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginStart="8dp"
@@ -397,7 +397,7 @@
                             android:layout_height="wrap_content"
                             android:text="Buy"
                             android:fontFamily="@font/roboto_bold"
-                            android:textColor="@color/black"
+                            android:textColor="@color/white"
                             android:textSize="16sp"
                             android:textAlignment="center"
                             app:layout_constraintBottom_toBottomOf="parent"

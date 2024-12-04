@@ -2,6 +2,7 @@ package com.example.uiux.Activities;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -31,6 +32,7 @@ import java.util.List;
 
 public class AllSuppliesActivity extends AppCompatActivity {
     RecyclerView rcv_chip, rcv_all_supplies;
+    ImageView img_back_all_supply;
     ChipAdapter chipAdapter;
     AllSuppliesAdapter allSuppliesAdapter;
     List<String> chipList;
@@ -40,7 +42,7 @@ public class AllSuppliesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_all_supplies);
 
         initWidget();
@@ -48,6 +50,8 @@ public class AllSuppliesActivity extends AppCompatActivity {
     }
 
     void initWidget() {
+        img_back_all_supply = findViewById(R.id.img_back_all_supply);
+        img_back_all_supply.setOnClickListener(view -> finish());
         rcv_chip = findViewById(R.id.rcv_chip);
         rcv_all_supplies = findViewById(R.id.rcv_all_supplies);
 
@@ -56,10 +60,10 @@ public class AllSuppliesActivity extends AppCompatActivity {
         reviewList = new ArrayList<>();
 
         chipList.add("All");
-        chipList.add("Best Sellers");
-        chipList.add("New Arrivals");
-        chipList.add("Trending");
-        chipList.add("Popular");
+//        chipList.add("Best Sellers");
+//        chipList.add("New Arrivals");
+//        chipList.add("Trending");
+//        chipList.add("Popular");
         chipList.add("Dog");
         chipList.add("Cat");
         chipList.add("Bird");
@@ -68,7 +72,9 @@ public class AllSuppliesActivity extends AppCompatActivity {
 
         rcv_chip.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        chipAdapter = new ChipAdapter(chipList, this);
+        chipAdapter = new ChipAdapter(chipList, this, chipText -> {
+            filterSuppliesByChip(chipText);
+        });
         rcv_chip.setAdapter(chipAdapter);
 
         rcv_all_supplies.setLayoutManager(new GridLayoutManager(this, 3));
@@ -118,5 +124,23 @@ public class AllSuppliesActivity extends AppCompatActivity {
                 // Handle possible errors
             }
         });
+    }
+
+    private void filterSuppliesByChip(String chipText) {
+        List<Supplies> filteredList = new ArrayList<>();
+
+        if ("All".equals(chipText)) {
+            filteredList = suppliesList;
+        } else {
+            for (Supplies supply : suppliesList) {
+                if (chipText.equals(supply.getCategory())) {
+                    filteredList.add(supply);
+                }
+            }
+        }
+
+        // Cập nhật adapter
+        allSuppliesAdapter = new AllSuppliesAdapter(filteredList, reviewList, getApplicationContext());
+        rcv_all_supplies.setAdapter(allSuppliesAdapter);
     }
 }

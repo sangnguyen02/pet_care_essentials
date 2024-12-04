@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
@@ -35,6 +36,7 @@ import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Detail;
 import com.example.uiux.Model.Supplies_Import;
+import com.example.uiux.Model.Supplies_Review;
 import com.example.uiux.R;
 import com.example.uiux.Utils.CurrencyFormatter;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -51,6 +53,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 public class SupplyDetailActivity extends AppCompatActivity implements SupplyDetailOptionAdapter.OnSupplyOptionClickListener {
@@ -63,8 +66,9 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
     RecyclerView rcv_img_list, rcv_option_list;
     SupplyImageListAdapter supplyImageListAdapter;
     List<String> imageUrls  = new ArrayList<>();
-    TextView tv_supply_title, tv_supply_description, tv_supply_price, tv_price_add_to_cart, tv_total_stock_quantity, tv_quantity_of_supply;
-    DatabaseReference databaseReference, detailRef, cartRef;
+    List<Supplies_Review> suppliesReviews;
+    TextView tv_supply_title, tv_supply_description, tv_supply_price, tv_price_add_to_cart, tv_total_stock_quantity, tv_quantity_of_supply, tv_rating_supply_detail;
+    DatabaseReference databaseReference, detailRef, cartRef, reviewRef;;
     String accountId;
     String supplyId;
     String supplyAddToCartImageUrl;
@@ -80,7 +84,7 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_supply_detail);
 //        mAuth = FirebaseAuth.getInstance();
         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -120,10 +124,12 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
             }
         });
 
+
     }
 
     private void initWidget() {
         aniLove = findViewById(R.id.ani_love);
+        tv_rating_supply_detail = findViewById(R.id.tv_rating_supply_detail);
         tv_supply_title = findViewById(R.id.tv_supply_title);
         tv_supply_price = findViewById(R.id.tv_supply_price);
         tv_supply_description = findViewById(R.id.tv_description);
@@ -307,6 +313,8 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
                                 .load(supplyAddToCartImageUrl)
                                 .into(img_supply_add_to_cart);
                     }
+
+                    loadSupplyReview(supplyId);
                 }
             }
 
@@ -410,6 +418,55 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
             isAnimating = false;
         }
     }
+
+    void loadSupplyReview(String supplyId) {
+        if (suppliesReviews == null) {
+            suppliesReviews = new ArrayList<>();
+        }
+        reviewRef = FirebaseDatabase.getInstance().getReference("Supplies_Review");
+        reviewRef.orderByChild("supplies_id").equalTo(supplyId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                suppliesReviews.clear();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Supplies_Review suppliesReview = snapshot.getValue(Supplies_Review.class);
+                    if (suppliesReview != null) {
+                        suppliesReviews.add(suppliesReview);
+                    }
+                }
+               // no_of_review.setText(String.valueOf(suppliesReviews.size()));
+                updateReviewStats();
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Firebase Error", error.getMessage());
+            }
+        });
+    }
+
+    void updateReviewStats() {
+        float totalRating = 0;
+        int totalReviews = suppliesReviews.size();
+
+        if (totalReviews == 0) {
+            tv_rating_supply_detail.setText("0.0");
+            return;
+        }
+
+        for (Supplies_Review review : suppliesReviews) {
+            int rating = review.getRating();
+            Log.e("Rating", String.valueOf(rating));
+            totalRating += rating;
+
+
+        }
+
+        float averageRating = totalRating / totalReviews;
+        tv_rating_supply_detail.setText(String.format(Locale.US, "%.1f", averageRating));
+    }
+
 
 
 

@@ -23,7 +23,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/img_back_my_store"
+                android:id="@+id/img_back_order_status"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -42,14 +42,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/roboto_bold"
-                android:text="Branch Store"
+                android:text="Orders"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
                 android:layout_marginStart="16dp"
-                app:layout_constraintStart_toEndOf="@+id/img_back_my_store"
-                app:layout_constraintBottom_toBottomOf="@+id/img_back_my_store"
-                app:layout_constraintTop_toTopOf="@+id/img_back_my_store"
+                app:layout_constraintStart_toEndOf="@+id/img_back_order_status"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back_order_status"
+                app:layout_constraintTop_toTopOf="@+id/img_back_order_status"
                 tools:ignore="HardcodedText" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -75,51 +75,6 @@
             />
     </LinearLayout>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/mcv_add_store"
-        android:layout_width="match_parent"
-        android:layout_height="52dp"
-        android:layout_marginTop="8dp"
-        app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="0dp"
-        app:strokeWidth="0dp"
-        app:rippleColor="@color/ripple_color"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/imgv_add_store"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/add_circle_outlined"
-                android:layout_marginStart="124dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
-
-            <TextView
-                android:id="@+id/tv_add_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_bold"
-                android:text="Add New Store"
-                android:textColor="@color/black"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imgv_add_store"
-                app:layout_constraintStart_toEndOf="@+id/imgv_add_store"
-                app:layout_constraintTop_toTopOf="@+id/imgv_add_store" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </com.google.android.material.card.MaterialCardView>
 
 
 

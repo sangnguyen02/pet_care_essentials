@@ -69,8 +69,15 @@ public class AllSuppliesAdapter extends RecyclerView.Adapter<AllSuppliesAdapter.
                 Supplies supplies = suppliesList.get(position);
                 Intent intent = new Intent(context, SupplyDetailActivity.class);
                 intent.putExtra("supply_id", supplies.getSupplies_id());
+
+                // Kiểm tra nếu context không phải Activity thì thêm flag
+                if (!(context instanceof android.app.Activity)) {
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
+
                 context.startActivity(intent);
             });
+
         }
          public void bind(Supplies supplies) {
              tvTitle.setText(supplies.getName() != null ? supplies.getName() : "N/A");

@@ -13,19 +13,19 @@ public class OrderStatus {
     public static String getStatusName(int status) {
         switch (status) {
             case PENDING:
-                return "Đang xác nhận";
+                return "Pending";
             case PREPARING:
-                return "Đang chuẩn bị";
+                return "Preparing";
             case SHIPPING:
-                return "Đang giao";
+                return "Delivering";
             case DELIVERED:
-                return "Đã nhận hàng";
+                return "Delivered";
             case CANCELED:
-                return "Đã hủy";
+                return "Canceled";
             case RETURNED:
-                return "Đã trả lại";
+                return "Returned";
             default:
-                return "Không xác định";
+                return "Undefined";
         }
     }
 }

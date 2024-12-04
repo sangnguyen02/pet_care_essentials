@@ -16,10 +16,18 @@ import java.util.List;
 public class ChipAdapter extends RecyclerView.Adapter<ChipAdapter.ChipViewHolder> {
     private List<String> chipList;
     private Context context;
+    private OnChipSelectedListener chipSelectedListener;
 
-    public ChipAdapter(List<String> chipList, Context context) {
+    public interface OnChipSelectedListener {
+        void onChipSelected(String chipText);
+    }
+
+
+    public ChipAdapter(List<String> chipList, Context context, OnChipSelectedListener chipSelectedListener) {
         this.chipList = chipList;
         this.context = context;
+        this.chipSelectedListener = chipSelectedListener;
+
     }
 
     @NonNull
@@ -33,6 +41,12 @@ public class ChipAdapter extends RecyclerView.Adapter<ChipAdapter.ChipViewHolder
     public void onBindViewHolder(@NonNull ChipViewHolder holder, int position) {
         String chipText = chipList.get(position);
         holder.chip.setText(chipText);
+
+        holder.chip.setOnClickListener(v -> {
+            if (chipSelectedListener != null) {
+                chipSelectedListener.onChipSelected(chipText);
+            }
+        });
     }
 
     @Override

@@ -98,14 +98,16 @@ public class MainActivityUser extends AppCompatActivity {
     }
 
     void getAccountIDByPhone(String phone) {
-        accountRef.orderByChild("phone").equalTo(phone).addListenerForSingleValueEvent(new ValueEventListener() {
+        accountRef.orderByChild("phone").equalTo(phone).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot accountSnapshot : dataSnapshot.getChildren()) {
                         String accountId = accountSnapshot.getKey(); // Lấy accountID
+                        Integer accountType = accountSnapshot.child("account_type").getValue(Integer.class);
                         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                         preferences.edit().putString("accountID", accountId).apply();
+                        preferences.edit().putInt("accountType", accountType).apply();
                         Log.d("Account ID", "Found Account ID: " + accountId);
                         // Bạn có thể lưu accountId hoặc sử dụng ở đây
                     }

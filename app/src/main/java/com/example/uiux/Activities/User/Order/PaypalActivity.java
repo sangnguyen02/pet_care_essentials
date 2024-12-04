@@ -60,13 +60,13 @@ public class PaypalActivity extends AppCompatActivity {
         walletRef = FirebaseDatabase.getInstance().getReference("Account Wallet");
         wallet_history = FirebaseDatabase.getInstance().getReference("Wallet History");
         wallet_Id = getIntent().getStringExtra("wallet_id");
-        Log.e("wallet_Id",wallet_Id);
+//        Log.e("wallet_Id",wallet_Id);
         account_id = getIntent().getStringExtra("account_id");
-        Log.e("account_id",account_id);
+//        Log.e("account_id",account_id);
         String amount =getIntent().getStringExtra("balance");
-        Log.e("Money",amount);
+//        Log.e("Money",amount);
         String amountUSD = convertVNDToUSD(amount);
-        Log.e("Money",amountUSD);
+//        Log.e("Money",amountUSD);
 
 
         paymentButtonContainer.setup(

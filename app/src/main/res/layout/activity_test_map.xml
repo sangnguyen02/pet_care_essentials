@@ -29,7 +29,7 @@
         app:boxCornerRadiusTopStart="8dp"
         app:boxStrokeWidthFocused="0dp"
         app:boxStrokeWidth="0dp"
-        app:startIconDrawable="@drawable/branch"
+        app:startIconDrawable="@drawable/branch_store"
         style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense">
 
         <com.google.android.material.textfield.TextInputEditText

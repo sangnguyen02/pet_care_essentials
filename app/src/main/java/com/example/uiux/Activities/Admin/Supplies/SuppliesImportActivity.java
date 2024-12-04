@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Supplies_Import;
 import com.example.uiux.Model.Supplies_Detail;
@@ -52,6 +54,7 @@ public class SuppliesImportActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_supplies_import);
         img_back_import_supply = findViewById(R.id.img_back_import_supply);
         spinnerSupplies = findViewById(R.id.spinner_supplies);

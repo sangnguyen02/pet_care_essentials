@@ -43,7 +43,7 @@ public class ProfileFragment extends Fragment {
     String accountId;
     CircleImageView img_avatar, img_setting;
     ImageView img_cart_at_profile, img_red_circle_at_profile;
-    TextView tv_username, tv_number_of_cart_item_at_profile;
+    TextView tv_username, tv_number_of_cart_item_at_profile, tv_view_purchase_history;
     DatabaseReference databaseReference;
     DatabaseReference cartItems;
     SharedPreferences preferences;
@@ -117,6 +117,12 @@ public class ProfileFragment extends Fragment {
             startActivity(goToOrderStatus);
         });
 
+        tv_view_purchase_history.setOnClickListener(view -> {
+            Intent goToOrderStatus = new Intent(rootView.getContext(), OrderActivity.class);
+            goToOrderStatus.putExtra("targetTab", OrderStatus.DELIVERED); // Tab Đang giao
+            startActivity(goToOrderStatus);
+        });
+
 
 
         return rootView;
@@ -129,6 +135,7 @@ public class ProfileFragment extends Fragment {
     }
 
     void initWidget() {
+        tv_view_purchase_history = rootView.findViewById(R.id.tv_view_purchase_history);
         tv_number_of_cart_item_at_profile = rootView.findViewById(R.id.tv_number_of_cart_item_at_profile);
         img_cart_at_profile = rootView.findViewById(R.id.img_cart_at_profile);
         img_red_circle_at_profile = rootView.findViewById(R.id.img_red_circle_at_profile);

@@ -92,7 +92,7 @@ public class HomeFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_home, container, false);
 
         if (getActivity() != null) {
-            getActivity().getWindow().setStatusBarColor(ContextCompat.getColor(getActivity(), R.color.white));
+            getActivity().getWindow().setStatusBarColor(ContextCompat.getColor(getActivity(), R.color.light_bg));
         }
 
         preferences =  getActivity().getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);

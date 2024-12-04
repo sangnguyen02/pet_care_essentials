@@ -43,6 +43,11 @@ public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.Or
         this.orderStatus = orderStatus;
     }
 
+    public OrderChildAdapter(Context context, List<CartItem> cartPaymentItemList) {
+        this.context = context;
+        this.cartPaymentItemList = cartPaymentItemList;
+    }
+
     @NonNull
     @Override
     public OrderChildViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

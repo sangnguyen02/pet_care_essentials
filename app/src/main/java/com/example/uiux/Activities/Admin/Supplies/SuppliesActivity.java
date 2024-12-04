@@ -64,7 +64,7 @@ public class SuppliesActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_supplies);
         suppName = findViewById(R.id.edt_name);
         suppSellPrice = findViewById(R.id.edt_sell_price);
