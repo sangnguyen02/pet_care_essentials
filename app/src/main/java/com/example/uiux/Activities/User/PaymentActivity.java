@@ -222,8 +222,6 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
 
     }
 
-
-
     private void initWidget() {
         img_back_payment = findViewById(R.id.img_back_payment);
         img_back_payment.setOnClickListener(view -> finish());
@@ -280,8 +278,6 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
     }
     private void SendData() {
         orderRef = FirebaseDatabase.getInstance().getReference("Order");
-
-
         Intent gotoOrderPayment= new Intent(PaymentActivity.this, OrderPaymentActivity.class);
 
 
@@ -320,7 +316,7 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         gotoOrderPayment.putExtra("accountId",accountId);
         gotoOrderPayment.putExtra("quantity", String.valueOf(cartPaymentItemList.size()));
         payment_index=paymentMethodAdapter.getSelectedPaymentMethod().getId();
-        Log.e("Tusf", String.valueOf(payment_index));
+
         gotoOrderPayment.putExtra("payment_index",payment_index);
 
 
@@ -343,10 +339,7 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
 
         gotoOrderPayment.putExtra("address",tv_address_detail.getText().toString() + ", " + tv_ward_district_province.getText().toString());
 
-
-
-        //startActivity(gotoOrderPayment);
-
+        startActivity(gotoOrderPayment);
     }
     private String setExpected_delivery_date(String orderDate, int deliveryMethodId) {
         // Dựa trên deliveryMethodId, xác định số ngày giao hàng

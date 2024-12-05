@@ -7,6 +7,8 @@ public class OrderStatus {
     public static final int SHIPPING = 2; // Đã giao hàng
     public static final int DELIVERED = 3; // Đã nhận hàng
     public static final int CANCELED = 4; // Đã hủy
+    public static  final int RETURN_REQUEST_PENDING=6;
+    public static  final  int RETURN_PRODUCT_WAITING=7;
     public static final int RETURNED = 5; // Đã trả lại
 
     // Hàm trả về tên trạng thái theo giá trị int
@@ -24,6 +26,10 @@ public class OrderStatus {
                 return "Canceled";
             case RETURNED:
                 return "Returned";
+            case RETURN_REQUEST_PENDING:
+                return "Waiting for Reply";
+            case RETURN_PRODUCT_WAITING:
+                return  "Waiting for get products";
             default:
                 return "Undefined";
         }

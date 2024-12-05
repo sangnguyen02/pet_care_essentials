@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +21,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.uiux.Activities.User.AccountWallet.ConfirmPINActivity;
+import com.example.uiux.Activities.User.AccountWallet.DisplayAccountWallet;
+import com.example.uiux.Model.AccountWallet;
 import com.example.uiux.Model.Order;
 import com.example.uiux.Model.Voucher;
 import com.example.uiux.R;
@@ -42,6 +47,8 @@ public class OrderPaymentActivity extends AppCompatActivity {
     String accountId;
     Double total;
     String orderId;
+    String wallet_Id;
+    String voucherId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +70,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
         String expectedDeliveryDate = getIntent().getStringExtra("expectedDeliveryDate");
          orderId = getIntent().getStringExtra("orderId");
         String formattedDate = getIntent().getStringExtra("formattedDate");
-        String voucherId = getIntent().getStringExtra("voucherId");
+         voucherId = getIntent().getStringExtra("voucherId");
         String name = getIntent().getStringExtra("name");
         String phone = getIntent().getStringExtra("phone");
          accountId = getIntent().getStringExtra("accountId");
@@ -114,13 +121,14 @@ public class OrderPaymentActivity extends AppCompatActivity {
 
             }
         });
+        getWalletId();
         btnWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//
-//                Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
-//                intent1.putExtra("result","Xac nhan thanh cong");
-//                startActivity(intent1);
+
+                Intent intent = new Intent(OrderPaymentActivity.this, ConfirmPINActivity.class);
+                intent.putExtra("wallet_id", wallet_Id);
+                confirmPINLauncher.launch(intent);
             }
         });
 
@@ -184,6 +192,37 @@ public class OrderPaymentActivity extends AppCompatActivity {
             }
         });
     }
+    private void getWalletId() {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Account Wallet");
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot walletSnapshot : snapshot.getChildren()) {
+                    AccountWallet accountWallet = walletSnapshot.getValue(AccountWallet.class);
+
+                    // Kiểm tra nếu account_id trùng khớp
+                    if (accountWallet != null && accountWallet.getAccount_id().equals(accountId)) {
+                        wallet_Id = walletSnapshot.getKey(); // Lấy wallet_id
+                        Log.d("WalletID", "Wallet ID found: " + wallet_Id);
+                        break;
+                    }
+                }
+
+                if (wallet_Id == null) {
+                    Log.e("WalletID", "No wallet ID found for account ID: " + accountId);
+                    Toast.makeText(OrderPaymentActivity.this, "Không tìm thấy ví tương ứng!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseError", "Failed to read wallet ID: " + error.getMessage());
+                Toast.makeText(OrderPaymentActivity.this, "Lỗi khi lấy dữ liệu ví!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     private void initWidget() {
         txtTongTien = findViewById(R.id.textViewTongTien);
@@ -263,6 +302,10 @@ public class OrderPaymentActivity extends AppCompatActivity {
                     if (voucher != null && voucher.getRemaining_quantity() > 0) {
                         // Giảm số lượng voucher đi 1
                         int newQuantity = voucher.getRemaining_quantity() - 1;
+                        if(newQuantity==0)
+                        {
+                            voucher.setStatus(2);
+                        }
                         voucher.setRemaining_quantity(newQuantity);
 
                         // Cập nhật lại số lượng voucher trong Firebase
@@ -270,7 +313,8 @@ public class OrderPaymentActivity extends AppCompatActivity {
 
                         // Thông báo cập nhật thành công
                         Toast.makeText(OrderPaymentActivity.this, "Voucher đã được giảm 1", Toast.LENGTH_SHORT).show();
-                    } else {
+                    } else
+                    {
                         // Nếu voucher đã hết
                         Toast.makeText(OrderPaymentActivity.this, "Voucher hết hạn sử dụng", Toast.LENGTH_SHORT).show();
                     }
@@ -326,4 +370,18 @@ public class OrderPaymentActivity extends AppCompatActivity {
         super.onNewIntent(intent);
         ZaloPaySDK.getInstance().onResult(intent);
     }
+    private final ActivityResultLauncher<Intent> confirmPINLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    // Nếu PIN đúng, chuyển sang PaypalActivity
+                    if (voucherId!=null)
+                    {
+                        updateVoucherQuantity(voucherId);
+                    }
+                    updateOrder(orderId,2);
+                } else {
+                    // Nếu PIN sai hoặc người dùng hủy
+                    Toast.makeText(this, "PIN không hợp lệ hoặc bạn đã hủy.", Toast.LENGTH_SHORT).show();
+                }
+            });
     }
