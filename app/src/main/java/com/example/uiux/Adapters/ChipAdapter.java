@@ -55,11 +55,15 @@ public class ChipAdapter extends RecyclerView.Adapter<ChipAdapter.ChipViewHolder
     }
 
     public static class ChipViewHolder extends RecyclerView.ViewHolder {
-        Chip chip;
+        public Chip chip;
 
         public ChipViewHolder(View itemView) {
             super(itemView);
             chip = itemView.findViewById(R.id.chip);
+        }
+
+        public Chip getChip() {
+            return chip;
         }
     }
 }

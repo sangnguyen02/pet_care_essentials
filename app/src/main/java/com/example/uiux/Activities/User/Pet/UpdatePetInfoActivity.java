@@ -20,12 +20,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.Admin.Supplies.SuppliesActivity;
 import com.example.uiux.Activities.Admin.Supplies.UpdateSuppliesActivity;
+import com.example.uiux.Activities.AllSuppliesActivity;
 import com.example.uiux.Adapters.PetInfoAdapter;
 import com.example.uiux.Adapters.PetProfileAdapter;
 import com.example.uiux.Adapters.SuppliesAdapter;
 import com.example.uiux.Model.Pet;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +41,7 @@ public class UpdatePetInfoActivity extends AppCompatActivity {
     private RecyclerView rcv_pet_profile;
     private ImageView imgv_back_add_pet_profile, img_pet_profile;
     private TextView tv_pet_name, tv_pet_gender, tv_pet_age, tv_pet_weight, tv_pet_type, tv_pet_breed;
+    private MaterialButton btn_view_recommend_supplies;
     private PetProfileAdapter petProfileAdapter;
     private List<Pet> petList = new ArrayList<>();
     private Pet selectedPet;
@@ -70,6 +73,7 @@ public class UpdatePetInfoActivity extends AppCompatActivity {
         tv_pet_breed = findViewById(R.id.tv_pet_breed);
         img_pet_profile = findViewById(R.id.img_pet_profile);
         imgv_back_add_pet_profile = findViewById(R.id.img_back_my_pet_profile);
+
         imgv_back_add_pet_profile.setOnClickListener(view -> {
             finish();
         });
@@ -81,6 +85,17 @@ public class UpdatePetInfoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
 
+        });
+
+        btn_view_recommend_supplies = findViewById(R.id.btn_view_recommend_supplies);
+        btn_view_recommend_supplies.setOnClickListener(view -> {
+            if (selectedPet != null && selectedPet.getPet_type() != null) {
+                Intent intent = new Intent(UpdatePetInfoActivity.this, AllSuppliesActivity.class);
+                intent.putExtra("selectedType", selectedPet.getPet_type());
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "No pet type selected!", Toast.LENGTH_SHORT).show();
+            }
         });
 
         loadPets();

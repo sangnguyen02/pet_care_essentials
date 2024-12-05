@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.User.CartActivity;
+import com.example.uiux.Activities.User.Map.BranchMapActivity;
 import com.example.uiux.Activities.User.Order.OrderActivity;
 import com.example.uiux.Activities.User.Pet.UpdatePetInfoActivity;
 import com.example.uiux.Activities.User.Profile.PhoneUpdateProfileActivity;
@@ -38,7 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileFragment extends Fragment {
     View rootView;
     ConstraintLayout to_pay, to_ship, to_receive, to_rate;
-    MaterialCardView mcv_help_center, mcv_pet_profile;
+    MaterialCardView mcv_help_center, mcv_pet_profile, mcv_branches;
     String phone;
     String accountId;
     CircleImageView img_avatar, img_setting;
@@ -99,6 +100,11 @@ public class ProfileFragment extends Fragment {
             startActivity(goToPetProfile);
         });
 
+        mcv_branches.setOnClickListener(view -> {
+            Intent goToMap = new Intent(rootView.getContext(), BranchMapActivity.class);
+            startActivity(goToMap);
+        });
+
         to_pay.setOnClickListener(view -> {
             Intent goToOrderStatus = new Intent(rootView.getContext(), OrderActivity.class);
             goToOrderStatus.putExtra("targetTab", OrderStatus.PENDING); // Tab Đang xác nhận
@@ -144,6 +150,7 @@ public class ProfileFragment extends Fragment {
         tv_username = rootView.findViewById(R.id.tv_username);
         mcv_help_center = rootView.findViewById(R.id.mcv_help_center);
         mcv_pet_profile = rootView.findViewById(R.id.mcv_pet_profile);
+        mcv_branches = rootView.findViewById(R.id.mcv_branches);
         to_pay = rootView.findViewById(R.id.to_pay);
         to_ship = rootView.findViewById(R.id.to_ship);
         to_receive = rootView.findViewById(R.id.to_receive);

@@ -121,7 +121,7 @@ public class BestSellerAdapter extends RecyclerView.Adapter<BestSellerAdapter.Be
              if (averageRating > 0) {
                  tvRating.setText(String.format(Locale.US, "%.1f", averageRating)); // Định dạng số thập phân 1 chữ số
              } else {
-                 tvRating.setText("N/A"); // Hiển thị "N/A" nếu chưa có đánh giá
+                 tvRating.setText("0.0"); // Hiển thị "N/A" nếu chưa có đánh giá
              }
 
              // Load hình ảnh

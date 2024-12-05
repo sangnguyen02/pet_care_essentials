@@ -90,7 +90,7 @@ public class AllSuppliesAdapter extends RecyclerView.Adapter<AllSuppliesAdapter.
              if (averageRating > 0) {
                  tvRating.setText(String.format(Locale.US, "%.1f", averageRating));
              } else {
-                 tvRating.setText("N/A");
+                 tvRating.setText("0.0");
              }
 
              List<String> imageUrls = supplies.getImageUrls();

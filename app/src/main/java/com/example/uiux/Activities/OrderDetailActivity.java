@@ -81,7 +81,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     Order order;
     View viewPending, viewPreparing, viewDelivering, viewCompleted;
     View linePendPrepare, linePrepareDeliver, lineDeliverComplete;
-    TextView tvStatusPending, tvStatusPreparing, tvStatusDelivering, tvStatusCompleted;
+    TextView tvStatusPending, tvStatusPreparing, tvStatusDelivering, tvStatusCompleted, tv_order_detail_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,15 +96,15 @@ public class OrderDetailActivity extends AppCompatActivity {
         orderRef = FirebaseDatabase.getInstance().getReference("Order").child(order_id);
         initWidget();
         Log.e("account type", String.valueOf(accountType));
-//        if (accountType != 1) {
-//            mcv_order_update.setVisibility(View.GONE);
-//        }
+        if (accountType != 1) {
+            mcv_order_update.setVisibility(View.GONE);
+        }
         loadOrder();
     }
 
     void initWidget() {
         spinner_order_status = findViewById(R.id.spinner_order_status);
-
+        tv_order_detail_id = findViewById(R.id.tv_order_detail_id);
         viewPending = findViewById(R.id.view_pending);
         viewPreparing = findViewById(R.id.view_preparing);
         viewDelivering = findViewById(R.id.view_delivering);
@@ -168,6 +168,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                     order = snapshot.getValue(Order.class);
                     if (order != null) {
                         // Cập nhật thông tin UI
+                        tv_order_detail_id.setText("Order #" + order.getOrder_id());
                         tv_order_buyer_name.setText(order.getName_customer() != null ? order.getName_customer() : "N/A");
                         tv_order_buyer_phone.setText(order.getPhone_number() != null ? order.getPhone_number() : "N/A");
                         tv_order_address_detail.setText(order.getAddress() != null ? order.getAddress() : "N/A");

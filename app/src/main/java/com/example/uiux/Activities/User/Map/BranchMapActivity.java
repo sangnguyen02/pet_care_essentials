@@ -18,6 +18,7 @@ import com.example.uiux.Activities.Admin.MainActivityAdmin;
 import com.example.uiux.Model.BranchStore;
 import com.example.uiux.R;
 import com.example.uiux.Utils.VectorToBitmapConverter;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -55,7 +56,7 @@ public class BranchMapActivity extends AppCompatActivity {
         setContentView(R.layout.activity_branch_map);
 
         mapView = findViewById(R.id.mapView);
-        int vectorResId = R.drawable.here;
+        int vectorResId = R.drawable.mark;
         Bitmap bitmap = VectorToBitmapConverter.convertVectorToBitmap(this, vectorResId);
         branchStatusArray = getResources().getStringArray(R.array.branch_store_status);
 
@@ -154,7 +155,7 @@ public class BranchMapActivity extends AppCompatActivity {
         // Thiết lập dữ liệu cho layout tùy chỉnh
         TextView branchNameTextView = viewAnnotation.findViewById(R.id.branch_name);
         TextView branchStatusTextView = viewAnnotation.findViewById(R.id.branch_status);
-        Button booking =viewAnnotation.findViewById(R.id.book);
+        MaterialButton booking =viewAnnotation.findViewById(R.id.book);
         branchNameTextView.setText(branchStore.getBranch_name());
         // Lấy trạng thái từ mảng chuỗi và thiết lập vào TextView
         int statusIndex = branchStore.getStatus();
