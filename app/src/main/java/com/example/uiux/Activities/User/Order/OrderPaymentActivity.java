@@ -8,6 +8,7 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -23,6 +25,7 @@ import com.example.uiux.Model.Order;
 import com.example.uiux.Model.Voucher;
 import com.example.uiux.R;
 import com.example.uiux.ZaloPay.Api.CreateOrder;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,6 +34,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import vn.zalopay.sdk.Environment;
 import vn.zalopay.sdk.ZaloPayError;
 import vn.zalopay.sdk.ZaloPaySDK;
@@ -38,7 +43,8 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class OrderPaymentActivity extends AppCompatActivity {
     TextView txtSoluong, txtTongTien,txtName,txtPhone,txtEmail,txtAddress,txtOrderDate,txtExpectedDeliveryDate;
-    Button btnThanhToan,btnConfirm,btnWallet;
+    MaterialButton btnThanhToan,btnConfirm,btnWallet;
+    ImageView img_back_order_confirm;
     String accountId;
     Double total;
     String orderId;
@@ -47,9 +53,15 @@ public class OrderPaymentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_order_payment);
         initWidget();
 
+        ArrayList<String> selectedSupplies = getIntent().getStringArrayListExtra("selected_supplies");
+        if (selectedSupplies != null) {
+            // Xử lý dữ liệu selected_supplies tại đây nếu cần
+            Log.d("OrderPaymentActivity", "Selected supplies: " + selectedSupplies.toString());
+        }
 
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -108,6 +120,23 @@ public class OrderPaymentActivity extends AppCompatActivity {
                     updateVoucherQuantity(voucherId);
                 }
                 updateOrder(orderId,0);
+
+                if (selectedSupplies != null && !selectedSupplies.isEmpty()) {
+                    for (String supply_combinedKey : selectedSupplies) {
+                        DatabaseReference cartRef = FirebaseDatabase.getInstance()
+                                .getReference("Cart")
+                                .child(accountId)
+                                .child(supply_combinedKey);
+                        cartRef.removeValue().addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Log.d("Firebase", "Deleted supply: " + supply_combinedKey);
+                            } else {
+                                Log.e("Firebase", "Failed to delete supply: " + supply_combinedKey);
+                            }
+                        });
+                    }
+                }
+
                 Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
                 intent1.putExtra("result","Xac nhan thanh cong");
                 startActivity(intent1);
@@ -186,6 +215,8 @@ public class OrderPaymentActivity extends AppCompatActivity {
     }
 
     private void initWidget() {
+        img_back_order_confirm = findViewById(R.id.img_back_order_confirm);
+        img_back_order_confirm.setOnClickListener(view -> finish());
         txtTongTien = findViewById(R.id.textViewTongTien);
         btnThanhToan = findViewById(R.id.buttonThanhToan);
         // Ánh xạ các TextView khác

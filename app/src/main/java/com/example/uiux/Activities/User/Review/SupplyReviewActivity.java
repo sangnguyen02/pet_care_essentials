@@ -85,7 +85,7 @@ public class SupplyReviewActivity extends AppCompatActivity {
 
     void initWidget() {
         img_back_review = findViewById(R.id.img_back_review);
-
+        img_back_review.setOnClickListener(view -> finish());
         no_of_review = findViewById(R.id.no_of_review);
         label_no_of_review = findViewById(R.id.label_no_of_review);
         no_review_5_star = findViewById(R.id.no_review_5_star);

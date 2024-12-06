@@ -9,7 +9,7 @@
     android:background="@color/bg_grey">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_edit_category_app_bar"
+        android:id="@+id/cv_edit_discount_app_bar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         app:cardBackgroundColor="@color/white"
@@ -23,7 +23,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/img_back_edit_category"
+                android:id="@+id/img_back_edit_discount"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -47,9 +47,9 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/img_back_edit_category"
-                app:layout_constraintStart_toEndOf="@+id/img_back_edit_category"
-                app:layout_constraintTop_toTopOf="@+id/img_back_edit_category"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back_edit_discount"
+                app:layout_constraintStart_toEndOf="@+id/img_back_edit_discount"
+                app:layout_constraintTop_toTopOf="@+id/img_back_edit_discount"
                 tools:ignore="HardcodedText" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

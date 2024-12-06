@@ -7,7 +7,10 @@ public class OrderStatus {
     public static final int SHIPPING = 2; // Đã giao hàng
     public static final int DELIVERED = 3; // Đã nhận hàng
     public static final int CANCELED = 4; // Đã hủy
+    public static final int CONFIRM_RETURNED = 6; // Xác nhận trả hàng
     public static final int RETURNED = 5; // Đã trả lại
+
+
 
     // Hàm trả về tên trạng thái theo giá trị int
     public static String getStatusName(int status) {

@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
-    android:background="@color/bg_grey">
+    android:background="@color/light_bg">
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_my_supplies_app_bar"
+        android:id="@+id/cv_my_vouncher_app_bar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         app:cardElevation="10dp"
@@ -19,7 +19,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/img_back_my_supplies"
+                android:id="@+id/img_back_my_vouncher"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -43,13 +43,13 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/img_back_my_supplies"
-                app:layout_constraintStart_toEndOf="@+id/img_back_my_supplies"
-                app:layout_constraintTop_toTopOf="@+id/img_back_my_supplies"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back_my_vouncher"
+                app:layout_constraintStart_toEndOf="@+id/img_back_my_vouncher"
+                app:layout_constraintTop_toTopOf="@+id/img_back_my_vouncher"
                 tools:ignore="HardcodedText" />
 
             <ImageView
-                android:id="@+id/imgv_add_supplies"
+                android:id="@+id/imgv_add_vouncher"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="16dp"
@@ -73,7 +73,7 @@
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_my_supplies_app_bar"
+        app:layout_constraintTop_toBottomOf="@+id/cv_my_vouncher_app_bar"
         >
 
         <androidx.recyclerview.widget.RecyclerView

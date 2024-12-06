@@ -108,6 +108,8 @@ public class PaymentActivity extends AppCompatActivity {
     int payment_index;
     String voucherCode = "";
 
+    ArrayList<String> selectedSupplies;
+
 
     private ActivityResultLauncher<Intent> addressLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -204,7 +206,7 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         }
 
 
-        ArrayList<String> selectedSupplies = getIntent().getStringArrayListExtra("selected_supplies");
+        selectedSupplies = getIntent().getStringArrayListExtra("selected_supplies");
 
         if (selectedSupplies != null) {
             loadSelectedItems(selectedSupplies);
@@ -254,7 +256,7 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         rcv_payment_method.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         paymentMethodList.add(new PaymentMethod(0, getString(R.string.zalo_method), R.drawable.zalopay));
         paymentMethodList.add(new PaymentMethod(1,getString(R.string.cod_method), R.drawable.cod));
-        paymentMethodList.add(new PaymentMethod(2,"Wallet",R.drawable.zalopay));
+        paymentMethodList.add(new PaymentMethod(2,"Wallet",R.drawable.wallet));
         paymentMethodAdapter = new PaymentMethodAdapter(this, paymentMethodList);
         rcv_payment_method.setAdapter(paymentMethodAdapter);
 
@@ -344,8 +346,12 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         gotoOrderPayment.putExtra("address",tv_address_detail.getText().toString() + ", " + tv_ward_district_province.getText().toString());
 
 
+//        selectedSupplies = getIntent().getStringArrayListExtra("selected_supplies");
+        if (selectedSupplies != null) {
+            gotoOrderPayment.putStringArrayListExtra("selected_supplies", selectedSupplies);
+        }
 
-        //startActivity(gotoOrderPayment);
+        startActivity(gotoOrderPayment);
 
     }
     private String setExpected_delivery_date(String orderDate, int deliveryMethodId) {
@@ -427,53 +433,122 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         totalDiscountedPayment=total;
         tv_total_payment.setText(currencyFormattedTotal);
     }
-    private void loadAccountInfo(String accountId) {
-        DatabaseReference accountRef = FirebaseDatabase.getInstance().getReference("Accounts").child(accountId);
-        DatabaseReference addressRef = FirebaseDatabase.getInstance().getReference("Account_Address").child(accountId);
+//    private void loadAccountInfo(String accountId) {
+//        DatabaseReference accountRef = FirebaseDatabase.getInstance().getReference("Account").child(accountId);
+//        DatabaseReference addressRef = FirebaseDatabase.getInstance().getReference("Account_Address");
+//
+//        // Load Account information
+//        accountRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                Model.Account account = snapshot.getValue(Model.Account.class);
+//                if (account != null) {
+//                    // Set fullname and phone
+//                    TextView tvBuyerName = findViewById(R.id.tv_buyer_name);
+//                    TextView tvBuyerPhone = findViewById(R.id.tv_buyer_phone);
+//
+//                    tvBuyerName.setText(account.getFullname());
+//                    tvBuyerPhone.setText(account.getPhone());
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Log.e("FirebaseError", "Failed to load account data: " + error.getMessage());
+//            }
+//        });
+//
+//        // Load Address information
+//        addressRef.orderByChild("account_id").equalTo(accountId).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                Account_Address accountAddress = snapshot.getValue(Account_Address.class);
+//                if (accountAddress != null) {
+//                    // Set address details, ward, district, province
+//                    TextView tvAddressDetail = findViewById(R.id.tv_address_detail);
+//                    TextView tvWardDistrictProvince = findViewById(R.id.tv_ward_district_province);
+//
+//                    tvAddressDetail.setText(accountAddress.getAddress_details());
+//                    String fullAddress = accountAddress.getWard() + ", " + accountAddress.getDistrict() + ", " + accountAddress.getProvince();
+//                    tvWardDistrictProvince.setText(fullAddress);
+//                }
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Log.e("FirebaseError", "Failed to load address data: " + error.getMessage());
+//            }
+//        });
+//    }
+private void loadAccountInfo(String accountId) {
+    DatabaseReference accountRef = FirebaseDatabase.getInstance().getReference("Account").child(accountId);
+    DatabaseReference addressRef = FirebaseDatabase.getInstance().getReference("Account_Address");
 
-        // Load Account information
-        accountRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Model.Account account = snapshot.getValue(Model.Account.class);
-                if (account != null) {
-                    // Set fullname and phone
-                    TextView tvBuyerName = findViewById(R.id.tv_buyer_name);
-                    TextView tvBuyerPhone = findViewById(R.id.tv_buyer_phone);
+    // Load Account information
+    accountRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            Model.Account account = snapshot.getValue(Model.Account.class);
+            if (account != null) {
+                // Set fullname and phone
+                TextView tvBuyerName = findViewById(R.id.tv_buyer_name);
+                TextView tvBuyerPhone = findViewById(R.id.tv_buyer_phone);
 
-                    tvBuyerName.setText(account.getFullname());
-                    tvBuyerPhone.setText(account.getPhone());
-                }
+                tvBuyerName.setText(account.getFullname());
+                tvBuyerPhone.setText(account.getPhone());
             }
+        }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FirebaseError", "Failed to load account data: " + error.getMessage());
-            }
-        });
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+            Log.e("FirebaseError", "Failed to load account data: " + error.getMessage());
+        }
+    });
 
-        // Load Address information
-        addressRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Account_Address accountAddress = snapshot.getValue(Account_Address.class);
+    // Load Address information
+    addressRef.orderByChild("account_id").equalTo(accountId).addListenerForSingleValueEvent(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            Account_Address defaultAddress = null;
+            Account_Address firstAddress = null;
+
+            for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                Account_Address accountAddress = childSnapshot.getValue(Account_Address.class);
+
                 if (accountAddress != null) {
-                    // Set address details, ward, district, province
-                    TextView tvAddressDetail = findViewById(R.id.tv_address_detail);
-                    TextView tvWardDistrictProvince = findViewById(R.id.tv_ward_district_province);
+                    if (firstAddress == null) {
+                        firstAddress = accountAddress; // Save the first address found
+                    }
 
-                    tvAddressDetail.setText(accountAddress.getAddress_details());
-                    String fullAddress = accountAddress.getWard() + ", " + accountAddress.getDistrict() + ", " + accountAddress.getProvince();
-                    tvWardDistrictProvince.setText(fullAddress);
+                    if (accountAddress.getIs_default()) {
+                        defaultAddress = accountAddress;
+                        break; // Exit loop once default address is found
+                    }
                 }
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FirebaseError", "Failed to load address data: " + error.getMessage());
+            // Use the default address if found, otherwise use the first address
+            Account_Address selectedAddress = (defaultAddress != null) ? defaultAddress : firstAddress;
+
+            if (selectedAddress != null) {
+                // Set address details, ward, district, province
+                TextView tvAddressDetail = findViewById(R.id.tv_address_detail);
+                TextView tvWardDistrictProvince = findViewById(R.id.tv_ward_district_province);
+
+                tvAddressDetail.setText(selectedAddress.getAddress_details());
+                String fullAddress = selectedAddress.getWard() + ", " + selectedAddress.getDistrict() + ", " + selectedAddress.getProvince();
+                tvWardDistrictProvince.setText(fullAddress);
+            } else {
+                Log.e("AddressInfo", "No address found for accountId: " + accountId);
             }
-        });
-    }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+            Log.e("FirebaseError", "Failed to load address data: " + error.getMessage());
+        }
+    });
+}
     private void loadAddressFromPayment(String accountAddressId) {
         DatabaseReference addressRef = FirebaseDatabase.getInstance().getReference("Account_Address").child(accountAddressId);
 

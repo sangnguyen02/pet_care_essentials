@@ -49,9 +49,9 @@ import java.util.Locale;
 
 public class OrderDetailActivity extends AppCompatActivity {
 
-    MaterialCardView mcv_order_update, mcv_payment_address,mcv_voucher;
+    MaterialCardView mcv_order_update;
     Spinner spinner_order_status;
-    MaterialButton btn_order_save;
+    MaterialButton btn_order_save, btn_return_order, btn_cancel_order;
     ImageView img_back_order_detail;
     TextView tv_order_buyer_name, tv_order_buyer_phone, tv_order_address_detail, tv_order_ward_district_province, tv_order_total_amount, tv_order_detail_date, tv_vouncher_selected, tv_vouncher_discount_amount;
     RecyclerView rcv_order_payment;
@@ -100,6 +100,8 @@ public class OrderDetailActivity extends AppCompatActivity {
             mcv_order_update.setVisibility(View.GONE);
         }
         loadOrder();
+
+
     }
 
     void initWidget() {
@@ -158,6 +160,19 @@ public class OrderDetailActivity extends AppCompatActivity {
                 }
             });
         });
+
+
+
+        btn_return_order = findViewById(R.id.btn_return_order);
+        btn_return_order.setOnClickListener(view -> {
+
+        });
+
+        btn_cancel_order = findViewById(R.id.btn_cancel_order);
+        btn_cancel_order.setOnClickListener(view -> {
+
+        });
+
     }
 
     void loadOrder() {
@@ -182,7 +197,15 @@ public class OrderDetailActivity extends AppCompatActivity {
                         orderChildAdapter.notifyDataSetChanged();
 
                         spinner_order_status.setSelection(order.getStatus());
+
                         updateStatusUI(order.getStatus());
+
+                        if(order.getStatus() == OrderStatus.DELIVERED) {
+                            btn_return_order.setVisibility(View.VISIBLE);
+                        }
+                        if(order.getStatus() == OrderStatus.PENDING || order.getStatus() == OrderStatus.PREPARING || order.getStatus() == OrderStatus.SHIPPING) {
+                            btn_cancel_order.setVisibility(View.VISIBLE);
+                        }
 
                     }
                 } else {

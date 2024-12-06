@@ -76,4 +76,6 @@ public class PaymentMethodAdapter extends RecyclerView.Adapter<PaymentMethodAdap
     public PaymentMethod getSelectedPaymentMethod() {
         return selectedPosition >= 0 ? paymentMethods.get(selectedPosition) : null;
     }
+
+
 }

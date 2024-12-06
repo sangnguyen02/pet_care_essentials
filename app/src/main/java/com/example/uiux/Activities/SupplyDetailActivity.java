@@ -266,7 +266,8 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
 
 
     private String generateCombinedKey(String supplyId, String selectedSupplySize) {
-        return supplyId + "_" + selectedSupplySize;
+        String formattedSupplySize = selectedSupplySize.replace(".", ",");
+        return supplyId + "_" + formattedSupplySize;
     }
 
 
@@ -406,14 +407,12 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
 
     private void toggleAnimation() {
         if (!isAnimating) {
-            // Nếu không hoạt động, chạy từ frame 0 đến frame 50
-            aniLove.setMinAndMaxFrame(0, 50); // Chỉ định khoảng khung hình
-            aniLove.setProgress(0f); // Thiết lập khung hình bắt đầu
-            aniLove.playAnimation(); // Chạy animation
+            aniLove.setMinAndMaxFrame(0, 50);
+            aniLove.setProgress(0f);
+            aniLove.playAnimation();
             isAnimating = true;
         } else {
-            aniLove.setProgress(0); // Thiết lập khung hình bắt đầu
-            // Chạy animation
+            aniLove.setProgress(0);
             aniLove.pauseAnimation();
             isAnimating = false;
         }

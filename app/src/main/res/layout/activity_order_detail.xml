@@ -519,6 +519,31 @@
                 />
 
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_return_order"
+                android:layout_margin="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Return"
+                android:textSize="20sp"
+                android:visibility="gone"
+                android:textColor="@color/black"
+                android:background="@drawable/button_bg_tranparent"
+                />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_cancel_order"
+                android:layout_margin="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Cancel"
+                android:textSize="20sp"
+                android:visibility="gone"
+                android:textColor="@color/black"
+                android:background="@drawable/button_bg_tranparent"
+                />
+
+
 
         </LinearLayout>
 

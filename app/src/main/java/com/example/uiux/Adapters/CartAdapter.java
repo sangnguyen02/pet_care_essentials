@@ -112,13 +112,25 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     public void selectAllItems(boolean isChecked) {
         selectedItems.clear(); // Clear the current selection
 
+//        if (isChecked) {
+//            selectedItems.addAll(cartItemList);
+//        }
+//        ((CartActivity) context).updateTotalAmount();
+//
+//
+//        notifyDataSetChanged(); // Refresh the RecyclerView
         if (isChecked) {
+            // Thêm tất cả items vào selectedItems nếu chọn "Select All"
             selectedItems.addAll(cartItemList);
         }
+
+        // Cập nhật lại các checkbox của từng item
+        for (int i = 0; i < cartItemList.size(); i++) {
+            notifyItemChanged(i);
+        }
+
+        // Cập nhật tổng tiền
         ((CartActivity) context).updateTotalAmount();
-
-
-        notifyDataSetChanged(); // Refresh the RecyclerView
     }
 
     @Override
@@ -127,7 +139,15 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     public List<CartItem> getSelectedItems() {
-        return selectedItems;
+
+//        return selectedItems;
+        List<CartItem> items = new ArrayList<>();
+        for (CartItem item : cartItemList) {
+            if (isItemSelected(item)) {
+                items.add(item);
+            }
+        }
+        return items;
     }
 
     public static class CartViewHolder extends RecyclerView.ViewHolder {

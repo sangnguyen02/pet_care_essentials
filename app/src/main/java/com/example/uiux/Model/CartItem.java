@@ -42,7 +42,8 @@ public class CartItem {
         this.imageUrl = imageUrl;
     }
     private String generateCombinedKey(String supply_id, String supply_size) {
-        return supply_id + "_" + supply_size;
+        String formattedSupplySize = supply_size.replace(".", ",");
+        return supply_id + "_" + formattedSupplySize;
     }
     public String getCombinedKey() {
         return combinedKey;
