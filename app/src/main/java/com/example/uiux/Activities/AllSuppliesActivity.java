@@ -387,9 +387,6 @@ public class AllSuppliesActivity extends AppCompatActivity {
         chipList.add("All");
         chipList.add("Dog");
         chipList.add("Cat");
-        chipList.add("Bird");
-        chipList.add("Hamster");
-        chipList.add("Turtle");
 
         rcv_chip.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         chipAdapter = new ChipAdapter(chipList, this, chipText -> filterSuppliesByChip(chipText));

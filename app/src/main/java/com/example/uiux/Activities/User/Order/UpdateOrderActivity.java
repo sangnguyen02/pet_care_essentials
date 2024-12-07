@@ -35,7 +35,6 @@ public class UpdateOrderActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private OrderAdminAdapter orderAdminAdapter;
     private ImageView img_back_order_status;
-    private MaterialCardView mcv_add_store;
     private List<Order> orderList = new ArrayList<>();
     private DatabaseReference databaseReference;
 
@@ -60,7 +59,6 @@ public class UpdateOrderActivity extends AppCompatActivity {
     void initWidget() {
         img_back_order_status = findViewById(R.id.img_back_order_status);
         recyclerView = findViewById(R.id.rcv_my_store);
-        mcv_add_store = findViewById(R.id.mcv_add_store);
     }
     private void loadOrder() {
         databaseReference = FirebaseDatabase.getInstance().getReference("Order");

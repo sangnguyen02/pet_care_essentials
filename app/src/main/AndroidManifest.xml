@@ -28,27 +28,29 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".Activities.User.Service.BookServiceActivity"
+            android:exported="false" />
         <activity
             android:name=".Activities.OrderDetailActivity"
-            android:exported="false" 
-            android:screenOrientation="portrait"/>
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.Admin.Order.DisplayReturnActivity"
-            android:exported="false" 
-            android:screenOrientation="portrait"/>
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.Admin.Order.ApproveReturnOrderActivity"
-            android:exported="false" 
-            android:screenOrientation="portrait"/>
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.User.CancelOrder.UserCancelOrderActivity"
-            android:exported="false" 
-            android:screenOrientation="portrait"/>
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.User.ReturnOrder.UserReturnOrderActivity"
-            android:exported="false" 
-            android:screenOrientation="portrait"/>
+            android:exported="false"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.User.AccountWallet.ConfirmPINActivity"
             android:exported="false"
@@ -169,7 +171,7 @@
         <activity
             android:name=".Activities.User.AccountWallet.DisplayAccountWallet"
             android:exported="false"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.Admin.Branch.UpdateBranchStoreActivity"
             android:exported="false"
