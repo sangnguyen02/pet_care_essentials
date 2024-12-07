@@ -193,11 +193,11 @@ public class DisplayAccountWallet extends AppCompatActivity {
             }
         });
     }
-    @Override
-    protected void onNewIntent(Intent intent2) {
-        super.onNewIntent(intent2);
-        ZaloPaySDK.getInstance().onResult(intent2);
-    }
+//    @Override
+//    protected void onNewIntent(Intent intent2) {
+//        super.onNewIntent(intent2);
+//        ZaloPaySDK.getInstance().onResult(intent2);
+//    }
 
     private void loadUserProfile() {
         accountRef.child(accountId).addListenerForSingleValueEvent(new ValueEventListener() {
