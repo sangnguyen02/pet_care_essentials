@@ -110,7 +110,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
     }
 
     public void selectAllItems(boolean isChecked) {
-        selectedItems.clear(); // Clear the current selection
+        selectedItems.clear();
 
 //        if (isChecked) {
 //            selectedItems.addAll(cartItemList);
@@ -120,7 +120,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartAdapter.CartViewHolder
 //
 //        notifyDataSetChanged(); // Refresh the RecyclerView
         if (isChecked) {
-            // Thêm tất cả items vào selectedItems nếu chọn "Select All"
             selectedItems.addAll(cartItemList);
         }
 

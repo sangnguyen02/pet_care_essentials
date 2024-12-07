@@ -321,6 +321,10 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         gotoOrderPayment.putExtra("phone",tv_buyer_phone.getText().toString());
         gotoOrderPayment.putExtra("accountId",accountId);
         gotoOrderPayment.putExtra("quantity", String.valueOf(cartPaymentItemList.size()));
+
+        //Bổ sung: chuyển total payment sang để hiển thị
+        gotoOrderPayment.putExtra("total_payment", tv_total_payment.getText());
+
         payment_index=paymentMethodAdapter.getSelectedPaymentMethod().getId();
         Log.e("Tusf", String.valueOf(payment_index));
         gotoOrderPayment.putExtra("payment_index",payment_index);

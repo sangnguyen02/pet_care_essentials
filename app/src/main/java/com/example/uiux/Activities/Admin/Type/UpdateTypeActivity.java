@@ -34,9 +34,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateTypeActivity extends AppCompatActivity {
-    private ImageView img_back_my_types;
+    private ImageView img_back_my_types, imgv_add_types;
     private RecyclerView recyclerView;
-    private MaterialCardView mcv_add_types;
     private TypeAdapter typeAdapter;
     private List<Type> typeList = new ArrayList<>();
     private DatabaseReference databaseReference;
@@ -45,7 +44,7 @@ public class UpdateTypeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_update_type);
         img_back_my_types = findViewById(R.id.img_back_my_types);
         img_back_my_types.setOnClickListener(view -> {finish();});
@@ -53,8 +52,8 @@ public class UpdateTypeActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         typeAdapter = new TypeAdapter(typeList, this);
         recyclerView.setAdapter(typeAdapter);
-        mcv_add_types = findViewById(R.id.mcv_add_types);
-        mcv_add_types.setOnClickListener(view -> {
+        imgv_add_types = findViewById(R.id.imgv_add_types);
+        imgv_add_types.setOnClickListener(view -> {
             Intent gotoAdd=new Intent(UpdateTypeActivity.this, TypeActivity.class);
             startActivity(gotoAdd);
         });

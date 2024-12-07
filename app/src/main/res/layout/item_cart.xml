@@ -79,7 +79,7 @@
                     android:text="Size"
                     android:textSize="12sp"
                     android:fontFamily="@font/roboto_bold"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/grey"/>
 
                 <TextView
                     android:id="@+id/tv_cart_item_price"

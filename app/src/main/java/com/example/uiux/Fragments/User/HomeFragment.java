@@ -250,7 +250,11 @@ public class HomeFragment extends Fragment {
                 // Khi tất cả các category được tải xong thì cập nhật adapter
                 progressBar_category.setVisibility(View.GONE);
                 mListCategory = categoryList;
-                CategoryAdapter adapter = new CategoryAdapter(mListCategory);
+                CategoryAdapter adapter = new CategoryAdapter(mListCategory, categoryName -> {
+                    Intent intent = new Intent(getContext(), AllSuppliesActivity.class);
+                    intent.putExtra("selectedCategory", categoryName);
+                    startActivity(intent);
+                });
                 rcv_category.setAdapter(adapter);
             }
 

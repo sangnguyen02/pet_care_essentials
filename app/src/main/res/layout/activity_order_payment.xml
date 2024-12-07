@@ -77,6 +77,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_margin="8dp"
+                android:weightSum="1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -84,7 +85,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
@@ -92,9 +93,10 @@
 
                 <TextView
                     android:id="@+id/textViewBuyerNameValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/grey"
+                    android:layout_weight="0.5"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
                     android:text="N/A" />
@@ -106,6 +108,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_margin="8dp"
+                android:weightSum="1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
@@ -114,7 +117,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
@@ -122,9 +125,10 @@
 
                 <TextView
                     android:id="@+id/textViewPhoneValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/grey"
+                    android:layout_weight="0.5"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
                     android:text="N/A" />
@@ -136,6 +140,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_margin="8dp"
+                android:weightSum="1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
@@ -144,7 +149,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
@@ -152,9 +157,10 @@
 
                 <TextView
                     android:id="@+id/textViewEmail"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/grey"
+                    android:layout_weight="0.5"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
                     android:text="N/A" />
@@ -167,15 +173,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_margin="8dp"
+                android:weightSum="1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout6"
-                tools:layout_editor_absoluteX="16dp">
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout6">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
@@ -183,9 +189,10 @@
 
                 <TextView
                     android:id="@+id/textViewAddressValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/grey"
+                    android:layout_weight="0.5"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
                     android:text="N/A" />
@@ -197,6 +204,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_margin="8dp"
+                android:weightSum="1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
@@ -205,7 +213,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
@@ -213,9 +221,10 @@
 
                 <TextView
                     android:id="@+id/textViewQuantity"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/grey"
+                    android:layout_weight="0.5"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
                     android:text="N/A" />
@@ -228,6 +237,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_margin="8dp"
+                android:weightSum="1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
@@ -236,7 +246,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
@@ -244,9 +254,10 @@
 
                 <TextView
                     android:id="@+id/textViewOrderDateValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/grey"
+                    android:layout_weight="0.5"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
                     android:text="N/A" />
@@ -259,6 +270,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_margin="8dp"
+                android:weightSum="1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout7"
@@ -267,7 +279,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
@@ -275,9 +287,10 @@
 
                 <TextView
                     android:id="@+id/textViewExpectedDeliveryDateValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/grey"
+                    android:layout_weight="0.5"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
                     android:text="N/A" />
@@ -290,6 +303,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_margin="8dp"
+                android:weightSum="1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout8"
@@ -299,7 +313,7 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="0.5"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
@@ -307,9 +321,10 @@
 
                 <TextView
                     android:id="@+id/textViewTongTien"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/grey"
+                    android:layout_weight="0.5"
                     android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
                     android:text="N/A" />
