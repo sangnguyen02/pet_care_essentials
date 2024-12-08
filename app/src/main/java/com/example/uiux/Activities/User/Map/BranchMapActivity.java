@@ -1,6 +1,7 @@
 package com.example.uiux.Activities.User.Map;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -53,6 +54,7 @@ public class BranchMapActivity extends AppCompatActivity {
     private PointAnnotationManager pointAnnotationManager;
     private ViewAnnotationManager viewAnnotationManager;
     private String[] branchStatusArray; // Mảng chuỗi trạng thái chi nhánh
+    private boolean fromBookActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,10 @@ public class BranchMapActivity extends AppCompatActivity {
         setContentView(R.layout.activity_branch_map);
         EdgeToEdge.enable(this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
+
+        Intent intent= getIntent();
+        fromBookActivity = intent.getBooleanExtra("from_book_activity", false);
+
 
         img_back_branches_map = findViewById(R.id.img_back_branches_map);
         img_back_branches_map.setOnClickListener(view -> finish());
@@ -175,8 +181,16 @@ public class BranchMapActivity extends AppCompatActivity {
         booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(BranchMapActivity.this, BranchStoreActivity.class);
-                startActivity(intent);
+                if(fromBookActivity) {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("selected_branch", branchStore.getBranch_Store_id());
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                } else {
+                    Intent intent=new Intent(BranchMapActivity.this, BranchStoreActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
 

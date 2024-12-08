@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -349,6 +350,8 @@ public class AllSuppliesActivity extends AppCompatActivity {
     private boolean isLoading = false;
     private String lastLoadedKey = null;
 
+    ProgressBar progressBar_all_supplies;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -357,24 +360,38 @@ public class AllSuppliesActivity extends AppCompatActivity {
 
         initWidget();
 
-        String selectedType = getIntent().getStringExtra("selectedType");
-        if (selectedType != null) {
-            Log.e("Selected Type", selectedType);
-            // Chọn chip tương ứng và lọc danh sách
-            loadInitialSupplies(() -> selectChip(selectedType.trim()));
-        } else {
-            loadInitialSupplies(null);
-        }
-        String selectedCategory = getIntent().getStringExtra("selectedCategory");
-        if (selectedCategory != null) {
-            Log.e("Selected Category", selectedCategory);
-            loadInitialSupplies(() -> filterSuppliesByCategory(selectedCategory.trim()));
-        } else {
-            loadInitialSupplies(null);
-        }
+//        String selectedType = getIntent().getStringExtra("selectedType");
+//        if (selectedType != null) {
+//            Log.e("Selected Type", selectedType);
+//            // Chọn chip tương ứng và lọc danh sách
+//            loadInitialSupplies(() -> selectChip(selectedType.trim()));
+//        } else {
+//            loadInitialSupplies(null);
+//        }
+//        String selectedCategory = getIntent().getStringExtra("selectedCategory");
+//        if (selectedCategory != null) {
+//            Log.e("Selected Category", selectedCategory);
+//            loadInitialSupplies(() -> filterSuppliesByCategory(selectedCategory.trim()));
+//        } else {
+//            loadInitialSupplies(null);
+//        }
+        loadInitialSupplies(() -> {
+            String selectedType = getIntent().getStringExtra("selectedType");
+            if (selectedType != null) {
+                Log.e("Selected Type", selectedType);
+                selectChip(selectedType.trim());
+            }
+
+            String selectedCategory = getIntent().getStringExtra("selectedCategory");
+            if (selectedCategory != null) {
+                Log.e("Selected Category", selectedCategory);
+                filterSuppliesByCategory(selectedCategory.trim());
+            }
+        });
     }
 
     void initWidget() {
+        progressBar_all_supplies = findViewById(R.id.progressBar_all_supplies);
         img_back_all_supply = findViewById(R.id.img_back_all_supply);
         img_back_all_supply.setOnClickListener(view -> finish());
         rcv_chip = findViewById(R.id.rcv_chip);
@@ -420,8 +437,9 @@ public class AllSuppliesActivity extends AppCompatActivity {
 
     private void loadInitialSupplies(Runnable callback) {
         isLoading = true;
+        progressBar_all_supplies.setVisibility(View.VISIBLE);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Supplies");
-        ref.limitToFirst(10).addListenerForSingleValueEvent(new ValueEventListener() {
+        ref.limitToFirst(30).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 suppliesList.clear();
@@ -433,15 +451,20 @@ public class AllSuppliesActivity extends AppCompatActivity {
                 allSuppliesAdapter.notifyDataSetChanged();
                 isLoading = false;
 
+                progressBar_all_supplies.setVisibility(View.GONE);
+
                 // Gọi callback nếu có
                 if (callback != null) {
                     callback.run();
+                } else {
+                    allSuppliesAdapter.notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 isLoading = false;
+                progressBar_all_supplies.setVisibility(View.GONE);
             }
         });
     }
@@ -492,8 +515,9 @@ public class AllSuppliesActivity extends AppCompatActivity {
             }
         }
 
-        allSuppliesAdapter = new AllSuppliesAdapter(filteredList, reviewList, getApplicationContext());
-        rcv_all_supplies.setAdapter(allSuppliesAdapter);
+//        allSuppliesAdapter = new AllSuppliesAdapter(filteredList, reviewList, getApplicationContext());
+//        rcv_all_supplies.setAdapter(allSuppliesAdapter);
+        allSuppliesAdapter.updateList(filteredList);
     }
 
     private void selectChip(String type) {
@@ -524,8 +548,9 @@ public class AllSuppliesActivity extends AppCompatActivity {
         }
 
         // Cập nhật adapter với danh sách đã lọc
-        allSuppliesAdapter = new AllSuppliesAdapter(filteredList, reviewList, getApplicationContext());
-        rcv_all_supplies.setAdapter(allSuppliesAdapter);
-        allSuppliesAdapter.notifyDataSetChanged();
+//        allSuppliesAdapter = new AllSuppliesAdapter(filteredList, reviewList, getApplicationContext());
+//        rcv_all_supplies.setAdapter(allSuppliesAdapter);
+//        allSuppliesAdapter.notifyDataSetChanged();
+        allSuppliesAdapter.updateList(filteredList);
     }
 }
