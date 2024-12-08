@@ -42,7 +42,8 @@ public class CartItem {
         this.imageUrl = imageUrl;
     }
     private String generateCombinedKey(String supply_id, String supply_size) {
-        return supply_id + "_" + supply_size;
+        String formattedSupplySize = supply_size.replace(".", ",");
+        return supply_id + "_" + formattedSupplySize;
     }
     public String getCombinedKey() {
         return combinedKey;
@@ -102,4 +103,16 @@ public class CartItem {
     public void updateTotalPrice() {
         this.totalPrice = this.supply_price * this.quantity; // Cập nhật giá trị tổng
     }
+
+//    public String[] splitCombinedKey() {
+//        if (this.combinedKey == null || !this.combinedKey.contains("_")) {
+//            return null;
+//        }
+//        String[] parts = this.combinedKey.split("_", 2);
+//        if (parts.length == 2) {
+//            // Khôi phục supply_size (thay , thành .)
+//            parts[1] = parts[1].replace(",", ".");
+//        }
+//        return parts;
+//    }
 }

@@ -37,8 +37,7 @@ import java.util.List;
 public class UpdateCategoryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private CategoryAdminAdapter categoryAdminAdapter;
-    private ImageView imgv_back_add_categories;
-    private MaterialCardView mcv_add_categories;
+    private ImageView imgv_back_add_categories, imgv_add_categories;
     private List<Category> categoryList = new ArrayList<>();
     private DatabaseReference databaseReference;
 
@@ -60,7 +59,7 @@ public class UpdateCategoryActivity extends AppCompatActivity {
         recyclerView.setAdapter(categoryAdminAdapter);
         loadCategory();
 
-        mcv_add_categories.setOnClickListener(view -> {
+        imgv_add_categories.setOnClickListener(view -> {
             Intent gotoAdd=new Intent(UpdateCategoryActivity.this, CategoryActivity.class);
             startActivity(gotoAdd);
         });
@@ -69,8 +68,8 @@ public class UpdateCategoryActivity extends AppCompatActivity {
 
     void initWidget() {
         imgv_back_add_categories = findViewById(R.id.img_back_my_categories);
+        imgv_add_categories = findViewById(R.id.imgv_add_categories);
         recyclerView = findViewById(R.id.rcv_my_categories);
-        mcv_add_categories = findViewById(R.id.mcv_add_categories);
     }
 
     private void loadCategory() {

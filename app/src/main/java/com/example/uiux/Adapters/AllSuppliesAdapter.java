@@ -35,6 +35,11 @@ public class AllSuppliesAdapter extends RecyclerView.Adapter<AllSuppliesAdapter.
         this.context = context;
     }
 
+    public void updateList(List<Supplies> newList) {
+        this.suppliesList = newList;
+        notifyDataSetChanged();  // Notify RecyclerView of data change
+    }
+
     @NonNull
     @Override
     public AllSuppliesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -249,39 +249,78 @@ public class CartActivity extends AppCompatActivity {
             });
         }
     }
-    public void getCategoryForSupplies(List<CartItem> selectedItems) {
-        List<String> supplyIds = new ArrayList<>();
-        for (CartItem item : selectedItems) {
-            supplyIds.add(item.getSupply_id());
-        }
-
-        DatabaseReference supplyRef = FirebaseDatabase.getInstance().getReference("Supplies");
-        List<String> categories = new ArrayList<>();
-
-        for (String supplyId : supplyIds) {
-            supplyRef.child(supplyId).addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    // Lấy thông tin category của sản phẩm
-                    String category = snapshot.child("category").getValue(String.class);
-
-                    if (category != null && !categories.contains(category)) {
-                        categories.add(category);
-                    }
-
-                    // Kiểm tra xem đã có đủ dữ liệu từ tất cả các sản phẩm
-                    if (categories.size() == supplyIds.size()) {
-                        checkCategoryMatch(categories);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Log.e("FirebaseError", "Error fetching supply data: " + error.getMessage());
-                }
-            });
-        }
+//    public void getCategoryForSupplies(List<CartItem> selectedItems) {
+//        List<String> supplyIds = new ArrayList<>();
+//        for (CartItem item : selectedItems) {
+//            supplyIds.add(item.getSupply_id());
+//        }
+//
+//        DatabaseReference supplyRef = FirebaseDatabase.getInstance().getReference("Supplies");
+//        List<String> categories = new ArrayList<>();
+//
+//        for (String supplyId : supplyIds) {
+//            supplyRef.child(supplyId).addListenerForSingleValueEvent(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    // Lấy thông tin category của sản phẩm
+//                    String category = snapshot.child("category").getValue(String.class);
+//
+//                    if (category != null && !categories.contains(category)) {
+//                        categories.add(category);
+//                    }
+//
+//                    // Kiểm tra xem đã có đủ dữ liệu từ tất cả các sản phẩm
+//                    if (categories.size() == supplyIds.size()) {
+//                        checkCategoryMatch(categories);
+//                    }
+//                }
+//
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//                    Log.e("FirebaseError", "Error fetching supply data: " + error.getMessage());
+//                }
+//            });
+//        }
+//    }
+public void getCategoryForSupplies(List<CartItem> selectedItems) {
+    List<String> supplyIds = new ArrayList<>();
+    for (CartItem item : selectedItems) {
+        supplyIds.add(item.getSupply_id());
     }
+
+    DatabaseReference supplyRef = FirebaseDatabase.getInstance().getReference("Supplies");
+    List<String> categories = new ArrayList<>();
+    final int[] remainingItemsToFetch = {supplyIds.size()}; // Bộ đếm kiểm tra khi nào tất cả đã hoàn thành
+
+    for (String supplyId : supplyIds) {
+        supplyRef.child(supplyId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                String category = snapshot.child("category").getValue(String.class);
+
+                if (category != null && !categories.contains(category)) {
+                    categories.add(category);
+                }
+
+                // Giảm số lượng còn lại và kiểm tra khi hoàn thành
+                remainingItemsToFetch[0]--;
+                if (remainingItemsToFetch[0] == 0) {
+                    checkCategoryMatch(categories);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseError", "Error fetching supply data: " + error.getMessage());
+                remainingItemsToFetch[0]--; // Giảm số lượng còn lại
+                if (remainingItemsToFetch[0] == 0) {
+                    checkCategoryMatch(categories); // Gọi kiểm tra ngay cả khi bị lỗi
+                }
+            }
+        });
+    }
+}
+
 
     private void checkCategoryMatch(List<String> categories) {
         if (categories.size() == 1) {

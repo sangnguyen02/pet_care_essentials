@@ -1,17 +1,21 @@
 package com.example.uiux.Activities.User.Map;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.uiux.Activities.Admin.Branch.BranchStoreActivity;
 import com.example.uiux.Activities.Admin.MainActivityAdmin;
@@ -46,15 +50,25 @@ import java.util.List;
 
 public class BranchMapActivity extends AppCompatActivity {
     private MapView mapView;
+    private ImageView img_back_branches_map;
     private PointAnnotationManager pointAnnotationManager;
     private ViewAnnotationManager viewAnnotationManager;
     private String[] branchStatusArray; // Mảng chuỗi trạng thái chi nhánh
+    private boolean fromBookActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_branch_map);
+        EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
 
+        Intent intent= getIntent();
+        fromBookActivity = intent.getBooleanExtra("from_book_activity", false);
+
+
+        img_back_branches_map = findViewById(R.id.img_back_branches_map);
+        img_back_branches_map.setOnClickListener(view -> finish());
         mapView = findViewById(R.id.mapView);
         int vectorResId = R.drawable.mark;
         Bitmap bitmap = VectorToBitmapConverter.convertVectorToBitmap(this, vectorResId);
@@ -167,8 +181,16 @@ public class BranchMapActivity extends AppCompatActivity {
         booking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent(BranchMapActivity.this, BranchStoreActivity.class);
-                startActivity(intent);
+                if(fromBookActivity) {
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra("selected_branch", branchStore.getBranch_Store_id());
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                } else {
+                    Intent intent=new Intent(BranchMapActivity.this, BranchStoreActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
 

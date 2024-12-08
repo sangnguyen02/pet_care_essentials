@@ -2,6 +2,7 @@ package com.example.uiux.Activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +30,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.Admin.Supplies.UpdateSuppliesActivity;
+import com.example.uiux.Activities.User.Review.SupplyReviewActivity;
 import com.example.uiux.Adapters.SuppliesAdapter;
 import com.example.uiux.Adapters.SupplyDetailOptionAdapter;
 import com.example.uiux.Adapters.SupplyImageListAdapter;
@@ -57,7 +59,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class SupplyDetailActivity extends AppCompatActivity implements SupplyDetailOptionAdapter.OnSupplyOptionClickListener {
-    MaterialCardView bottomSheetAddToCart, mcv_minus, mcv_plus;
+    MaterialCardView bottomSheetAddToCart, mcv_minus, mcv_plus, mcv_supply_review;
     MaterialButton btn_confirm_add_to_cart;
     BottomSheetBehavior bottomSheetBehaviorAddToCart;
     LottieAnimationView aniLove;
@@ -124,6 +126,12 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
             }
         });
 
+        mcv_supply_review.setOnClickListener(view -> {
+            Intent gotoReview = new Intent(SupplyDetailActivity.this, SupplyReviewActivity.class);
+            gotoReview.putExtra("supplyId", supplyId);
+            startActivity(gotoReview);
+        });
+
 
     }
 
@@ -133,6 +141,8 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
         tv_supply_title = findViewById(R.id.tv_supply_title);
         tv_supply_price = findViewById(R.id.tv_supply_price);
         tv_supply_description = findViewById(R.id.tv_description);
+        mcv_supply_review = findViewById(R.id.mcv_supply_review);
+
         // Bottomsheet
         tv_price_add_to_cart = findViewById(R.id.tv_price_add_to_cart);
         tv_total_stock_quantity = findViewById(R.id.tv_total_stock_quantity);
@@ -153,11 +163,13 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
         rcv_img_list.setAdapter(supplyImageListAdapter);
 
         supplyImageListAdapter.setImageClickListener(imageUrl -> {
-            Glide.with(this)
-                    .load(imageUrl)
-                    .placeholder(R.drawable.banner1)
-                    .error(R.drawable.guest)
-                    .into(img_supply);
+            if (!isDestroyed()) {
+                Glide.with(SupplyDetailActivity.this)
+                        .load(imageUrl)
+                        .placeholder(R.drawable.product_sample)
+                        .error(R.drawable.product_sample)
+                        .into(img_supply);
+            }
         });
 
         rcv_option_list = findViewById(R.id.rcv_option_list);
@@ -266,7 +278,8 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
 
 
     private String generateCombinedKey(String supplyId, String selectedSupplySize) {
-        return supplyId + "_" + selectedSupplySize;
+        String formattedSupplySize = selectedSupplySize.replace(".", ",");
+        return supplyId + "_" + formattedSupplySize;
     }
 
 
@@ -309,9 +322,12 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
 
                     if (supplies.getImageUrls() != null && !supplies.getImageUrls().isEmpty()) {
                         supplyAddToCartImageUrl = supplies.getImageUrls().get(0);
-                        Glide.with(SupplyDetailActivity.this)
-                                .load(supplyAddToCartImageUrl)
-                                .into(img_supply_add_to_cart);
+                        if(!isDestroyed()) {
+                            Glide.with(SupplyDetailActivity.this)
+                                    .load(supplyAddToCartImageUrl)
+                                    .into(img_supply_add_to_cart);
+                        }
+
                     }
 
                     loadSupplyReview(supplyId);
@@ -406,14 +422,12 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
 
     private void toggleAnimation() {
         if (!isAnimating) {
-            // Nếu không hoạt động, chạy từ frame 0 đến frame 50
-            aniLove.setMinAndMaxFrame(0, 50); // Chỉ định khoảng khung hình
-            aniLove.setProgress(0f); // Thiết lập khung hình bắt đầu
-            aniLove.playAnimation(); // Chạy animation
+            aniLove.setMinAndMaxFrame(0, 50);
+            aniLove.setProgress(0f);
+            aniLove.playAnimation();
             isAnimating = true;
         } else {
-            aniLove.setProgress(0); // Thiết lập khung hình bắt đầu
-            // Chạy animation
+            aniLove.setProgress(0);
             aniLove.pauseAnimation();
             isAnimating = false;
         }

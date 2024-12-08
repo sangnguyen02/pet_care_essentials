@@ -11,6 +11,8 @@ public class OrderStatus {
     public static  final  int RETURN_PRODUCT_WAITING=7;
     public static final int RETURNED = 5; // Đã trả lại
 
+
+
     // Hàm trả về tên trạng thái theo giá trị int
     public static String getStatusName(int status) {
         switch (status) {

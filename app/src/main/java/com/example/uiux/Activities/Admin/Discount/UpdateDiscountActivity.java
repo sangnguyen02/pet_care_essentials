@@ -29,7 +29,7 @@ import java.util.List;
 public class UpdateDiscountActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private DiscountAdapter discountAdapter;
-    private ImageView imgv_back_add_categories;
+    private ImageView img_back_my_discount, imgv_add_discount;
     private MaterialCardView mcv_add_categories;
     private List<Discount> discountList = new ArrayList<>();
     private DatabaseReference databaseReference;
@@ -43,14 +43,14 @@ public class UpdateDiscountActivity extends AppCompatActivity {
 
         initWidget();
 
-        imgv_back_add_categories.setOnClickListener(view -> finish());
+        img_back_my_discount.setOnClickListener(view -> finish());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         discountAdapter = new DiscountAdapter(discountList, this);
         recyclerView.setAdapter(discountAdapter);
         loadDiscount();
 
-        mcv_add_categories.setOnClickListener(view -> {
+        imgv_add_discount.setOnClickListener(view -> {
             Intent gotoAdd=new Intent(UpdateDiscountActivity.this, DiscountActivity.class);
             startActivity(gotoAdd);
         });
@@ -58,9 +58,9 @@ public class UpdateDiscountActivity extends AppCompatActivity {
     }
 
     void initWidget() {
-        imgv_back_add_categories = findViewById(R.id.img_back_my_categories);
+        img_back_my_discount = findViewById(R.id.img_back_my_discount);
         recyclerView = findViewById(R.id.rcv_my_categories);
-        mcv_add_categories = findViewById(R.id.mcv_add_categories);
+        imgv_add_discount = findViewById(R.id.imgv_add_discount);
     }
 
     private void loadDiscount() {

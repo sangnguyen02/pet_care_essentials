@@ -8,6 +8,7 @@ import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -24,10 +26,13 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.uiux.Activities.User.AccountWallet.ConfirmPINActivity;
 import com.example.uiux.Activities.User.AccountWallet.DisplayAccountWallet;
 import com.example.uiux.Model.AccountWallet;
+import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.Order;
+import com.example.uiux.Model.Supplies_Detail;
 import com.example.uiux.Model.Voucher;
 import com.example.uiux.R;
 import com.example.uiux.ZaloPay.Api.CreateOrder;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +41,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 import vn.zalopay.sdk.Environment;
 import vn.zalopay.sdk.ZaloPayError;
 import vn.zalopay.sdk.ZaloPaySDK;
@@ -43,20 +50,28 @@ import vn.zalopay.sdk.listeners.PayOrderListener;
 
 public class OrderPaymentActivity extends AppCompatActivity {
     TextView txtSoluong, txtTongTien,txtName,txtPhone,txtEmail,txtAddress,txtOrderDate,txtExpectedDeliveryDate;
-    Button btnThanhToan,btnConfirm,btnWallet;
+    MaterialButton btnThanhToan,btnConfirm,btnWallet;
+    ImageView img_back_order_confirm;
     String accountId;
     Double total;
     String orderId;
     String wallet_Id;
     String voucherId;
+    ArrayList<String> selectedSupplies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_order_payment);
         initWidget();
 
+        selectedSupplies = getIntent().getStringArrayListExtra("selected_supplies");
+        if (selectedSupplies != null) {
+            // Xử lý dữ liệu selected_supplies tại đây nếu cần
+            Log.d("OrderPaymentActivity", "Selected supplies: " + selectedSupplies.toString());
+        }
 
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -76,18 +91,25 @@ public class OrderPaymentActivity extends AppCompatActivity {
          accountId = getIntent().getStringExtra("accountId");
         String address = getIntent().getStringExtra("address");
         String quantity = getIntent().getStringExtra("quantity");
+
+        //Bổ sung: nhận total payment sang để hiển thị
+        String totalPayment = getIntent().getStringExtra("total_payment");
+
         int index = getIntent().getIntExtra("payment_index",0);
         Log.e("index", String.valueOf(index));
 
 
         String totalString = String.format("%.0f", total);
-        txtTongTien.setText(Double.toString(total));
+        txtTongTien.setText(totalPayment); // chuyển thành nhận từ intent
         txtName.setText(name);
         txtSoluong.setText(quantity);
         txtAddress.setText(address);
         txtExpectedDeliveryDate.setText(expectedDeliveryDate);
         txtOrderDate.setText(formattedDate);
         txtPhone.setText(phone);
+
+
+
         fetchEmailFromFirebase(accountId);
         if(index==1)
         {
@@ -115,6 +137,13 @@ public class OrderPaymentActivity extends AppCompatActivity {
                     updateVoucherQuantity(voucherId);
                 }
                 updateOrder(orderId,0);
+                if (selectedSupplies != null && !selectedSupplies.isEmpty()) {
+                    for (String supply_combinedKey : selectedSupplies) {
+                        updateCartAndDeleteItem(supply_combinedKey);
+                    }
+                }
+
+
                 Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
                 intent1.putExtra("result","Xac nhan thanh cong");
                 startActivity(intent1);
@@ -129,6 +158,15 @@ public class OrderPaymentActivity extends AppCompatActivity {
                 Intent intent = new Intent(OrderPaymentActivity.this, ConfirmPINActivity.class);
                 intent.putExtra("wallet_id", wallet_Id);
                 confirmPINLauncher.launch(intent);
+                if (selectedSupplies != null && !selectedSupplies.isEmpty()) {
+                    for (String supply_combinedKey : selectedSupplies) {
+                        updateCartAndDeleteItem(supply_combinedKey);
+                    }
+                }
+//
+//                Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
+//                intent1.putExtra("result","Xac nhan thanh cong");
+//                startActivity(intent1);
             }
         });
 
@@ -162,6 +200,11 @@ public class OrderPaymentActivity extends AppCompatActivity {
                                     updateVoucherQuantity(voucherId);
                                 }
                                 updateOrder(orderId,1);
+                                if (selectedSupplies != null && !selectedSupplies.isEmpty()) {
+                                    for (String supply_combinedKey : selectedSupplies) {
+                                        updateCartAndDeleteItem(supply_combinedKey);
+                                    }
+                                }
                                 startActivity(intent1);
 
                             }
@@ -225,6 +268,8 @@ public class OrderPaymentActivity extends AppCompatActivity {
 
 
     private void initWidget() {
+        img_back_order_confirm = findViewById(R.id.img_back_order_confirm);
+        img_back_order_confirm.setOnClickListener(view -> finish());
         txtTongTien = findViewById(R.id.textViewTongTien);
         btnThanhToan = findViewById(R.id.buttonThanhToan);
         // Ánh xạ các TextView khác
@@ -362,6 +407,113 @@ public class OrderPaymentActivity extends AppCompatActivity {
         });
     }
 
+    private void updateCartAndDeleteItem(String supply_combinedKey) {
+        DatabaseReference cartRef = FirebaseDatabase.getInstance()
+                .getReference("Cart")
+                .child(accountId)
+                .child(supply_combinedKey);
+
+        String[] splits = splitCombinedKey(supply_combinedKey);
+        DatabaseReference supplyImportRef = FirebaseDatabase.getInstance()
+                .getReference("Supplies_Imports")
+                .child(splits[0]);
+
+        DatabaseReference supplyPriceRef = FirebaseDatabase.getInstance()
+                .getReference("Supplies_Price")
+                .child(splits[0]);
+
+        cartRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                CartItem cartItem = snapshot.getValue(CartItem.class);
+                if (cartItem != null) {
+                    int quantity = cartItem.getQuantity();
+
+                    updateStock(supplyImportRef, splits[1], quantity, "suppliesDetail", () -> {
+                        updateStock(supplyPriceRef, splits[1], quantity, "suppliesDetailList", () -> {
+                            updateTotalStock(supplyImportRef, splits[0], splits[1], quantity, "suppliesDetail", () -> {
+                                cartRef.removeValue().addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        Log.e("Cart", "Deleted cart item: " + supply_combinedKey);
+                                    } else {
+                                        Log.e("Cart", "Failed to delete cart item: " + supply_combinedKey);
+                                    }
+
+                                });
+
+                            });
+                        });
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Cart", "Failed to read cart item: " + error.getMessage());
+            }
+        });
+    }
+
+    private void updateStock(DatabaseReference supplyRef, String size, int quantity, String nodeType, Runnable onComplete) {
+        supplyRef.child(nodeType).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean updated = false;
+                for (DataSnapshot detailSnapshot : snapshot.getChildren()) {
+                    Supplies_Detail suppliesDetail = detailSnapshot.getValue(Supplies_Detail.class);
+                    if (suppliesDetail != null && suppliesDetail.getSize().equals(size)) {
+                        int stockQuantity = suppliesDetail.getQuantity();
+                        int updatedStockQuantity = stockQuantity - quantity;
+                        detailSnapshot.getRef().child("quantity").setValue(updatedStockQuantity);
+                        updated = true;
+                    }
+                }
+                if (updated && onComplete != null) {
+                    onComplete.run();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Stock", "Failed to update stock: " + error.getMessage());
+            }
+        });
+    }
+
+    private void updateTotalStock(DatabaseReference supplyRef, String supplyId ,String size, int quantity, String nodeType, Runnable onComplete) {
+        supplyRef.child(nodeType).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean updated = false;
+                int totalQuantity = 0;
+                for (DataSnapshot detailSnapshot : snapshot.getChildren()) {
+                    Supplies_Detail suppliesDetail = detailSnapshot.getValue(Supplies_Detail.class);
+                    totalQuantity += suppliesDetail.getQuantity();
+                    updated = true;
+                }
+                updateTotalSupplyQuantity(supplyId, totalQuantity);
+
+                if (updated && onComplete != null) {
+                    onComplete.run();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("Stock", "Failed to update stock: " + error.getMessage());
+            }
+        });
+    }
+
+    private void updateTotalSupplyQuantity(String suppliesId, int totalQuantity) {
+        DatabaseReference supplyRef = FirebaseDatabase.getInstance().getReference("Supplies").child(suppliesId);
+
+        supplyRef.child("quantity").setValue(totalQuantity);
+    }
+
+
+
+
 
 
 
@@ -384,4 +536,39 @@ public class OrderPaymentActivity extends AppCompatActivity {
                     Toast.makeText(this, "PIN không hợp lệ hoặc bạn đã hủy.", Toast.LENGTH_SHORT).show();
                 }
             });
+
+//    private String[] splitCombinedKey(String combinedKey) {
+//        if (combinedKey == null || !combinedKey.contains("_")) {
+//            return null;
+//        }
+//        String[] parts = combinedKey.split("_", 2);
+//        if (parts.length == 2) {
+//            // Khôi phục supply_size (thay , thành .)
+//            parts[1] = parts[1].replace(",", ".");
+//        }
+//        return parts;
+//    }
+
+    private String[] splitCombinedKey(String combinedKey) {
+        if (combinedKey == null || !combinedKey.contains("_")) {
+            return null;
+        }
+
+        // Tìm vị trí của dấu gạch dưới cuối cùng
+        int lastUnderscoreIndex = combinedKey.lastIndexOf('_');
+        if (lastUnderscoreIndex == -1) {
+            return null; // Không tìm thấy dấu gạch dưới
+        }
+
+        // Tách supplyId và size
+        String supplyId = combinedKey.substring(0, lastUnderscoreIndex);
+        String size = combinedKey.substring(lastUnderscoreIndex + 1);
+
+        // Trả về kết quả dưới dạng một mảng
+        return new String[] { supplyId, size };
     }
+
+
+}
+
+

@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_bold"
                     android:text="4.6"
-                    android:textSize="36sp"
+                    android:textSize="28sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@+id/label_no_of_review"
                     app:layout_constraintStart_toStartOf="parent"

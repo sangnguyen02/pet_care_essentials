@@ -21,9 +21,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder> {
     private List<Category> mListCategory;
+    private OnCategoryClickListener listener;
 
-    public CategoryAdapter(List<Category> mListCategory) {
+    public CategoryAdapter(List<Category> mListCategory, OnCategoryClickListener listener) {
         this.mListCategory = mListCategory;
+        this.listener = listener;
     }
 
     @NonNull
@@ -43,12 +45,22 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
         Glide.with(holder.itemView.getContext())
                 .load(category.getImageUrl()).fitCenter().override(64,64)
                 .into(holder.imgCategory);
+
+        holder.mcv_category.setOnClickListener(view -> {
+            if (listener != null) {
+                listener.onCategoryClick(category.getName());
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return mListCategory != null ? mListCategory.size() : 0;
     }
+    public interface OnCategoryClickListener {
+        void onCategoryClick(String categoryName);
+    }
+
 
     public static class CategoryViewHolder extends RecyclerView.ViewHolder {
         private MaterialCardView mcv_category;
@@ -59,9 +71,6 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.Catego
             mcv_category = itemView.findViewById(R.id.mcv_category_item);
             imgCategory = itemView.findViewById(R.id.img_category);
 
-            mcv_category.setOnClickListener(view -> {
-
-            });
         }
     }
 }

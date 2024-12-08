@@ -39,8 +39,7 @@ import java.util.List;
 public class UpdateBranchStoreActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private BranchStoreAdapter branchStoreAdapter;
-    private ImageView imgv_back_add_store;
-    private MaterialCardView mcv_add_store;
+    private ImageView imgv_back_add_store, imgv_add_store;
     private List<BranchStore> branchStoreList = new ArrayList<>();
     private DatabaseReference databaseReference;
 
@@ -63,7 +62,7 @@ public class UpdateBranchStoreActivity extends AppCompatActivity {
 
         loadAddresses();
 
-        mcv_add_store.setOnClickListener(view -> {
+        imgv_add_store.setOnClickListener(view -> {
             Intent gotoAdd=new Intent(UpdateBranchStoreActivity.this, BranchStoreActivity.class);
 //            gotoAdd.putExtra("account_id",accountId);
             startActivity(gotoAdd);
@@ -72,7 +71,7 @@ public class UpdateBranchStoreActivity extends AppCompatActivity {
     void initWidget() {
         imgv_back_add_store = findViewById(R.id.img_back_my_store);
         recyclerView = findViewById(R.id.rcv_my_store);
-        mcv_add_store = findViewById(R.id.mcv_add_store);
+        imgv_add_store = findViewById(R.id.imgv_add_store);
     }
     private void loadAddresses() {
         databaseReference = FirebaseDatabase.getInstance().getReference("Branch Store");
