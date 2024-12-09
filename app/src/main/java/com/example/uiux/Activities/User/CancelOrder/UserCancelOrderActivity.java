@@ -29,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.UUID;
 
 public class UserCancelOrderActivity extends AppCompatActivity {
@@ -146,6 +147,7 @@ public class UserCancelOrderActivity extends AppCompatActivity {
                     if (order != null && order.getIs_completed_payment() == 1) {
                         // Thanh toán hoàn tất
                         Toast.makeText(UserCancelOrderActivity.this, "Thanh toán hoàn tất", Toast.LENGTH_SHORT).show();
+                        Log.e("Thanh toán hoàn tất","Thanh toán hoàn tất");
                         // Bạn có thể thực hiện các hành động khác nếu thanh toán đã hoàn tất
                         totalPrice=order.getTotal_price();
                         Refund();
@@ -166,19 +168,23 @@ public class UserCancelOrderActivity extends AppCompatActivity {
         });
     }
     private void Refund() {
-        // Truy vấn ví của người dùng từ Firebase theo accountId
-        accountWalletRef.orderByChild("account_id").equalTo(accountId)
+        // Log để kiểm tra giá trị của accountId
+        Log.e("ID", accountId);
+
+        // Truy vấn vào Firebase với cấu trúc chính xác
+        accountWalletRef
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         // Kiểm tra ví của người dùng có tồn tại không
                         if (dataSnapshot.exists()) {
+                            // Chỉ có một ví của người dùng, lấy ví đầu tiên
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 AccountWallet accountWallet = snapshot.getValue(AccountWallet.class);
-                                if (accountWallet != null) {
+                                if (accountWallet != null&& Objects.equals(accountWallet.getAccount_id(), accountId)) {
                                     // Lấy số dư hiện tại của ví
                                     double currentBalance = accountWallet.getBalance();
-                                    wallet_id=accountWallet.getWallet_id();
+                                    wallet_id = accountWallet.getWallet_id();
 
                                     // Cập nhật số dư mới
                                     double newBalance = currentBalance + totalPrice;
@@ -209,6 +215,7 @@ public class UserCancelOrderActivity extends AppCompatActivity {
                     }
                 });
     }
+
 
     private void CreateHistory() {
         // Lấy ngày giờ hiện tại theo định dạng yyyy/MM/dd HH:mm:ss

@@ -7,8 +7,11 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +58,24 @@ public class BranchMapActivity extends AppCompatActivity {
     private ViewAnnotationManager viewAnnotationManager;
     private String[] branchStatusArray; // Mảng chuỗi trạng thái chi nhánh
     private boolean fromBookActivity;
+    private Spinner regionSpinner;
+    // Define coordinates for regions
+    private static final CameraOptions VIETNAM = new CameraOptions.Builder()
+            .center(Point.fromLngLat(108.2068, 16.0471))
+            .zoom(5.0)
+            .build();
+    private static final CameraOptions NORTH = new CameraOptions.Builder()
+            .center(Point.fromLngLat(106.0, 21.0285))
+            .zoom(7.0)
+            .build();
+    private static final CameraOptions CENTRAL = new CameraOptions.Builder()
+            .center(Point.fromLngLat(108.0, 15.8794))
+            .zoom(7.0)
+            .build();
+    private static final CameraOptions SOUTH = new CameraOptions.Builder()
+            .center(Point.fromLngLat(106.6297, 10.8231))
+            .zoom(7.0)
+            .build();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,44 +94,83 @@ public class BranchMapActivity extends AppCompatActivity {
         int vectorResId = R.drawable.mark;
         Bitmap bitmap = VectorToBitmapConverter.convertVectorToBitmap(this, vectorResId);
         branchStatusArray = getResources().getStringArray(R.array.branch_store_status);
+        regionSpinner = findViewById(R.id.region_spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.regions_array, android.R.layout.simple_spinner_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        regionSpinner.setAdapter(adapter);
+        regionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0: // Vietnam
+                        mapView.getMapboxMap().setCamera(VIETNAM);
+                        break;
+                    case 1: // North
+                        mapView.getMapboxMap().setCamera(NORTH);
+                        break;
+                    case 2: // Central
+                        mapView.getMapboxMap().setCamera(CENTRAL);
+                        break;
+                    case 3: // South
+                        mapView.getMapboxMap().setCamera(SOUTH);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
 
         // Thiết lập map và tải style
+//        mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
+//            @Override
+//            public void onStyleLoaded(@NonNull Style style) {
+////                mapView.getMapboxMap().setCamera(new CameraOptions.Builder()
+////                        .center(Point.fromLngLat(106.688084, 16.054407))
+////                        .zoom(5.0)
+////                        .pitch(0.0)
+////                        .bearing(0.0)
+////                        .build()
+////                );
+//                CameraBoundsOptions vietnamBounds = new CameraBoundsOptions.Builder()
+//                        .bounds(new CoordinateBounds(
+//                                Point.fromLngLat(102.14441, 8.179066), // Southwest corner of Vietnam
+//                                Point.fromLngLat(109.464639, 23.393395) // Northeast corner of Vietnam
+//                        ))
+//                        .minZoom(5.0) // Set minimum zoom level
+//                        .maxZoom(15.0) // Set maximum zoom level
+//                        .build();
+//
+//                // Áp dụng giới hạn camera để giới hạn khu vực bản đồ chỉ ở Việt Nam
+//                mapView.getMapboxMap().setBounds(vietnamBounds);
+//                // Thiết lập vị trí camera ban đầu để hiển thị toàn bộ Việt Nam
+//                Point vietnamCenter = Point.fromLngLat(108.2068, 16.0471);
+//                CameraOptions initialCameraOptions = new CameraOptions.Builder()
+//                        .center(vietnamCenter)
+//                        .zoom(5.0)
+//                        .bearing(0.0)
+//                        .pitch(0.0)
+//                        .build();
+//                mapView.getMapboxMap().setCamera(initialCameraOptions);
+//
+//                AnnotationPlugin annotationAPI = AnnotationPluginImplKt.getAnnotations((MapPluginProviderDelegate) mapView);
+//                pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationAPI, mapView);
+//                viewAnnotationManager = mapView.getViewAnnotationManager(); // Khởi tạo viewAnnotationManager
+//
+//                // Gọi hàm để lấy các điểm từ Firebase
+//                fetchBranchStores(bitmap);
+//            }
+//        });
+        // Load the map style and fetch data
         mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
-//                mapView.getMapboxMap().setCamera(new CameraOptions.Builder()
-//                        .center(Point.fromLngLat(106.688084, 16.054407))
-//                        .zoom(5.0)
-//                        .pitch(0.0)
-//                        .bearing(0.0)
-//                        .build()
-//                );
-                CameraBoundsOptions vietnamBounds = new CameraBoundsOptions.Builder()
-                        .bounds(new CoordinateBounds(
-                                Point.fromLngLat(102.14441, 8.179066), // Southwest corner of Vietnam
-                                Point.fromLngLat(109.464639, 23.393395) // Northeast corner of Vietnam
-                        ))
-                        .minZoom(5.0) // Set minimum zoom level
-                        .maxZoom(15.0) // Set maximum zoom level
-                        .build();
-
-                // Áp dụng giới hạn camera để giới hạn khu vực bản đồ chỉ ở Việt Nam
-                mapView.getMapboxMap().setBounds(vietnamBounds);
-                // Thiết lập vị trí camera ban đầu để hiển thị toàn bộ Việt Nam
-                Point vietnamCenter = Point.fromLngLat(108.2068, 16.0471);
-                CameraOptions initialCameraOptions = new CameraOptions.Builder()
-                        .center(vietnamCenter)
-                        .zoom(5.0)
-                        .bearing(0.0)
-                        .pitch(0.0)
-                        .build();
-                mapView.getMapboxMap().setCamera(initialCameraOptions);
-
                 AnnotationPlugin annotationAPI = AnnotationPluginImplKt.getAnnotations((MapPluginProviderDelegate) mapView);
                 pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationAPI, mapView);
-                viewAnnotationManager = mapView.getViewAnnotationManager(); // Khởi tạo viewAnnotationManager
-
-                // Gọi hàm để lấy các điểm từ Firebase
                 fetchBranchStores(bitmap);
             }
         });

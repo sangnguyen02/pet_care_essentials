@@ -3,6 +3,7 @@ package com.example.uiux.Adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.uiux.Activities.User.CancelOrder.UserCancelOrderActivity;
 import com.example.uiux.Activities.User.Review.SupplyReviewActivity;
 import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.Supplies_Detail;
@@ -29,30 +31,34 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+//public OrderChildAdapter(Context context, List<CartItem> cartPaymentItemList) {
+//    this.context = context;
+//    this.cartPaymentItemList = cartPaymentItemList;
+//}
 
 public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.OrderChildViewHolder> {
 
-    private List<CartItem> cartPaymentItemList;
+    public List<CartItem> cartPaymentItemList;
     private Context context;
     private int orderStatus;
-    //private List<CartItem> selectedItems = new ArrayList<>();
+    private String order_id;  // Lưu trữ order_id
 
-    public OrderChildAdapter(Context context, List<CartItem> cartPaymentItemList, int orderStatus) {
+    public OrderChildAdapter(Context context, List<CartItem> cartPaymentItemList, int orderStatus, String order_id) {
         this.context = context;
         this.cartPaymentItemList = cartPaymentItemList;
         this.orderStatus = orderStatus;
+        this.order_id = order_id;  // Truyền order_id khi khởi tạo adapter
     }
-
     public OrderChildAdapter(Context context, List<CartItem> cartPaymentItemList) {
-        this.context = context;
-        this.cartPaymentItemList = cartPaymentItemList;
-    }
+    this.context = context;
+    this.cartPaymentItemList = cartPaymentItemList;
+}
 
     @NonNull
     @Override
     public OrderChildViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_order_child, parent, false);
-        return new OrderChildViewHolder(view, context);
+        return new OrderChildViewHolder(view, context, order_id); // Truyền order_id vào ViewHolder
     }
 
     @Override
@@ -74,7 +80,7 @@ public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.Or
             holder.img_supply.setImageResource(R.drawable.product_sample);
         }
 
-        if(String.valueOf(orderStatus).equals("3")) {
+        if (String.valueOf(orderStatus).equals("3")) {
             holder.btn_review_supply.setVisibility(View.VISIBLE);
             holder.btn_buy_again.setVisibility(View.VISIBLE);
 
@@ -84,7 +90,6 @@ public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.Or
                 holder.itemView.getContext().startActivity(goToReview);
             });
         }
-
     }
 
     @Override
@@ -95,11 +100,12 @@ public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.Or
     public static class OrderChildViewHolder extends RecyclerView.ViewHolder {
         ImageView img_supply;
         TextView tvSupplyTitle, tvSupplySize, tvSupplyPrice, tvSupplyQuantity, tvSupplyTotalPrice;
-        MaterialButton btn_review_supply, btn_buy_again;
-        String accountId;
+        MaterialButton btn_review_supply, btn_buy_again, btn_cancel;
         SharedPreferences preferences;
+        String order_id;  // Lưu trữ order_id trong ViewHolder
 
-        public OrderChildViewHolder(@NonNull View itemView, Context context) {
+        // Cập nhật constructor để nhận order_id từ adapter
+        public OrderChildViewHolder(@NonNull View itemView, Context context, String order_id) {
             super(itemView);
             tvSupplyTitle = itemView.findViewById(R.id.tv_order_child_item_title);
             tvSupplySize = itemView.findViewById(R.id.tv_order_child_item_size);
@@ -109,8 +115,22 @@ public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.Or
             img_supply = itemView.findViewById(R.id.img_order_child_item);
             btn_review_supply = itemView.findViewById(R.id.btn_review_supply);
             btn_buy_again = itemView.findViewById(R.id.btn_buy_again);
+            btn_cancel = itemView.findViewById(R.id.btn_cancel);
 
             preferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            this.order_id = order_id; // Nhận order_id từ constructor
+
+            // Sự kiện cho nút "Cancel"
+            btn_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    // Khi nút Cancel được nhấn, mở UserCancelOrderActivity với order_id
+                    Intent intent = new Intent(context, UserCancelOrderActivity.class);
+                    intent.putExtra("order_id", order_id); // Truyền order_id vào Intent
+                    Log.e("Order_ID", order_id);  // Ghi log để kiểm tra order_id
+                    context.startActivity(intent); // Mở Activity mới
+                }
+            });
         }
     }
 }

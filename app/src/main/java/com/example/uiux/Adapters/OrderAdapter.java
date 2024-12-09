@@ -39,7 +39,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(OrderViewHolder holder, int position) {
         Order order = orders.get(position);
         Log.e("ORDER", "Binding order: " + order.getOrder_id());
-        OrderChildAdapter orderChildAdapter = new OrderChildAdapter(holder.itemView.getContext(), order.getCart_items_ordered(), order.getStatus());
+        OrderChildAdapter orderChildAdapter = new OrderChildAdapter(holder.itemView.getContext(), order.getCart_items_ordered(), order.getStatus(),order.getOrder_id());
         holder.rcv_order_child.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), RecyclerView.VERTICAL, false));
         holder.rcv_order_child.setAdapter(orderChildAdapter);
 
