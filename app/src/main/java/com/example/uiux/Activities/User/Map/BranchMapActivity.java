@@ -46,10 +46,15 @@ import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManager;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationManagerKt;
 import com.mapbox.maps.plugin.annotation.generated.PointAnnotationOptions;
 import com.mapbox.maps.plugin.delegates.MapPluginProviderDelegate;
+import com.mapbox.maps.plugin.gestures.OnMapClickListener;
 import com.mapbox.maps.viewannotation.ViewAnnotationManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.mapbox.maps.plugin.gestures.GesturesPlugin;
+import com.mapbox.maps.plugin.gestures.OnMapClickListener;
+import com.mapbox.maps.plugin.Plugin;
+
 
 public class BranchMapActivity extends AppCompatActivity {
     private MapView mapView;
@@ -66,15 +71,15 @@ public class BranchMapActivity extends AppCompatActivity {
             .build();
     private static final CameraOptions NORTH = new CameraOptions.Builder()
             .center(Point.fromLngLat(106.0, 21.0285))
-            .zoom(7.0)
+            .zoom(8.0)
             .build();
     private static final CameraOptions CENTRAL = new CameraOptions.Builder()
             .center(Point.fromLngLat(108.0, 15.8794))
-            .zoom(7.0)
+            .zoom(8.0)
             .build();
     private static final CameraOptions SOUTH = new CameraOptions.Builder()
             .center(Point.fromLngLat(106.6297, 10.8231))
-            .zoom(7.0)
+            .zoom(10.0)
             .build();
 
     @Override
@@ -125,55 +130,23 @@ public class BranchMapActivity extends AppCompatActivity {
             }
         });
 
-        // Thiết lập map và tải style
-//        mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
-//            @Override
-//            public void onStyleLoaded(@NonNull Style style) {
-////                mapView.getMapboxMap().setCamera(new CameraOptions.Builder()
-////                        .center(Point.fromLngLat(106.688084, 16.054407))
-////                        .zoom(5.0)
-////                        .pitch(0.0)
-////                        .bearing(0.0)
-////                        .build()
-////                );
-//                CameraBoundsOptions vietnamBounds = new CameraBoundsOptions.Builder()
-//                        .bounds(new CoordinateBounds(
-//                                Point.fromLngLat(102.14441, 8.179066), // Southwest corner of Vietnam
-//                                Point.fromLngLat(109.464639, 23.393395) // Northeast corner of Vietnam
-//                        ))
-//                        .minZoom(5.0) // Set minimum zoom level
-//                        .maxZoom(15.0) // Set maximum zoom level
-//                        .build();
-//
-//                // Áp dụng giới hạn camera để giới hạn khu vực bản đồ chỉ ở Việt Nam
-//                mapView.getMapboxMap().setBounds(vietnamBounds);
-//                // Thiết lập vị trí camera ban đầu để hiển thị toàn bộ Việt Nam
-//                Point vietnamCenter = Point.fromLngLat(108.2068, 16.0471);
-//                CameraOptions initialCameraOptions = new CameraOptions.Builder()
-//                        .center(vietnamCenter)
-//                        .zoom(5.0)
-//                        .bearing(0.0)
-//                        .pitch(0.0)
-//                        .build();
-//                mapView.getMapboxMap().setCamera(initialCameraOptions);
-//
-//                AnnotationPlugin annotationAPI = AnnotationPluginImplKt.getAnnotations((MapPluginProviderDelegate) mapView);
-//                pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationAPI, mapView);
-//                viewAnnotationManager = mapView.getViewAnnotationManager(); // Khởi tạo viewAnnotationManager
-//
-//                // Gọi hàm để lấy các điểm từ Firebase
-//                fetchBranchStores(bitmap);
-//            }
-//        });
-        // Load the map style and fetch data
+
+
         mapView.getMapboxMap().loadStyleUri(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 AnnotationPlugin annotationAPI = AnnotationPluginImplKt.getAnnotations((MapPluginProviderDelegate) mapView);
                 pointAnnotationManager = PointAnnotationManagerKt.createPointAnnotationManager(annotationAPI, mapView);
+                viewAnnotationManager = mapView.getViewAnnotationManager(); // Initialize here
+
+
+
                 fetchBranchStores(bitmap);
             }
         });
+
+
+
     }
 
     private void fetchBranchStores(Bitmap bitmap) {
@@ -217,7 +190,10 @@ public class BranchMapActivity extends AppCompatActivity {
     }
     private void showCustomAnnotation(BranchStore branchStore, Point point) {
         // Xóa bất kỳ ViewAnnotation nào trước đó nếu cần
-        viewAnnotationManager.removeAllViewAnnotations();
+        if (viewAnnotationManager != null) {
+            viewAnnotationManager.removeAllViewAnnotations();
+        }
+
 
         // Tạo ViewAnnotation với layout tùy chỉnh
         ViewAnnotationOptions options = new ViewAnnotationOptions.Builder()
