@@ -1,6 +1,9 @@
 package com.example.uiux.Activities;
 
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,12 +30,16 @@ import com.example.uiux.Adapters.OrderChildAdapter;
 import com.example.uiux.Adapters.PaymentMethodAdapter;
 import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.DeliveryMethod;
+import com.example.uiux.Model.Notification;
 import com.example.uiux.Model.Order;
 import com.example.uiux.Model.PaymentMethod;
 import com.example.uiux.Model.Voucher;
 import com.example.uiux.R;
 import com.example.uiux.Utils.CurrencyFormatter;
+import com.example.uiux.Utils.FCM.FcmNotificationSender;
 import com.example.uiux.Utils.OrderStatus;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.database.DataSnapshot;
@@ -40,12 +47,25 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class OrderDetailActivity extends AppCompatActivity {
 
@@ -55,7 +75,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     ImageView img_back_order_detail;
     TextView tv_order_buyer_name, tv_order_buyer_phone, tv_order_address_detail, tv_order_ward_district_province, tv_order_total_amount, tv_order_detail_date, tv_vouncher_selected, tv_vouncher_discount_amount;
     RecyclerView rcv_order_payment;
-    OrderChildAdapter orderChildAdapter;
+    CartPaymentAdapter cartPaymentAdapter;
     SharedPreferences preferences;
     DatabaseReference orderRef;
     String accountId, order_id;
@@ -89,6 +109,11 @@ public class OrderDetailActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_order_detail);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
         preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         accountId = preferences.getString("accountID", null);
         accountType = preferences.getInt("accountType", -1);
@@ -96,12 +121,24 @@ public class OrderDetailActivity extends AppCompatActivity {
         orderRef = FirebaseDatabase.getInstance().getReference("Order").child(order_id);
         initWidget();
         Log.e("account type", String.valueOf(accountType));
-        if (accountType != 1) {
-            mcv_order_update.setVisibility(View.GONE);
+        if (accountType == -1) {
+            mcv_order_update.setVisibility(View.VISIBLE);
         }
+//        mcv_order_update.setVisibility(View.VISIBLE);
+
         loadOrder();
 
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        accountType = preferences.getInt("accountType", -1);
+        if (accountType == -1) {
+            mcv_order_update.setVisibility(View.VISIBLE);
+        }
+        loadOrder();
     }
 
     void initWidget() {
@@ -133,10 +170,13 @@ public class OrderDetailActivity extends AppCompatActivity {
         tv_order_detail_date = findViewById(R.id.tv_order_detail_date);
         rcv_order_payment = findViewById(R.id.rcv_order_payment);
         rcv_order_payment.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-        orderChildAdapter = new OrderChildAdapter(this, cartPaymentItemList);
-        rcv_order_payment.setAdapter(orderChildAdapter);
+        cartPaymentAdapter = new CartPaymentAdapter(this, cartPaymentItemList);
+        rcv_order_payment.setAdapter(cartPaymentAdapter);
         FetchSpinnerStatus();
+
+
         btn_order_save.setOnClickListener(view -> {
+
             if(spinner_order_status.getSelectedItemPosition()==3)
             {
                 // order.setIs_completed(1);
@@ -154,7 +194,40 @@ public class OrderDetailActivity extends AppCompatActivity {
             orderRef.setValue(order).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(OrderDetailActivity.this, "Order updated.", Toast.LENGTH_SHORT).show();
-                    finish();
+                    DatabaseReference userFCMTokenRef = FirebaseDatabase.getInstance()
+                            .getReference("Account")
+                            .child(order.getAccount_id())
+                            .child("fcm_token");
+                    userFCMTokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                String userToken = snapshot.getValue(String.class);
+                                String title = "Order " + order.getOrder_id();
+                                String body = OrderStatus.getStatusMessage(order.getStatus());
+                                FcmNotificationSender fcmNotificationSender = new FcmNotificationSender(
+                                        userToken,
+                                        title,
+                                        body,
+                                        order.getOrder_id(),
+                                        OrderDetailActivity.this);
+                                fcmNotificationSender.sendNotification();
+
+//                                Log.e("User FCM TOken", userToken);
+
+                                createNotification(order.getAccount_id(), body);
+                                finish();
+
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                            Toast.makeText(OrderDetailActivity.this, "Failed to fetch user token: " + error.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    });
+//                    finish();
                 } else {
                     Toast.makeText(OrderDetailActivity.this, "Failed to edit Order ", Toast.LENGTH_SHORT).show();
                 }
@@ -194,18 +267,35 @@ public class OrderDetailActivity extends AppCompatActivity {
                         if (order.getCart_items_ordered() != null) {
                             cartPaymentItemList.addAll(order.getCart_items_ordered());
                         }
-                        orderChildAdapter.notifyDataSetChanged();
+                        cartPaymentAdapter.notifyDataSetChanged();
 
                         spinner_order_status.setSelection(order.getStatus());
 
                         updateStatusUI(order.getStatus());
 
                         if(order.getStatus() == OrderStatus.DELIVERED) {
-                            btn_return_order.setVisibility(View.VISIBLE);
+                            if(accountType != 1) {
+                                btn_return_order.setVisibility(View.GONE);
+                            } else {
+                                btn_return_order.setVisibility(View.VISIBLE);
+                            }
                         }
-                        if(order.getStatus() == OrderStatus.PENDING || order.getStatus() == OrderStatus.PREPARING || order.getStatus() == OrderStatus.SHIPPING) {
+//                        if(order.getStatus() == OrderStatus.PENDING || order.getStatus() == OrderStatus.PREPARING || order.getStatus() == OrderStatus.SHIPPING) {
+//                            if(accountType != 1) {
+//                                btn_cancel_order.setVisibility(View.VISIBLE);
+//                            } else {
+//                                btn_cancel_order.setVisibility(View.GONE);
+//                            }
+//                        }
+
+                        if (accountType == 1 && (order.getStatus() == OrderStatus.PENDING ||
+                                order.getStatus() == OrderStatus.PREPARING ||
+                                order.getStatus() == OrderStatus.SHIPPING)) {
                             btn_cancel_order.setVisibility(View.VISIBLE);
+                        } else {
+                            btn_cancel_order.setVisibility(View.GONE);
                         }
+
 
                     }
                 } else {
@@ -289,6 +379,32 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvStatusCompleted.setTextColor(status >= 3 ? completedColor : incompleteColor);
     }
 
+    private void createNotification(String accountId, String content) {
+        DatabaseReference notifyRef = FirebaseDatabase.getInstance().getReference("Notification");
+        String notificationId = notifyRef.push().getKey();
 
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String currentTime = sdf.format(new Date());
+
+        Notification notification = new Notification(
+                notificationId,
+                accountId,
+                false,
+                content,
+                0,
+                1,
+                currentTime
+        );
+
+        if (notificationId != null) {
+            notifyRef.child(notificationId).setValue(notification).addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    Log.e("Notification","Notification created successfully.");
+                } else {
+                    Log.e("Notification","Failed to create notification.");
+                }
+            });
+        }
+    }
 
 }

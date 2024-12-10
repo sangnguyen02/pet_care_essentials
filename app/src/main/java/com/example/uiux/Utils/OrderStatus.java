@@ -36,4 +36,27 @@ public class OrderStatus {
                 return "Undefined";
         }
     }
+
+    public static String getStatusMessage(int status) {
+        switch (status) {
+            case PENDING:
+                return "Your order is currently pending and will be processed soon.";
+            case PREPARING:
+                return "Your order is being prepared. We will notify you once it is ready for delivery.";
+            case SHIPPING:
+                return "Your order is on its way! You can expect delivery soon.";
+            case DELIVERED:
+                return "Your order has been delivered. Thank you for shopping with us!";
+            case CANCELED:
+                return "Your order has been canceled. If this is a mistake, please contact our support.";
+            case RETURNED:
+                return "Your order has been returned. Please check your account for further details.";
+            case RETURN_REQUEST_PENDING:
+                return "Your return request is pending. We will get back to you shortly.";
+            case RETURN_PRODUCT_WAITING:
+                return "We are waiting for the product to be returned. Please send it at your earliest convenience.";
+            default:
+                return "Your order status has been updated.";
+        }
+    }
 }

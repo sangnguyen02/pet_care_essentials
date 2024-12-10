@@ -13,7 +13,7 @@ public class Account {
     private  String Phone;
     private  int account_type;
     private String address;
-
+    private String fcm_token;
     private String image;
 
     public Account() {
@@ -29,6 +29,14 @@ public class Account {
         this.account_type = account_type;
         this.address = address;
         this.image = image;
+    }
+
+    public String getFcm_token() {
+        return fcm_token;
+    }
+
+    public void setFcm_token(String fcm_token) {
+        this.fcm_token = fcm_token;
     }
 
     public String getAccount_id() {

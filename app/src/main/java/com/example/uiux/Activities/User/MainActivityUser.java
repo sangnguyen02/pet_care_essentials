@@ -1,9 +1,11 @@
 package com.example.uiux.Activities.User;
 
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-
+import android.Manifest;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -18,17 +20,20 @@ import com.example.uiux.Fragments.User.ProfileFragment;
 import com.example.uiux.Fragments.User.WishlistFragment;
 import com.example.uiux.R;
 import com.example.uiux.databinding.ActivityMainUserBinding;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivityUser extends AppCompatActivity {
     ActivityMainUserBinding binding;
 //    LottieAnimationView fab_chatbot;
     String phone;
     DatabaseReference accountRef;
+    String fcm_token;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +41,11 @@ public class MainActivityUser extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
         binding = ActivityMainUserBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
         initWidget();
 
         replaceFragment(new HomeFragment());
@@ -108,8 +118,9 @@ public class MainActivityUser extends AppCompatActivity {
                         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
                         preferences.edit().putString("accountID", accountId).apply();
                         preferences.edit().putInt("accountType", accountType).apply();
-                        Log.d("Account ID", "Found Account ID: " + accountId);
-                        // Bạn có thể lưu accountId hoặc sử dụng ở đây
+                        Log.e("Account ID", "Found Account ID: " + accountId);
+
+                        getFCMToken(accountId);
                     }
                 } else {
                     Log.d("Account ID", "No account found with this phone number.");
@@ -119,6 +130,29 @@ public class MainActivityUser extends AppCompatActivity {
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.d("Account ID", "Error fetching account ID: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    void getFCMToken(String accountID) {
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                fcm_token = task.getResult();
+                //Log.d("FCM Token", "Token: " + fcm_token);
+
+                // Lưu token vào Firebase dưới node "Users"
+                if (fcm_token != null) {
+                    accountRef = FirebaseDatabase.getInstance().getReference("Account").child(accountID).child("fcm_token");
+                    accountRef.setValue(fcm_token).addOnCompleteListener(tokenTask -> {
+                        if (tokenTask.isSuccessful()) {
+                            Log.d("FCM Token", "Token saved successfully.");
+                        } else {
+                            Log.d("FCM Token", "Failed to save token.");
+                        }
+                    });
+                }
+            } else {
+                Log.w("FCM Token", "Fetching FCM registration token failed", task.getException());
             }
         });
     }

@@ -9,12 +9,12 @@ public class Notification {
     private  String content;
     private  int status;
     private int type;
-    private Date sent_time;
+    private String sent_time;
 
     public Notification() {
     }
 
-    public Notification(String notification_id, String account_id, boolean sent_to_all, String content, int status, int type, Date sent_time) {
+    public Notification(String notification_id, String account_id, boolean sent_to_all, String content, int status, int type, String sent_time) {
         this.notification_id = notification_id;
         this.account_id = account_id;
         this.sent_to_all = sent_to_all;
@@ -72,11 +72,11 @@ public class Notification {
         this.type = type;
     }
 
-    public Date getSent_time() {
+    public String getSent_time() {
         return sent_time;
     }
 
-    public void setSent_time(Date sent_time) {
+    public void setSent_time(String sent_time) {
         this.sent_time = sent_time;
     }
 }

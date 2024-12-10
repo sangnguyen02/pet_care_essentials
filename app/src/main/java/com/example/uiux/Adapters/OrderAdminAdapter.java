@@ -76,34 +76,12 @@ public class OrderAdminAdapter  extends RecyclerView.Adapter<OrderAdminAdapter.O
                 Order order = orderList.get(position);
                 // Tạo một AlertDialog với 2 lựa chọn: Edit và Delete
                 new AlertDialog.Builder(context)
-                        .setItems(new CharSequence[]{"Review", "Deny"}, (dialog, which) -> {
+                        .setItems(new CharSequence[]{"Review"}, (dialog, which) -> {
                             if (which == 0) {
                                 Intent intent = new Intent(context, OrderDetailActivity.class);
                                 intent.putExtra("order_id", order.getOrder_id());
                                 context.startActivity(intent);
 
-                            } else if (which == 1) {
-                                // Nếu người dùng chọn "Xóa"
-                                new AlertDialog.Builder(context)
-                                        .setTitle("Confirm")
-                                        .setMessage("Are you sure")
-                                        .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
-                                            // Thực hiện xóa địa chỉ khỏi cơ sở dữ liệu
-                                            deleteOrderFromDatabase(order.getOrder_id());
-
-                                            // Xóa địa chỉ khỏi danh sách và cập nhật giao diện
-                                            orderList.remove(position); // Loại bỏ địa chỉ khỏi danh sách
-                                            notifyItemRemoved(position);  // Thông báo cho RecyclerView item bị xóa
-                                            notifyItemRangeChanged(position, orderList.size()); // Cập nhật range các item khác
-
-                                            // Thông báo người dùng
-                                            Toast.makeText(context, "Delete Order successfully", Toast.LENGTH_SHORT).show();
-                                        })
-                                        .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
-                                            // Nếu người dùng chọn "Không", đóng dialog
-                                            confirmDialog.dismiss();
-                                        })
-                                        .show();
                             }
                         })
                         .show();

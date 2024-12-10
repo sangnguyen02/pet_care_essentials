@@ -1,6 +1,7 @@
 package com.example.uiux.Activities.Admin;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -147,6 +148,11 @@ public class MainActivityAdmin extends AppCompatActivity {
     }
 
     private void signOutUser() {
+        SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("accountType");  // This will remove the accountType value
+        editor.apply();
+
         mAuth.signOut();  // Firebase Auth sign out
         Intent intent = new Intent(MainActivityAdmin.this, SplashActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
