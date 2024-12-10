@@ -15,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.uiux.Model.InfoReturnOrder;
 import com.example.uiux.Model.Order;
 import com.example.uiux.R;
@@ -22,7 +23,6 @@ import com.example.uiux.Utils.OrderStatus;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -163,6 +163,30 @@ public class ApproveReturnOrderActivity extends AppCompatActivity {
         }
     }
 
+//    private void loadProductImages(List<String> imageUrls) {
+//        // Kiểm tra nếu không có hình ảnh
+//        if (imageUrls == null || imageUrls.isEmpty()) {
+//            ivProduct1.setImageResource(R.drawable.logo);
+//            ivProduct2.setImageResource(R.drawable.logo);
+//            ivProduct3.setImageResource(R.drawable.logo);
+//            ivProduct4.setImageResource(R.drawable.logo);
+//        } else {
+//            // Tải hình ảnh từ URL vào các ImageView tương ứng
+//            if (imageUrls.size() > 0) {
+//                Picasso.get().load(imageUrls.get(0)).into(ivProduct1);
+//            }
+//            if (imageUrls.size() > 1) {
+//                Picasso.get().load(imageUrls.get(1)).into(ivProduct2);
+//            }
+//            if (imageUrls.size() > 2) {
+//                Picasso.get().load(imageUrls.get(2)).into(ivProduct3);
+//            }
+//            if (imageUrls.size() > 3) {
+//                Picasso.get().load(imageUrls.get(3)).into(ivProduct4);
+//            }
+//        }
+//    }
+
     private void loadProductImages(List<String> imageUrls) {
         // Kiểm tra nếu không có hình ảnh
         if (imageUrls == null || imageUrls.isEmpty()) {
@@ -173,16 +197,16 @@ public class ApproveReturnOrderActivity extends AppCompatActivity {
         } else {
             // Tải hình ảnh từ URL vào các ImageView tương ứng
             if (imageUrls.size() > 0) {
-                Picasso.get().load(imageUrls.get(0)).into(ivProduct1);
+                Glide.with(this).load(imageUrls.get(0)).placeholder(R.drawable.logo).into(ivProduct1);
             }
             if (imageUrls.size() > 1) {
-                Picasso.get().load(imageUrls.get(1)).into(ivProduct2);
+                Glide.with(this).load(imageUrls.get(1)).placeholder(R.drawable.logo).into(ivProduct2);
             }
             if (imageUrls.size() > 2) {
-                Picasso.get().load(imageUrls.get(2)).into(ivProduct3);
+                Glide.with(this).load(imageUrls.get(2)).placeholder(R.drawable.logo).into(ivProduct3);
             }
             if (imageUrls.size() > 3) {
-                Picasso.get().load(imageUrls.get(3)).into(ivProduct4);
+                Glide.with(this).load(imageUrls.get(3)).placeholder(R.drawable.logo).into(ivProduct4);
             }
         }
     }

@@ -35,6 +35,7 @@ public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.Or
     private List<CartItem> cartPaymentItemList;
     private Context context;
     private int orderStatus;
+    private String orderId;
     //private List<CartItem> selectedItems = new ArrayList<>();
 
     public OrderChildAdapter(Context context, List<CartItem> cartPaymentItemList, int orderStatus) {
@@ -43,9 +44,11 @@ public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.Or
         this.orderStatus = orderStatus;
     }
 
-    public OrderChildAdapter(Context context, List<CartItem> cartPaymentItemList) {
+    public OrderChildAdapter(Context context, List<CartItem> cartPaymentItemList, int orderStatus, String orderId) {
         this.context = context;
         this.cartPaymentItemList = cartPaymentItemList;
+        this.orderStatus = orderStatus;
+        this.orderId = orderId;
     }
 
     @NonNull
