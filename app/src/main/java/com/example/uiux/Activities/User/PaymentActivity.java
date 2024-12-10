@@ -536,7 +536,12 @@ private void loadAccountInfo(String accountId) {
                 TextView tvWardDistrictProvince = findViewById(R.id.tv_ward_district_province);
 
                 tvAddressDetail.setText(selectedAddress.getAddress_details());
-                String fullAddress = selectedAddress.getWard() + ", " + selectedAddress.getDistrict() + ", " + selectedAddress.getProvince();
+
+                String[] Province = selectedAddress.getProvince().split("\\+");
+                String[] District = selectedAddress.getDistrict().split("\\+");
+                String[] Ward = selectedAddress.getWard().split("\\+");
+
+                String fullAddress = Ward[1] + ", " + District[1] + ", " + Province[1];
                 tvWardDistrictProvince.setText(fullAddress);
             } else {
                 Log.e("AddressInfo", "No address found for accountId: " + accountId);
