@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.uiux.Activities.Admin.Order.ApproveReturnOrderActivity;
 import com.example.uiux.Activities.Admin.Order.DisplayReturnActivity;
 import com.example.uiux.Activities.Admin.Supplies.EditSuppliesActivity;
 import com.example.uiux.Activities.User.CancelOrder.UserCancelOrderActivity;
@@ -37,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapter.ReturnOrderViewHolder>{
     private List<InfoReturnOrder> infoReturnOrderList;
@@ -58,7 +60,6 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
     public void onBindViewHolder(@NonNull ReturnOrderApdapter.ReturnOrderViewHolder holder, int position) {
         InfoReturnOrder infoReturnOrder = infoReturnOrderList.get(position);
         holder.bind(infoReturnOrder);
-
     }
 
     @Override
@@ -72,7 +73,7 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
 
         public ReturnOrderViewHolder(@NonNull View itemView) {
             super(itemView);
-            img1 = itemView.findViewById(R.id.img1);
+            img1 = itemView.findViewById(R.id.img_order);
             userName=itemView.findViewById(R.id.tv_return_name);
             userPhone=itemView.findViewById(R.id.tv_return_phone);
             userAddress=itemView.findViewById(R.id.tv_return_address);
@@ -91,7 +92,7 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
                     new AlertDialog.Builder(context)
                             .setItems(new CharSequence[]{"Edit", "Complete"}, (dialog, which) -> {
                                 if (which == 0) {
-                                    Intent intent = new Intent(context, DisplayReturnActivity.class);
+                                    Intent intent = new Intent(context, ApproveReturnOrderActivity.class);
                                     intent.putExtra("info_return_id", infoReturnOrder.getInfo_return_id());
                                     intent.putExtra("order_id", infoReturnOrder.getOrder_id());
                                     context.startActivity(intent);
@@ -123,29 +124,24 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
                 }
             });
         }
-        public void bind(InfoReturnOrder InfoReturnOrder)
-        {
+        public void bind(InfoReturnOrder InfoReturnOrder) {
             userName.setText(InfoReturnOrder.getName() != null ? InfoReturnOrder.getName() : "N/A");
             userPhone.setText(InfoReturnOrder.getPhone_number() != null ? InfoReturnOrder.getPhone_number() : "N/A");
             userAddress.setText(InfoReturnOrder.getAddress() != null ? InfoReturnOrder.getAddress() : "N/A");
             requestDate.setText(InfoReturnOrder.getRequest_date() != null ? InfoReturnOrder.getRequest_date() : "N/A");
 
             List<String> imageUrls = InfoReturnOrder.getImageUrls();
-            if (imageUrls != null && !imageUrls.isEmpty()) {
-                // Load the first image
-                if (imageUrls.size() > 0) {
-                    Glide.with(itemView.getContext())
-                            .load(imageUrls.get(0))
-                            .placeholder(R.drawable.product_sample)
-                            .error(R.drawable.product_sample)
-                            .into(img1);
-                }
-
+            if (imageUrls != null && !imageUrls.isEmpty() && imageUrls.get(0) != null && !imageUrls.get(0).isEmpty()) {
+                Glide.with(itemView.getContext())
+                        .load(imageUrls.get(0))
+                        .placeholder(R.drawable.product_sample)
+                        .error(R.drawable.product_sample)
+                        .into(img1);
             } else {
-                // Set placeholders if no images are available
                 img1.setImageResource(R.drawable.product_sample);
             }
         }
+
 
         private void deteRequestFromDatabase(String Id)
         {
@@ -153,14 +149,14 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
         }
         private void Refund(String accountId, String order_id) {
             DatabaseReference accountWalletRef = FirebaseDatabase.getInstance().getReference("Account Wallet");
-            accountWalletRef.orderByChild("account_id").equalTo(accountId)
+            accountWalletRef
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
                                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                     AccountWallet accountWallet = snapshot.getValue(AccountWallet.class);
-                                    if (accountWallet != null) {
+                                    if (accountWallet != null&& Objects.equals(accountWallet.getAccount_id(), accountId)) {
                                         double currentBalance = accountWallet.getBalance();
                                         String wallet_id = accountWallet.getWallet_id();
 

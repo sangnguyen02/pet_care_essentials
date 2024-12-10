@@ -163,29 +163,6 @@ public class ApproveReturnOrderActivity extends AppCompatActivity {
         }
     }
 
-//    private void loadProductImages(List<String> imageUrls) {
-//        // Kiểm tra nếu không có hình ảnh
-//        if (imageUrls == null || imageUrls.isEmpty()) {
-//            ivProduct1.setImageResource(R.drawable.logo);
-//            ivProduct2.setImageResource(R.drawable.logo);
-//            ivProduct3.setImageResource(R.drawable.logo);
-//            ivProduct4.setImageResource(R.drawable.logo);
-//        } else {
-//            // Tải hình ảnh từ URL vào các ImageView tương ứng
-//            if (imageUrls.size() > 0) {
-//                Picasso.get().load(imageUrls.get(0)).into(ivProduct1);
-//            }
-//            if (imageUrls.size() > 1) {
-//                Picasso.get().load(imageUrls.get(1)).into(ivProduct2);
-//            }
-//            if (imageUrls.size() > 2) {
-//                Picasso.get().load(imageUrls.get(2)).into(ivProduct3);
-//            }
-//            if (imageUrls.size() > 3) {
-//                Picasso.get().load(imageUrls.get(3)).into(ivProduct4);
-//            }
-//        }
-//    }
 
     private void loadProductImages(List<String> imageUrls) {
         // Kiểm tra nếu không có hình ảnh
@@ -216,20 +193,19 @@ public class ApproveReturnOrderActivity extends AppCompatActivity {
             Log.e("UpdateOrderStatus", "Order ID is null or empty.");
             return;
         }
- 
-        // Cập nhật trạng thái trong Firebase
-        orderRef.child(order_id).child("status").setValue(status).addOnCompleteListener(task -> {
+
+        // Cập nhật trường "status" trong đơn hàng
+        orderRef.child("status").setValue(status).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // Trạng thái đã được cập nhật
-                String statusMessage = (status == OrderStatus.RETURN_PRODUCT_WAITING) ? "Yêu cầu trả hàng đã được phê duyệt." : "Yêu cầu trả hàng đã bị từ chối.";
-                Toast.makeText(this, statusMessage, Toast.LENGTH_SHORT).show();
+                Log.d("UpdateOrderStatus", "Order status updated to: " + status);
+                Toast.makeText(this, "Trạng thái đơn hàng đã được cập nhật.", Toast.LENGTH_SHORT).show();
             } else {
-                // Cập nhật thất bại
                 Log.e("UpdateOrderStatus", "Failed to update order status: " + task.getException());
                 Toast.makeText(this, "Cập nhật trạng thái đơn hàng thất bại.", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
 
 }

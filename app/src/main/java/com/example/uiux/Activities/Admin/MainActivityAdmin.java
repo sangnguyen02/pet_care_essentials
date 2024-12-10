@@ -16,6 +16,7 @@ import com.example.uiux.Activities.Admin.Branch.UpdateBranchStoreActivity;
 import com.example.uiux.Activities.Admin.Category.CategoryActivity;
 import com.example.uiux.Activities.Admin.Category.UpdateCategoryActivity;
 import com.example.uiux.Activities.Admin.Discount.UpdateDiscountActivity;
+import com.example.uiux.Activities.Admin.Order.DisplayReturnActivity;
 import com.example.uiux.Activities.Admin.Services.UpdateServiceActivity;
 import com.example.uiux.Activities.Admin.Supplies.UpdateSuppliesActivity;
 import com.example.uiux.Activities.Admin.Supplies.SuppliesImportActivity;
@@ -119,7 +120,8 @@ public class MainActivityAdmin extends AppCompatActivity {
         });
 
         order_approve_btn.setOnClickListener(view -> {
-            Intent intent=new Intent(MainActivityAdmin.this, UpdateOrderActivity.class);
+           // Intent intent=new Intent(MainActivityAdmin.this, UpdateOrderActivity.class);
+            Intent intent=new Intent(MainActivityAdmin.this, DisplayReturnActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 

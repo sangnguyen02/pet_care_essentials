@@ -1,6 +1,7 @@
 package com.example.uiux.Activities.Admin.Order;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -55,6 +56,7 @@ public class DisplayReturnActivity extends AppCompatActivity {
                 infoReturnOrderList.clear();
                 for (DataSnapshot suppSnapshot : snapshot.getChildren()) {
                     InfoReturnOrder infoReturnOrder = suppSnapshot.getValue(InfoReturnOrder.class);
+                    Log.e("infoReturnOrder", infoReturnOrder.getInfo_return_id());
                     infoReturnOrderList.add(infoReturnOrder);
 
                 }

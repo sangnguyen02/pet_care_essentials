@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.User.CancelOrder.UserCancelOrderActivity;
+import com.example.uiux.Activities.User.ReturnOrder.UserReturnOrderActivity;
 import com.example.uiux.Activities.User.Review.SupplyReviewActivity;
 import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.Supplies_Detail;
@@ -107,7 +108,7 @@ public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.Or
     public static class OrderChildViewHolder extends RecyclerView.ViewHolder {
         ImageView img_supply;
         TextView tvSupplyTitle, tvSupplySize, tvSupplyPrice, tvSupplyQuantity, tvSupplyTotalPrice;
-        MaterialButton btn_review_supply, btn_buy_again, btn_cancel;
+        MaterialButton btn_review_supply, btn_buy_again, btn_cancel,btn_return;
         SharedPreferences preferences;
         String order_id;  // Lưu trữ order_id trong ViewHolder
 
@@ -123,6 +124,7 @@ public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.Or
             btn_review_supply = itemView.findViewById(R.id.btn_review_supply);
             btn_buy_again = itemView.findViewById(R.id.btn_buy_again);
             btn_cancel = itemView.findViewById(R.id.btn_cancel);
+            btn_return= itemView.findViewById(R.id.btn_return);
 
             preferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
             this.order_id = order_id; // Nhận order_id từ constructor
@@ -136,6 +138,16 @@ public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.Or
                     intent.putExtra("order_id", order_id); // Truyền order_id vào Intent
                     Log.e("Order_ID", order_id);  // Ghi log để kiểm tra order_id
                     context.startActivity(intent); // Mở Activity mới
+                }
+            });
+            btn_return.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, UserReturnOrderActivity.class);
+                    intent.putExtra("order_id", order_id); // Truyền order_id vào Intent
+                    Log.e("Order_ID", order_id);  // Ghi log để kiểm tra order_id
+                    context.startActivity(intent); // Mở Activity mới
+
                 }
             });
         }
