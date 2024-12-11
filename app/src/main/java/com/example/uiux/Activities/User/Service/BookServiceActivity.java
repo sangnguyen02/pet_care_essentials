@@ -1,11 +1,14 @@
 package com.example.uiux.Activities.User.Service;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
@@ -31,6 +34,7 @@ import com.example.uiux.Fragments.User.CaringFragment;
 import com.example.uiux.Model.Account_Address;
 import com.example.uiux.Model.BranchStore;
 import com.example.uiux.Model.Service;
+import com.example.uiux.Model.ServiceOrder;
 import com.example.uiux.R;
 import com.example.uiux.Utils.CurrencyFormatter;
 import com.google.android.material.button.MaterialButton;
@@ -44,7 +48,9 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class BookServiceActivity extends AppCompatActivity {
 
@@ -58,6 +64,21 @@ public class BookServiceActivity extends AppCompatActivity {
     String serviceId;
     MaterialCardView mcv_service_branch;
     MaterialButton btn_confirm_book;
+    String accountId;
+    String branch_id;
+
+    String branch_name;
+    String branch_address;
+
+    String email;
+    String phone_number;
+    String name;
+    String type;
+    String service_id;
+    String service_name;
+    double total_price;
+    String timeSlot = "";
+    String order_date="";
 
     private ActivityResultLauncher<Intent> branchLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -99,6 +120,92 @@ public class BookServiceActivity extends AppCompatActivity {
 
         loadDays();
 
+//        Date dateOrder = new Date();
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+//        String formattedDate = dateFormat.format(dateOrder);
+        SharedPreferences preferences =  getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        accountId = preferences.getString("accountID", null);
+        Log.e("ID",accountId);
+        getAccountInfo();
+        btn_confirm_book.setOnClickListener(view -> {
+                timeSlot=timeAdapter.getSelectedTimeSlot();
+            order_date=dayAdapter.getSelectedDay();
+                createServiceOrder();
+        });
+
+    }
+
+    private void getAccountInfo() {
+        if (accountId == null || accountId.isEmpty()) {
+            Log.e("getAccountInfo", "Account ID is null or empty");
+            return;
+        }
+
+        DatabaseReference accountRef = FirebaseDatabase.getInstance().getReference("Account").child(accountId);
+        accountRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    // Assuming the Account model class is set up correctly
+                    Model.Account account = dataSnapshot.getValue(Model.Account.class);
+                    if (account != null) {
+                       email=account.getEmail();
+                       name=account.getFullname();
+                       phone_number=account.getPhone();
+                    } else {
+                        Log.e("getAccountInfo", "Account data is null");
+                    }
+                } else {
+                    Log.e("getAccountInfo", "Account not found for ID: " + accountId);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("getAccountInfo", "Error fetching account info: " + databaseError.getMessage());
+            }
+        });
+    }
+
+    private void createServiceOrder() {
+        // 1. Lấy dữ liệu từ UI và các biến đã có trong class
+        String orderId = FirebaseDatabase.getInstance().getReference("Service Order").push().getKey(); // Tạo ID đơn hàng tự động
+
+
+
+
+        // 4. Lấy các thông tin khác từ UI và các biến đã lưu trong class
+        double price = total_price; // Hoặc bạn có thể tính toán lại nếu cần
+
+        // 5. Tạo đối tượng ServiceOrder
+        ServiceOrder serviceOrder = new ServiceOrder(
+                orderId,
+                service_id,
+                service_name,
+                type, // Nếu cần thêm type, đảm bảo bạn đã có nó trong Service model
+                order_date,
+                price,
+                name,
+                phone_number,
+                email,
+                branch_id,
+                branch_name,
+                branch_address,
+                timeSlot
+        );
+
+        // 6. Lưu thông tin đơn hàng vào Firebase
+        DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference("Service Order").child(orderId);
+        orderRef.setValue(serviceOrder).addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Đơn hàng đã được tạo thành công
+                Log.e("createServiceOrder", "Order created successfully");
+                // Có thể chuyển hướng người dùng đến màn hình xác nhận hoặc thông báo thành công
+            } else {
+                // Xử lý lỗi nếu không thể lưu
+                Log.e("createServiceOrder", "Failed to create order: " + task.getException());
+            }
+        });
     }
 
 
@@ -124,9 +231,7 @@ public class BookServiceActivity extends AppCompatActivity {
 
 
         btn_confirm_book = findViewById(R.id.btn_confirm_book);
-        btn_confirm_book.setOnClickListener(view -> {
 
-        });
     }
 
     void loadServices() {
@@ -144,7 +249,12 @@ public class BookServiceActivity extends AppCompatActivity {
                                 .into(img_service_chosen);
                     }
 
+
                     tv_service_name_chosen.setText(service.getName());
+                    service_id=service.getService_id();
+                    service_name=service.getName();
+                    type=service.getType();
+                    total_price=service.getSell_price();
                     tv_service_price_chosen.setText(CurrencyFormatter.formatCurrency(service.getSell_price(), getString(R.string.currency_vn)));
                 }
             }
@@ -212,6 +322,9 @@ public class BookServiceActivity extends AppCompatActivity {
                 if (branchStore != null) {
                     tv_service_branch_name.setText(branchStore.getBranch_name());
                     tv_service_branch_address.setText(branchStore.getAddress_details());
+                    branch_id=branchId;
+                    branch_name=branchStore.getBranch_name();
+                    branch_address=branchStore.getAddress_details();
                 }
             }
 
