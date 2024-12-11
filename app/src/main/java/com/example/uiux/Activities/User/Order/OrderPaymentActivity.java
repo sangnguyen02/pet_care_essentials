@@ -25,11 +25,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.uiux.Activities.User.AccountWallet.ConfirmPINActivity;
 import com.example.uiux.Activities.User.AccountWallet.DisplayAccountWallet;
+import com.example.uiux.Activities.User.CancelOrder.UserCancelOrderActivity;
 import com.example.uiux.Model.AccountWallet;
 import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.Order;
 import com.example.uiux.Model.Supplies_Detail;
 import com.example.uiux.Model.Voucher;
+import com.example.uiux.Model.WalletHistory;
 import com.example.uiux.R;
 import com.example.uiux.ZaloPay.Api.CreateOrder;
 import com.google.android.material.button.MaterialButton;
@@ -41,7 +43,10 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 import vn.zalopay.sdk.Environment;
 import vn.zalopay.sdk.ZaloPayError;
@@ -58,6 +63,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
     String wallet_Id;
     String voucherId;
     ArrayList<String> selectedSupplies;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +99,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
         String quantity = getIntent().getStringExtra("quantity");
 
         //Bổ sung: nhận total payment sang để hiển thị
-        String totalPayment = getIntent().getStringExtra("total_payment");
+         String totalPayment = getIntent().getStringExtra("total_payment");
 
         int index = getIntent().getIntExtra("payment_index",0);
         Log.e("index", String.valueOf(index));
@@ -163,10 +169,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
                         updateCartAndDeleteItem(supply_combinedKey);
                     }
                 }
-//
-//                Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
-//                intent1.putExtra("result","Xac nhan thanh cong");
-//                startActivity(intent1);
+
             }
         });
 
@@ -512,11 +515,6 @@ public class OrderPaymentActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
-
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
@@ -531,23 +529,89 @@ public class OrderPaymentActivity extends AppCompatActivity {
                         updateVoucherQuantity(voucherId);
                     }
                     updateOrder(orderId,2);
+                    updateWallet(total);
+                    CreateHistory();
                 } else {
                     // Nếu PIN sai hoặc người dùng hủy
                     Toast.makeText(this, "PIN không hợp lệ hoặc bạn đã hủy.", Toast.LENGTH_SHORT).show();
                 }
             });
 
-//    private String[] splitCombinedKey(String combinedKey) {
-//        if (combinedKey == null || !combinedKey.contains("_")) {
-//            return null;
-//        }
-//        String[] parts = combinedKey.split("_", 2);
-//        if (parts.length == 2) {
-//            // Khôi phục supply_size (thay , thành .)
-//            parts[1] = parts[1].replace(",", ".");
-//        }
-//        return parts;
-//    }
+    private void CreateHistory( ) {
+        DatabaseReference walletHistoryRef = FirebaseDatabase.getInstance().getReference("Wallet History");
+        // Lấy ngày giờ hiện tại theo định dạng yyyy/MM/dd HH:mm:ss
+        String currentDate = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale.getDefault()).format(new Date());
+
+        // Tạo ID cho lịch sử giao dịch mới
+        String walletHistoryId = walletHistoryRef.push().getKey();
+
+        // Tạo đối tượng WalletHistory
+        WalletHistory walletHistory = new WalletHistory(
+                walletHistoryId,    // ID của lịch sử giao dịch
+                wallet_Id,          // wallet_id của người dùng
+                String.valueOf(total),  // Số tiền hoàn tiền (dưới dạng String)
+                "-",                // Trạng thái giao dịch, "+" cho hoàn tiền
+                currentDate         // Ngày giờ giao dịch
+        );
+
+        // Lưu WalletHistory vào Firebase
+        walletHistoryRef.child(walletHistoryId).setValue(walletHistory)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // Thông báo thành công khi ghi lịch sử
+                        Toast.makeText(OrderPaymentActivity.this, "Lịch sử giao dịch đã được ghi lại", Toast.LENGTH_SHORT).show();
+                    } else {
+                        // Thông báo thất bại khi ghi lịch sử
+                        Toast.makeText(OrderPaymentActivity.this, "Ghi lại lịch sử giao dịch thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void updateWallet(double amountToDeduct) {
+        // Tham chiếu đến "Account Wallet" trong Firebase
+        DatabaseReference accountWalletRef = FirebaseDatabase.getInstance().getReference("Account Wallet");
+
+        // Lấy thông tin ví dựa trên wallet_id
+        accountWalletRef.child(wallet_Id).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    // Chuyển dữ liệu từ snapshot sang model AccountWallet
+                    AccountWallet accountWallet = snapshot.getValue(AccountWallet.class);
+
+                    if (accountWallet != null) {
+                        // Kiểm tra nếu số dư đủ để trừ
+                        if (accountWallet.getBalance() >= amountToDeduct) {
+                            // Trừ số tiền
+                            double newBalance = accountWallet.getBalance() - amountToDeduct;
+                            accountWallet.setBalance(newBalance);
+
+                            // Cập nhật số dư mới lên Firebase
+                            accountWalletRef.child(wallet_Id).setValue(accountWallet)
+                                    .addOnCompleteListener(task -> {
+                                        if (task.isSuccessful()) {
+                                            Toast.makeText(OrderPaymentActivity.this, "Trừ tiền thành công!", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            Toast.makeText(OrderPaymentActivity.this, "Lỗi khi cập nhật số dư!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(OrderPaymentActivity.this, "Số dư không đủ!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } else {
+                    Toast.makeText(OrderPaymentActivity.this, "Ví không tồn tại!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(OrderPaymentActivity.this, "Lỗi: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 
     private String[] splitCombinedKey(String combinedKey) {
         if (combinedKey == null || !combinedKey.contains("_")) {
