@@ -36,7 +36,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivityAdmin extends AppCompatActivity {
     FirebaseAuth mAuth;
     MaterialCardView category_btn, type_btn, supplies_btn, supplies_import_btn, service_btn, service_booking_btn,
-            branch_store_btn, order_approve_btn, order_statistic_btn, discount_btn, vouncher_btn;
+            branch_store_btn, order_approve_btn, order_review_btn, order_statistic_btn, discount_btn, vouncher_btn;
 
     ImageButton sign_out_admin;
     DatabaseReference suppliesRef;
@@ -71,6 +71,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         branch_store_btn=findViewById(R.id.branch);
 
         order_approve_btn = findViewById(R.id.approve);
+        order_review_btn = findViewById(R.id.review);
         order_statistic_btn = findViewById(R.id.statistic);
 
         discount_btn = findViewById(R.id.discount);
@@ -120,12 +121,18 @@ public class MainActivityAdmin extends AppCompatActivity {
         });
 
         order_approve_btn.setOnClickListener(view -> {
-           // Intent intent=new Intent(MainActivityAdmin.this, UpdateOrderActivity.class);
             Intent intent=new Intent(MainActivityAdmin.this, DisplayReturnActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
 
         });
+
+        order_review_btn.setOnClickListener(view -> {
+            Intent intent=new Intent(MainActivityAdmin.this, UpdateOrderActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
+
         order_statistic_btn.setOnClickListener(view -> {
 //            Intent intent=new Intent(MainActivityAdmin.this, UpdateServiceActivity.class);
 //            startActivity(intent);

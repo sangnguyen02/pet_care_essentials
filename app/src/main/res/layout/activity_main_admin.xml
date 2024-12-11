@@ -590,13 +590,76 @@
 
 
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/approve"
+                        android:id="@+id/review"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
                         android:backgroundTint="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:rippleColor="@color/ripple_color"
+                        app:strokeWidth="0dp">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/icon_review"
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:layout_marginStart="16dp"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/approve"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                            <TextView
+                                android:id="@+id/tv_review"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:fontFamily="@font/roboto_bold"
+                                android:text="Order Review"
+                                android:textAlignment="center"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"
+                                app:layout_constraintBottom_toBottomOf="@+id/icon_review"
+                                app:layout_constraintStart_toEndOf="@+id/icon_review"
+                                app:layout_constraintTop_toTopOf="@+id/icon_review" />
+
+                            <ImageView
+                                android:id="@+id/img_arrow_8"
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_marginEnd="16dp"
+                                android:src="@drawable/arrow"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <View
+                        android:id="@+id/admin_line6"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/light_grey"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/review" />
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/approve"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:backgroundTint="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/admin_line6"
                         app:rippleColor="@color/ripple_color"
                         app:strokeWidth="0dp">
 
@@ -621,7 +684,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="16dp"
                                 android:fontFamily="@font/roboto_bold"
-                                android:text="@string/review_approve"
+                                android:text="Order Return Approve"
                                 android:textAlignment="center"
                                 android:textColor="@color/black"
                                 android:textSize="16sp"
@@ -630,7 +693,7 @@
                                 app:layout_constraintTop_toTopOf="@+id/icon_approve" />
 
                             <ImageView
-                                android:id="@+id/img_arrow_8"
+                                android:id="@+id/img_arrow_9"
                                 android:layout_width="16dp"
                                 android:layout_height="16dp"
                                 android:layout_marginEnd="16dp"
@@ -644,7 +707,7 @@
                     </com.google.android.material.card.MaterialCardView>
 
                     <View
-                        android:id="@+id/admin_line6"
+                        android:id="@+id/admin_line7"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/light_grey"
@@ -660,7 +723,7 @@
                         android:backgroundTint="@color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/admin_line6"
+                        app:layout_constraintTop_toBottomOf="@+id/admin_line7"
                         app:rippleColor="@color/ripple_color"
                         app:strokeWidth="0dp">
 
@@ -694,7 +757,7 @@
                                 app:layout_constraintTop_toTopOf="@+id/icon_statistic" />
 
                             <ImageView
-                                android:id="@+id/img_arrow_9"
+                                android:id="@+id/img_arrow_10"
                                 android:layout_width="16dp"
                                 android:layout_height="16dp"
                                 android:layout_marginEnd="16dp"
@@ -786,7 +849,7 @@
                                 app:layout_constraintTop_toTopOf="@+id/icon_discount" />
 
                             <ImageView
-                                android:id="@+id/img_arrow_10"
+                                android:id="@+id/img_arrow_11"
                                 android:layout_width="16dp"
                                 android:layout_height="16dp"
                                 android:layout_marginEnd="16dp"
@@ -800,7 +863,7 @@
                     </com.google.android.material.card.MaterialCardView>
 
                     <View
-                        android:id="@+id/admin_line7"
+                        android:id="@+id/admin_line8"
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:background="@color/light_grey"
@@ -850,7 +913,7 @@
                                 app:layout_constraintTop_toTopOf="@+id/icon_vouncher" />
 
                             <ImageView
-                                android:id="@+id/img_arrow_11"
+                                android:id="@+id/img_arrow_12"
                                 android:layout_width="16dp"
                                 android:layout_height="16dp"
                                 android:layout_marginEnd="16dp"

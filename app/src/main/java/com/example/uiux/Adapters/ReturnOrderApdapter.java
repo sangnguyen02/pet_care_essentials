@@ -76,7 +76,7 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
             img1 = itemView.findViewById(R.id.img_order);
             userName=itemView.findViewById(R.id.tv_return_name);
             userPhone=itemView.findViewById(R.id.tv_return_phone);
-            userAddress=itemView.findViewById(R.id.tv_return_address);
+//            userAddress=itemView.findViewById(R.id.tv_return_address);
             requestDate=itemView.findViewById(R.id.tv_return_date);
             SharedPreferences preferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
             String accountId = preferences.getString("accountID", null);
@@ -127,7 +127,7 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
         public void bind(InfoReturnOrder InfoReturnOrder) {
             userName.setText(InfoReturnOrder.getName() != null ? InfoReturnOrder.getName() : "N/A");
             userPhone.setText(InfoReturnOrder.getPhone_number() != null ? InfoReturnOrder.getPhone_number() : "N/A");
-            userAddress.setText(InfoReturnOrder.getAddress() != null ? InfoReturnOrder.getAddress() : "N/A");
+//            userAddress.setText(InfoReturnOrder.getAddress() != null ? InfoReturnOrder.getAddress() : "N/A");
             requestDate.setText(InfoReturnOrder.getRequest_date() != null ? InfoReturnOrder.getRequest_date() : "N/A");
 
             List<String> imageUrls = InfoReturnOrder.getImageUrls();

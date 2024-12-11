@@ -8,18 +8,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.uiux.Model.AccountWallet;
 import com.example.uiux.Model.InfoCancelOrder;
 import com.example.uiux.Model.Order;
 import com.example.uiux.Model.WalletHistory;
 import com.example.uiux.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,7 +39,8 @@ public class UserCancelOrderActivity extends AppCompatActivity {
 
     private RadioGroup rgCancelReasons;
     private EditText etOtherReason;
-    private Button btnCancelOrder;
+    private MaterialButton btnCancelOrder;
+    private ImageView img_back_cancel_order;
     private DatabaseReference cancelOrderRef;
     private  DatabaseReference orderRef;
     private  DatabaseReference accountWalletRef;
@@ -50,9 +54,12 @@ public class UserCancelOrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_user_cancel_order);
 
         // Khởi tạo các widget
+        img_back_cancel_order = findViewById(R.id.img_back_cancel_order);
+        img_back_cancel_order.setOnClickListener(view -> finish());
         rgCancelReasons = findViewById(R.id.rg_cancel_reasons);
         etOtherReason = findViewById(R.id.et_other_reason);
         btnCancelOrder = findViewById(R.id.btn_cancel_order);
