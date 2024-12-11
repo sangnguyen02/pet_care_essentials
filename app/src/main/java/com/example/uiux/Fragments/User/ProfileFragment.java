@@ -38,13 +38,13 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ProfileFragment extends Fragment {
     View rootView;
-    ConstraintLayout to_pay, to_ship, to_receive, to_rate;
+    ConstraintLayout to_pay, to_ship, to_receive, completed;
     MaterialCardView mcv_help_center, mcv_pet_profile, mcv_branches;
     String phone;
     String accountId;
     CircleImageView img_avatar, img_setting;
     ImageView img_cart_at_profile, img_red_circle_at_profile;
-    TextView tv_username, tv_number_of_cart_item_at_profile, tv_view_purchase_history;
+    TextView tv_username, tv_number_of_cart_item_at_profile;
     DatabaseReference databaseReference;
     DatabaseReference cartItems;
     SharedPreferences preferences;
@@ -123,12 +123,11 @@ public class ProfileFragment extends Fragment {
             startActivity(goToOrderStatus);
         });
 
-        tv_view_purchase_history.setOnClickListener(view -> {
+        completed.setOnClickListener(view -> {
             Intent goToOrderStatus = new Intent(rootView.getContext(), OrderActivity.class);
-            goToOrderStatus.putExtra("targetTab", OrderStatus.DELIVERED); // Tab Đang giao
+            goToOrderStatus.putExtra("targetTab", OrderStatus.DELIVERED); // Tab hoàn thành
             startActivity(goToOrderStatus);
         });
-
 
 
         return rootView;
@@ -141,7 +140,6 @@ public class ProfileFragment extends Fragment {
     }
 
     void initWidget() {
-        tv_view_purchase_history = rootView.findViewById(R.id.tv_view_purchase_history);
         tv_number_of_cart_item_at_profile = rootView.findViewById(R.id.tv_number_of_cart_item_at_profile);
         img_cart_at_profile = rootView.findViewById(R.id.img_cart_at_profile);
         img_red_circle_at_profile = rootView.findViewById(R.id.img_red_circle_at_profile);
@@ -154,7 +152,7 @@ public class ProfileFragment extends Fragment {
         to_pay = rootView.findViewById(R.id.to_pay);
         to_ship = rootView.findViewById(R.id.to_ship);
         to_receive = rootView.findViewById(R.id.to_receive);
-        to_rate = rootView.findViewById(R.id.to_rate);
+        completed = rootView.findViewById(R.id.completed);
     }
 
     void displayNoOfCartItem() {

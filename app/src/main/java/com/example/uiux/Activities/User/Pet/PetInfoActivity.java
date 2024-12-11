@@ -140,9 +140,8 @@ public class PetInfoActivity extends AppCompatActivity {
             progressDialog.dismiss();
             if (task.isSuccessful()) {
                 Toast.makeText(PetInfoActivity.this, "Pet added successfully!", Toast.LENGTH_SHORT).show();
-                // Sau khi thêm sản phẩm thành công, thêm giá của sản phẩm vào bảng Supplies_Price
-
-                clearInputFields(); // Optional: clear the input fields after successful upload
+                clearInputFields();
+                finish();
             } else {
                 Toast.makeText(PetInfoActivity.this, "Failed to add Pet: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -155,9 +154,9 @@ public class PetInfoActivity extends AppCompatActivity {
         petWeight.setText("");
         petAge.setText("");
         for (int i = 0; i < imageUris.length; i++) {
-            imageUris[i] = null; // Clear image URIs
+            imageUris[i] = null;
             if (i == 0) {
-                img1.setImageResource(R.drawable.logo); // Set to a placeholder image
+                img1.setImageResource(R.drawable.logo_main);
             }
         }
     }

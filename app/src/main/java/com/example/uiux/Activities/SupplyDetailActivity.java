@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,8 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.Admin.Supplies.UpdateSuppliesActivity;
 import com.example.uiux.Activities.User.Review.SupplyReviewActivity;
+import com.example.uiux.Adapters.BestSellerAdapter;
+import com.example.uiux.Adapters.SameSuppliesAdapter;
 import com.example.uiux.Adapters.SuppliesAdapter;
 import com.example.uiux.Adapters.SupplyDetailOptionAdapter;
 import com.example.uiux.Adapters.SupplyImageListAdapter;
@@ -65,7 +68,7 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
     LottieAnimationView aniLove;
     ImageView img_back, img_supply, img_arrow, img_supply_add_to_cart;
     MaterialCardView mcv_description, mcv_add_to_cart;
-    RecyclerView rcv_img_list, rcv_option_list;
+    RecyclerView rcv_img_list, rcv_option_list, rcv_same_supplies;
     SupplyImageListAdapter supplyImageListAdapter;
     List<String> imageUrls  = new ArrayList<>();
     List<Supplies_Review> suppliesReviews;
@@ -79,8 +82,8 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
     boolean showMoreClick = false;
     boolean isAnimating = false;
     boolean isOptionSelected = false;
-
-
+    ProgressBar progressBar_sameSupplies;
+    List<Supplies> sameSuppliesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +140,7 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
 
     private void initWidget() {
         aniLove = findViewById(R.id.ani_love);
+        progressBar_sameSupplies = findViewById(R.id.progressBar_sameSupplies);
         tv_rating_supply_detail = findViewById(R.id.tv_rating_supply_detail);
         tv_supply_title = findViewById(R.id.tv_supply_title);
         tv_supply_price = findViewById(R.id.tv_supply_price);
@@ -173,6 +177,7 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
         });
 
         rcv_option_list = findViewById(R.id.rcv_option_list);
+        rcv_same_supplies = findViewById(R.id.rcv_same_supplies);
 
 
         mcv_description = findViewById(R.id.mcv_description);
@@ -230,6 +235,7 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
         img_back.setOnClickListener(view -> {
             finish();
         });
+
 
 
     }
@@ -309,6 +315,13 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
                 if (supplies != null) {
                     tv_supply_title.setText(supplies.getName());
                     tv_supply_description.setText(supplies.getDescription());
+                    String currentCategory = supplies.getCategory();
+                    String currentSuppliesId = supplies.getSupplies_id();
+
+
+                    if (currentCategory != null && !currentCategory.isEmpty()) {
+                        getSameSuppliesItems(currentCategory, currentSuppliesId);
+                    }
 
                     // Format the sell price to remove decimals
                     DecimalFormat df = new DecimalFormat("#");
@@ -456,6 +469,50 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("Firebase Error", error.getMessage());
+            }
+        });
+    }
+
+    private void getSameSuppliesItems(String category, String currentSuppliesId) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Supplies");
+        ref.orderByChild("category").equalTo(category).limitToFirst(6).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                sameSuppliesList = new ArrayList<>();
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Supplies supply = snapshot.getValue(Supplies.class);
+                    if (supply != null && !supply.getSupplies_id().equals(currentSuppliesId)) {
+                        sameSuppliesList.add(supply);
+                    }
+                }
+
+                // Lấy dữ liệu đánh giá
+                DatabaseReference reviewsRef = FirebaseDatabase.getInstance().getReference("Supplies_Review");
+                reviewsRef.addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        List<Supplies_Review> reviewList = new ArrayList<>();
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Supplies_Review review = snapshot.getValue(Supplies_Review.class);
+                            reviewList.add(review);
+                        }
+
+                        progressBar_sameSupplies.setVisibility(View.GONE);
+                        SameSuppliesAdapter adapter = new SameSuppliesAdapter(sameSuppliesList, reviewList, SupplyDetailActivity.this);
+                        rcv_same_supplies.setLayoutManager(new LinearLayoutManager(SupplyDetailActivity.this ,LinearLayoutManager.HORIZONTAL,false));
+                        rcv_same_supplies.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        // Handle possible errors
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle possible errors
             }
         });
     }

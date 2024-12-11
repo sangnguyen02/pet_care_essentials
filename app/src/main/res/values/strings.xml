@@ -91,14 +91,12 @@
         <item>Trả hàng thành công</item>
     </string-array>
 
-        <string-array name="regions_array">
-            <item>Việt Nam</item>
-            <item>Miền Bắc</item>
-            <item>Miền Trung</item>
-            <item>Miền Nam</item>
-        </string-array>
-
-
+    <string-array name="regions_array">
+        <item>Việt Nam</item>
+        <item>Miền Bắc</item>
+        <item>Miền Trung</item>
+        <item>Miền Nam</item>
+    </string-array>
 
 
     <string name="delete_cart_item_title">Delete Item</string>
