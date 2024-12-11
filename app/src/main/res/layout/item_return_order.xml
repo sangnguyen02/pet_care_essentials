@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:backgroundTint="@color/white"
-    app:cardCornerRadius="4dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="8dp"
     app:strokeWidth="0dp"
     app:rippleColor="@color/ripple_color">
 
@@ -71,23 +71,7 @@
                 android:text="+123456789"
                 android:textSize="11sp" />
 
-            <!-- Địa chỉ -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_bold"
-                android:text="Address:"
-                android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/tv_return_address"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto_flex"
-                android:text="123 Main St, City"
-                android:textSize="11sp" />
-
-            <!-- Ngày yêu cầu -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -16,12 +16,14 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.uiux.Model.InfoReturnOrder;
 import com.example.uiux.R;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,14 +44,15 @@ import java.util.UUID;
 public class UserReturnOrderActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private ImageView img1, img2, img3, img4;
-    private Uri[] imageUris = new Uri[4]; // Array to hold image URIs
+    private Uri[] imageUris = new Uri[4];
     private FirebaseStorage storage;
     private DatabaseReference returnOrderRef;
     private  DatabaseReference orderRef;
     private  DatabaseReference accountRef;
     private RadioGroup rgReturnReasons;
     private EditText etOtherReason;
-    private Button btnReturnOrder;
+    private MaterialButton btnReturnOrder;
+    private ImageView img_back_return_order;
     private String orderId;
     private  String accountId;
     private  String name,email,phone,address;
@@ -58,6 +61,7 @@ public class UserReturnOrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_user_return_order);
         initWidget();
         img1.setOnClickListener(view -> openImageChooser(0));
@@ -69,7 +73,6 @@ public class UserReturnOrderActivity extends AppCompatActivity {
         accountRef = FirebaseDatabase.getInstance().getReference("Account");
         returnOrderRef = FirebaseDatabase.getInstance().getReference("Return Order");
 
-        // Lấy Order ID từ Intent
         Intent intent = getIntent();
         orderId = intent.getStringExtra("order_id");
         SharedPreferences preferences =  getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
@@ -232,6 +235,8 @@ public class UserReturnOrderActivity extends AppCompatActivity {
 
 
     private void initWidget() {
+        img_back_return_order = findViewById(R.id.img_back_return_order);
+        img_back_return_order.setOnClickListener(view -> finish());
         img1 = findViewById(R.id.img1);
         img2 = findViewById(R.id.img2);
         img3 = findViewById(R.id.img3);

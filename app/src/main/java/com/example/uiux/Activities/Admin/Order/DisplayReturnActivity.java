@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -34,13 +35,17 @@ public class DisplayReturnActivity extends AppCompatActivity {
     private ReturnOrderApdapter returnOrderApdapter;
     private List<InfoReturnOrder> infoReturnOrderList = new ArrayList<>();
     private DatabaseReference databaseReference;
+    private ImageView img_back_order_return;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_display_return);
 
+        img_back_order_return = findViewById(R.id.img_back_order_return);
+        img_back_order_return.setOnClickListener(view -> finish());
         recyclerView = findViewById(R.id.recyclerViewRequests);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         returnOrderApdapter = new ReturnOrderApdapter(infoReturnOrderList, this);

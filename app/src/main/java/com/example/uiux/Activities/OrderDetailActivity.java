@@ -1,6 +1,7 @@
 package com.example.uiux.Activities;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -23,7 +24,9 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.uiux.Activities.User.CancelOrder.UserCancelOrderActivity;
 import com.example.uiux.Activities.User.Order.EditOrderActivity;
+import com.example.uiux.Activities.User.ReturnOrder.UserReturnOrderActivity;
 import com.example.uiux.Adapters.CartPaymentAdapter;
 import com.example.uiux.Adapters.DeliveryMethodAdapter;
 import com.example.uiux.Adapters.OrderChildAdapter;
@@ -238,11 +241,19 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         btn_return_order = findViewById(R.id.btn_return_order);
         btn_return_order.setOnClickListener(view -> {
+            Intent intent = new Intent(OrderDetailActivity.this, UserReturnOrderActivity.class);
+            intent.putExtra("order_id", order_id); // Truyền order_id vào Intent
+            Log.e("Order_ID", order_id);  // Ghi log để kiểm tra order_id
+            startActivity(intent);
 
         });
 
         btn_cancel_order = findViewById(R.id.btn_cancel_order);
         btn_cancel_order.setOnClickListener(view -> {
+            Intent intent = new Intent(OrderDetailActivity.this, UserCancelOrderActivity.class);
+            intent.putExtra("order_id", order_id); // Truyền order_id vào Intent
+            Log.e("Order_ID", order_id);  // Ghi log để kiểm tra order_id
+            startActivity(intent);
 
         });
 
@@ -274,26 +285,20 @@ public class OrderDetailActivity extends AppCompatActivity {
                         updateStatusUI(order.getStatus());
 
                         if(order.getStatus() == OrderStatus.DELIVERED) {
-                            if(accountType != 1) {
-                                btn_return_order.setVisibility(View.GONE);
-                            } else {
+                            if(accountType == 0) {
                                 btn_return_order.setVisibility(View.VISIBLE);
                             }
                         }
 //                        if(order.getStatus() == OrderStatus.PENDING || order.getStatus() == OrderStatus.PREPARING || order.getStatus() == OrderStatus.SHIPPING) {
-//                            if(accountType != 1) {
+//                            if(accountType == 0) {
 //                                btn_cancel_order.setVisibility(View.VISIBLE);
-//                            } else {
-//                                btn_cancel_order.setVisibility(View.GONE);
 //                            }
 //                        }
 
-                        if (accountType == 1 && (order.getStatus() == OrderStatus.PENDING ||
+                        if (accountType == 0 && (order.getStatus() == OrderStatus.PENDING ||
                                 order.getStatus() == OrderStatus.PREPARING ||
                                 order.getStatus() == OrderStatus.SHIPPING)) {
                             btn_cancel_order.setVisibility(View.VISIBLE);
-                        } else {
-                            btn_cancel_order.setVisibility(View.GONE);
                         }
 
 

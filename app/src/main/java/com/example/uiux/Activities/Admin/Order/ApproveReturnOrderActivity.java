@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -20,6 +21,7 @@ import com.example.uiux.Model.InfoReturnOrder;
 import com.example.uiux.Model.Order;
 import com.example.uiux.R;
 import com.example.uiux.Utils.OrderStatus;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,8 +33,8 @@ public class ApproveReturnOrderActivity extends AppCompatActivity {
     private TextView tvCustomerName, tvCustomerPhone, tvCustomerEmail, tvCustomerAddress;
     private TextView tvTotalPrice, tvPaymentStatus, tvDeliveryDate, tvOrderDate, tvRequestReturnDate;
     private TextView tvReturnReason, tvReturnDetailReason;
-    private ImageView ivProduct1, ivProduct2, ivProduct3, ivProduct4;
-    private Button approveBtn,rejectBtn;
+    private ImageView ivProduct1, ivProduct2, ivProduct3, ivProduct4, img_back_return_approve;
+    private MaterialButton approveBtn,rejectBtn;
     String info_return_id;
     String order_id;
     private DatabaseReference returnOrderRef;
@@ -44,6 +46,7 @@ public class ApproveReturnOrderActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_approve_return_order);
 
         Intent intent=getIntent();
@@ -68,6 +71,8 @@ public class ApproveReturnOrderActivity extends AppCompatActivity {
         });
     }
     private void initViews() {
+        img_back_return_approve = findViewById(R.id.img_back_return_approve);
+        img_back_return_approve.setOnClickListener(view -> finish());
         tvCustomerName = findViewById(R.id.tvCustomerName);
         tvCustomerPhone = findViewById(R.id.tvCustomerPhone);
         tvCustomerEmail = findViewById(R.id.tvCustomerEmail);

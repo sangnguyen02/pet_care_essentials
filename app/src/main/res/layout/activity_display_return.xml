@@ -4,9 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
-    android:background="@color/light_bg">
+    android:background="@color/light_bg"
+    >
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_my_supplies_app_bar"
+        android:id="@+id/cv_order_return_app_bar"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         app:cardElevation="10dp"
@@ -19,7 +20,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/img_back_my_supplies"
+                android:id="@+id/img_back_order_return"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -39,27 +40,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:fontFamily="@font/roboto_bold"
-                android:text="My Supplies"
+                android:text="Orders Return"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/img_back_my_supplies"
-                app:layout_constraintStart_toEndOf="@+id/img_back_my_supplies"
-                app:layout_constraintTop_toTopOf="@+id/img_back_my_supplies"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back_order_return"
+                app:layout_constraintStart_toEndOf="@+id/img_back_order_return"
+                app:layout_constraintTop_toTopOf="@+id/img_back_order_return"
                 tools:ignore="HardcodedText" />
 
-            <ImageView
-                android:id="@+id/imgv_add_supplies"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginEnd="16dp"
-                android:background="@drawable/ripple_effect"
-                android:scaleType="centerCrop"
-                android:src="@drawable/add_circle_outlined"
-                app:layout_constraintBottom_toBottomOf="@+id/textView"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textView"
-                tools:ignore="ContentDescription" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -69,17 +58,17 @@
         android:id="@+id/linearLayout_supply"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_my_supplies_app_bar"
-        >
+        app:layout_constraintTop_toBottomOf="@+id/cv_order_return_app_bar">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewRequests"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:clipToPadding="false" />
     </LinearLayout>
 
 

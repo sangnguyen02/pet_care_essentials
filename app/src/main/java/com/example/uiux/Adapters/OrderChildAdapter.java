@@ -123,33 +123,33 @@ public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.Or
             img_supply = itemView.findViewById(R.id.img_order_child_item);
             btn_review_supply = itemView.findViewById(R.id.btn_review_supply);
             btn_buy_again = itemView.findViewById(R.id.btn_buy_again);
-            btn_cancel = itemView.findViewById(R.id.btn_cancel);
-            btn_return= itemView.findViewById(R.id.btn_return);
+//            btn_cancel = itemView.findViewById(R.id.btn_cancel);
+//            btn_return= itemView.findViewById(R.id.btn_return);
 
             preferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
             this.order_id = order_id; // Nhận order_id từ constructor
 
             // Sự kiện cho nút "Cancel"
-            btn_cancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    // Khi nút Cancel được nhấn, mở UserCancelOrderActivity với order_id
-                    Intent intent = new Intent(context, UserCancelOrderActivity.class);
-                    intent.putExtra("order_id", order_id); // Truyền order_id vào Intent
-                    Log.e("Order_ID", order_id);  // Ghi log để kiểm tra order_id
-                    context.startActivity(intent); // Mở Activity mới
-                }
-            });
-            btn_return.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Intent intent = new Intent(context, UserReturnOrderActivity.class);
-                    intent.putExtra("order_id", order_id); // Truyền order_id vào Intent
-                    Log.e("Order_ID", order_id);  // Ghi log để kiểm tra order_id
-                    context.startActivity(intent); // Mở Activity mới
-
-                }
-            });
+//            btn_cancel.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    // Khi nút Cancel được nhấn, mở UserCancelOrderActivity với order_id
+//                    Intent intent = new Intent(context, UserCancelOrderActivity.class);
+//                    intent.putExtra("order_id", order_id); // Truyền order_id vào Intent
+//                    Log.e("Order_ID", order_id);  // Ghi log để kiểm tra order_id
+//                    context.startActivity(intent); // Mở Activity mới
+//                }
+//            });
+//            btn_return.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Intent intent = new Intent(context, UserReturnOrderActivity.class);
+//                    intent.putExtra("order_id", order_id); // Truyền order_id vào Intent
+//                    Log.e("Order_ID", order_id);  // Ghi log để kiểm tra order_id
+//                    context.startActivity(intent); // Mở Activity mới
+//
+//                }
+//            });
         }
     }
 }
