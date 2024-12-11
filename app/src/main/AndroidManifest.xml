@@ -29,18 +29,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Uiux"
         android:usesCleartextTraffic="true">
+        <activity
+            android:name=".Activities.User.Review.AllReviewedActivity"
+            android:exported="false" />
 
         <service
             android:name=".Utils.FCM.FCMNotificationService"
             android:exported="false"
-            android:permission="TODO"
-            >
+            android:permission="TODO">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-
         </service>
 
         <activity
@@ -319,11 +320,9 @@
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
-
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="Notification"
-            />
+            android:value="Notification" />
     </application>
 
 </manifest>

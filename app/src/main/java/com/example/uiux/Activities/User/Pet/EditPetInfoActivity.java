@@ -1,5 +1,6 @@
 package com.example.uiux.Activities.User.Pet;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -109,7 +110,18 @@ public class EditPetInfoActivity extends AppCompatActivity {
     }
 
     private void deletePetInfoFromDatabase() {
-        petDatabase.removeValue();
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm")
+                .setMessage("Are you sure")
+                .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+                    petDatabase.removeValue();
+                    finish();
+                })
+                .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
+                    confirmDialog.dismiss();
+                })
+                .show();
+
     }
     private void savePetData() {
         String updatedName = petName.getText().toString().trim();

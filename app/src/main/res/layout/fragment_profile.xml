@@ -209,28 +209,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tv_view_purchase_history"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:fontFamily="@font/roboto_bold"
-                    android:text="View Purchase History"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/img_arrow_0"
-                    app:layout_constraintEnd_toStartOf="@id/img_arrow_0"
-                    app:layout_constraintTop_toTopOf="@id/img_arrow_0" />
-
-                <ImageView
-                    android:id="@+id/img_arrow_0"
-                    android:layout_width="12dp"
-                    android:layout_height="12dp"
-                    android:src="@drawable/arrow"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -443,7 +421,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:id="@+id/to_rate"
+                        android:id="@+id/completed"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:background="@drawable/ripple_effect"
@@ -451,55 +429,56 @@
                         >
 
                         <ImageView
-                            android:id="@+id/img_to_rate"
-                            android:layout_width="32dp"
-                            android:layout_height="32dp"
+                            android:id="@+id/img_completed"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
                             android:layout_marginBottom="4dp"
-                            android:src="@drawable/to_rate"
                             android:scaleType="centerCrop"
+                            android:src="@drawable/delivered"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.507"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <TextView
-                            android:id="@+id/tv_to_rate"
+                            android:id="@+id/tv_completed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/roboto_bold"
-                            android:layout_marginTop="4dp"
-                            android:text="To Rate"
+                            android:layout_marginBottom="12dp"
+                            android:text="Completed"
                             android:textAlignment="center"
                             android:textColor="@color/black"
                             android:textSize="11sp"
-                            app:layout_constraintEnd_toEndOf="@+id/img_to_rate"
-                            app:layout_constraintStart_toStartOf="@+id/img_to_rate"
-                            app:layout_constraintTop_toBottomOf="@+id/img_to_rate" />
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="@+id/img_completed"
+                            app:layout_constraintStart_toStartOf="@+id/img_completed" />
 
                         <ImageView
-                            android:id="@+id/img_red_circle_to_rate"
+                            android:id="@+id/img_red_circle_completed"
                             android:layout_width="14dp"
                             android:layout_height="14dp"
                             android:visibility="gone"
-                            app:layout_constraintBottom_toTopOf="@+id/img_to_rate"
-                            app:layout_constraintEnd_toEndOf="@+id/img_to_rate"
-                            app:layout_constraintStart_toEndOf="@+id/img_to_rate"
-                            app:layout_constraintTop_toTopOf="@+id/img_to_rate"
+                            app:layout_constraintBottom_toTopOf="@+id/img_completed"
+                            app:layout_constraintEnd_toEndOf="@+id/img_completed"
+                            app:layout_constraintStart_toEndOf="@+id/img_completed"
+                            app:layout_constraintTop_toTopOf="@+id/img_completed"
                             app:srcCompat="@drawable/red_circle_png"
                             tools:ignore="ContentDescription" />
 
                         <TextView
-                            android:id="@+id/tv_number_of_notify_to_rate"
+                            android:id="@+id/tv_number_of_notify_completed"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/roboto_bold"
                             android:text=""
                             android:textColor="@color/white"
                             android:textSize="8sp"
-                            app:layout_constraintBottom_toBottomOf="@+id/img_red_circle_to_rate"
-                            app:layout_constraintEnd_toEndOf="@id/img_red_circle_to_rate"
-                            app:layout_constraintStart_toStartOf="@+id/img_red_circle_to_rate"
-                            app:layout_constraintTop_toTopOf="@+id/img_red_circle_to_rate"
+                            app:layout_constraintBottom_toBottomOf="@+id/img_red_circle_completed"
+                            app:layout_constraintEnd_toEndOf="@id/img_red_circle_completed"
+                            app:layout_constraintStart_toStartOf="@+id/img_red_circle_completed"
+                            app:layout_constraintTop_toTopOf="@+id/img_red_circle_completed"
                             tools:ignore="HardcodedText,SmallSp" />
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
