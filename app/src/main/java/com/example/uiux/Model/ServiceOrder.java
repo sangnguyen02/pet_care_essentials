@@ -5,25 +5,43 @@ import java.util.Date;
 public class ServiceOrder {
     private String service_order_id;
     private String service_id;
-    private String type_id;
-    private Date order_date;
+    private String service_name;
+    private String type;
+    private String order_date;
     private double total_price;
     private String name;
     private String phone_number;
     private String email;
+    private String branch_id;
+    private String branch_name;
+    private String branch_address;
+    private  String time;
 
     public ServiceOrder() {
     }
 
-    public ServiceOrder(String service_order_id, String service_id, String type_id, Date order_date, double total_price, String name, String phone_number, String email) {
+    public ServiceOrder(String service_order_id, String service_id, String service_name, String type, String order_date, double total_price, String name, String phone_number, String email, String branch_id, String branch_name, String branch_address, String time) {
         this.service_order_id = service_order_id;
         this.service_id = service_id;
-        this.type_id = type_id;
+        this.service_name = service_name;
+        this.type = type;
         this.order_date = order_date;
         this.total_price = total_price;
         this.name = name;
         this.phone_number = phone_number;
         this.email = email;
+        this.branch_id = branch_id;
+        this.branch_name = branch_name;
+        this.branch_address = branch_address;
+        this.time = time;
+    }
+
+    public String getService_name() {
+        return service_name;
+    }
+
+    public void setService_name(String service_name) {
+        this.service_name = service_name;
     }
 
     public String getService_order_id() {
@@ -42,19 +60,19 @@ public class ServiceOrder {
         this.service_id = service_id;
     }
 
-    public String getType_id() {
-        return type_id;
+    public String getType() {
+        return type;
     }
 
-    public void setType_id(String type_id) {
-        this.type_id = type_id;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public Date getOrder_date() {
+    public String getOrder_date() {
         return order_date;
     }
 
-    public void setOrder_date(Date order_date) {
+    public void setOrder_date(String order_date) {
         this.order_date = order_date;
     }
 
@@ -88,5 +106,37 @@ public class ServiceOrder {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getBranch_id() {
+        return branch_id;
+    }
+
+    public void setBranch_id(String branch_id) {
+        this.branch_id = branch_id;
+    }
+
+    public String getBranch_name() {
+        return branch_name;
+    }
+
+    public void setBranch_name(String branch_name) {
+        this.branch_name = branch_name;
+    }
+
+    public String getBranch_address() {
+        return branch_address;
+    }
+
+    public void setBranch_address(String branch_address) {
+        this.branch_address = branch_address;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.uiux.Adapters;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,8 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
         String day = new SimpleDateFormat("EEE", Locale.ENGLISH).format(calendar.getTime());
 
         String date = new SimpleDateFormat("dd", Locale.ENGLISH).format(calendar.getTime());
+        String month = new SimpleDateFormat("dd", Locale.ENGLISH).format(calendar.getTime());
+        String year = new SimpleDateFormat("dd", Locale.ENGLISH).format(calendar.getTime());
 
         holder.tvDay.setText(day);
         holder.tvDate.setText(date);
@@ -72,6 +75,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
                 notifyDataSetChanged();
                 if (listener != null) {
                     listener.onItemClick(clickedPosition);
+                    Log.e("Log","Test");
                 }
             }
         });
@@ -81,6 +85,18 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder> {
     public int getItemCount() {
         return days.size();
     }
+    public String getSelectedDay() {
+        if (selectedPosition != -1) {
+            // Lấy đối tượng Calendar của ngày đã chọn
+            Calendar selectedCalendar = days.get(selectedPosition);
+
+            // Định dạng ngày đã chọn thành chuỗi
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.ENGLISH); // Ví dụ: "Mon, 12/12/2024"
+            return dateFormat.format(selectedCalendar.getTime());
+        }
+        return null;  // Nếu không có ngày nào được chọn
+    }
+
 
     static class DayViewHolder extends RecyclerView.ViewHolder {
         TextView tvDay, tvDate;
