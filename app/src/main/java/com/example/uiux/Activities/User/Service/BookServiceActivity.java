@@ -182,6 +182,7 @@ public class BookServiceActivity extends AppCompatActivity {
         ServiceOrder serviceOrder = new ServiceOrder(
                 orderId,
                 service_id,
+                accountId,
                 service_name,
                 type, // Nếu cần thêm type, đảm bảo bạn đã có nó trong Service model
                 order_date,

@@ -58,21 +58,21 @@
         <item>Large</item>
     </string-array>
     <string-array name="suplies_status">
-        <item>Ngừng kinh doanh</item>
-        <item>Hết hàng</item>
-        <item>Tạm ngưng</item>
-        <item>Mới về</item>
-        <item>Còn hàng</item>
+        <item>Discontinued</item>
+        <item>Out of stock</item>
+        <item>Temporarily discontinued</item>
+        <item>New arrival</item>
+        <item>In stock</item>
     </string-array>
     <string-array name="service_status">
-        <item>Đang cung cấp</item>
-        <item>Ngừng cung cấp</item>
+        <item>Currently available</item>
+        <item>Discontinued</item>
     </string-array>
     <string-array name="branch_store_status">
-        <item>Mới Khai trương</item>
-        <item>Đang mở</item>
-        <item>Tạm đóng cửa</item>
-        <item>Đóng cửa</item>
+        <item>Newly Opened</item>
+        <item>Open</item>
+        <item>Temporarily Closed</item>
+        <item>Closed</item>
     </string-array>
     <string-array name="discount_status">
         <item>New </item>
@@ -81,21 +81,21 @@
     </string-array>
 
     <string-array name="order_status">
-        <item>Chờ xác nhận đơn hàng </item>
-        <item>Đã xác nhận đơn hàng</item>
-        <item>Đang giao hàng</item>
-        <item>Giao hàng thành công</item>
-        <item>Hủy đơn hàng</item>
-        <item>Chờ xác nhận trả hàng</item>
-        <item>Đã xác nhận trả hàng</item>
-        <item>Trả hàng thành công</item>
+        <item>Waiting for order confirmation</item>
+        <item>Order confirmed</item>
+        <item>Delivery</item>
+        <item>Delivery successful</item>
+        <item>Cancel order</item>
+        <item>Waiting for return confirmation</item>
+        <item>Return confirmed</item>
+        <item>Return successful</item>
     </string-array>
 
     <string-array name="regions_array">
-        <item>Việt Nam</item>
-        <item>Miền Bắc</item>
-        <item>Miền Trung</item>
-        <item>Miền Nam</item>
+        <item>Vietnam</item>
+        <item>North</item>
+        <item>Central</item>
+        <item>South</item>
     </string-array>
 
 

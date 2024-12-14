@@ -26,6 +26,7 @@ import com.example.uiux.Activities.User.Order.OrderActivity;
 import com.example.uiux.Activities.User.Pet.UpdatePetInfoActivity;
 import com.example.uiux.Activities.User.Profile.PhoneUpdateProfileActivity;
 import com.example.uiux.Activities.User.Profile.SettingsActivity;
+import com.example.uiux.Activities.User.Service.DisplayOrderServiceActivity;
 import com.example.uiux.R;
 import com.example.uiux.Utils.OrderStatus;
 import com.google.android.material.card.MaterialCardView;
@@ -40,7 +41,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileFragment extends Fragment {
     View rootView;
     ConstraintLayout to_pay, to_ship, to_receive, completed;
-    MaterialCardView mcv_help_center, mcv_pet_profile, mcv_branches;
+    MaterialCardView mcv_help_center, mcv_pet_profile, mcv_branches,mcv_myService;
     String phone;
     String accountId;
     CircleImageView img_avatar, img_setting;
@@ -114,6 +115,13 @@ public class ProfileFragment extends Fragment {
             Intent goToMap = new Intent(rootView.getContext(), BranchMapActivity.class);
             startActivity(goToMap);
         });
+        mcv_myService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent goToMap = new Intent(rootView.getContext(), DisplayOrderServiceActivity.class);
+                startActivity(goToMap);
+            }
+        });
 
         to_pay.setOnClickListener(view -> {
             Intent goToOrderStatus = new Intent(rootView.getContext(), OrderActivity.class);
@@ -162,6 +170,7 @@ public class ProfileFragment extends Fragment {
         mcv_help_center = rootView.findViewById(R.id.mcv_help_center);
         mcv_pet_profile = rootView.findViewById(R.id.mcv_pet_profile);
         mcv_branches = rootView.findViewById(R.id.mcv_branches);
+        mcv_myService= rootView.findViewById(R.id.mcv_my_service_orders);
         to_pay = rootView.findViewById(R.id.to_pay);
         to_ship = rootView.findViewById(R.id.to_ship);
         to_receive = rootView.findViewById(R.id.to_receive);
