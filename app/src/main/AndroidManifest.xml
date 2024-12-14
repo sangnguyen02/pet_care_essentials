@@ -30,6 +30,9 @@
         android:theme="@style/Theme.Uiux"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".Activities.Admin.Statistic.StatisticAllRevenueActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.Admin.Services.DisplayServiceBookingActivity"
             android:exported="false" />
         <activity
