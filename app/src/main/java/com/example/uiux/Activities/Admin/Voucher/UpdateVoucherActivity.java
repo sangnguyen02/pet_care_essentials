@@ -45,9 +45,9 @@ public class UpdateVoucherActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_update_voucher);
-        imgv_back_add_supplies = findViewById(R.id.img_back_my_supplies);
-        imgv_add_supplies = findViewById(R.id.imgv_add_supplies);
-
+        imgv_back_add_supplies = findViewById(R.id.img_back_my_vouncher);
+        imgv_add_supplies = findViewById(R.id.imgv_add_vouncher);
+//
         imgv_back_add_supplies.setOnClickListener(view -> {
             finish();
         });
