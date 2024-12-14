@@ -16,11 +16,12 @@ public class ServiceOrder {
     private String branch_name;
     private String branch_address;
     private  String time;
+    private  int status;
 
     public ServiceOrder() {
     }
 
-    public ServiceOrder(String service_order_id, String service_id, String service_name, String type, String order_date, double total_price, String name, String phone_number, String email, String branch_id, String branch_name, String branch_address, String time) {
+    public ServiceOrder(String service_order_id, String service_id, String service_name, String type, String order_date, double total_price, String name, String phone_number, String email, String branch_id, String branch_name, String branch_address, String time, int status) {
         this.service_order_id = service_order_id;
         this.service_id = service_id;
         this.service_name = service_name;
@@ -34,6 +35,15 @@ public class ServiceOrder {
         this.branch_name = branch_name;
         this.branch_address = branch_address;
         this.time = time;
+        this.status = status;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getService_name() {

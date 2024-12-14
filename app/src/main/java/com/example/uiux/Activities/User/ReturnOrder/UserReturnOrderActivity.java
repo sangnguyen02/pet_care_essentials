@@ -167,7 +167,7 @@ public class UserReturnOrderActivity extends AppCompatActivity {
         // Lưu vào Firebase
         returnOrderRef.child(returnOrderId).setValue(returnOrder).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                updateOrderStatus(5);
+                updateOrderStatus(6);
                 Toast.makeText(this, "Yêu cầu trả hàng đã được gửi!", Toast.LENGTH_SHORT).show();
                 finish();
             } else {

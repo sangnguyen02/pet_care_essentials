@@ -5,25 +5,35 @@ import java.util.Date;
 public class CancelService {
     private String cancel_service_id;
     private String service_order_id;
-    private Date date;
+    private String date;
     private String reason;
     private String detail_reason;
-    private String name;
+    private String service_name;
+    private String user_name;
     private String phone_number;
     private String email;
+    private double total_price;
+    private String branch_id;
+    private String branch_name;
+    private String branch_address;
 
     public CancelService() {
     }
 
-    public CancelService(String cancel_service_id, String service_order_id, Date date, String reason, String detail_reason, String name, String phone_number, String email) {
+    public CancelService(String cancel_service_id, String service_order_id, String date, String reason, String detail_reason, String service_name, String user_name, String phone_number, String email, double total_price, String branch_id, String branch_name, String branch_addres) {
         this.cancel_service_id = cancel_service_id;
         this.service_order_id = service_order_id;
         this.date = date;
         this.reason = reason;
         this.detail_reason = detail_reason;
-        this.name = name;
+        this.service_name = service_name;
+        this.user_name = user_name;
         this.phone_number = phone_number;
         this.email = email;
+        this.total_price = total_price;
+        this.branch_id = branch_id;
+        this.branch_name = branch_name;
+        this.branch_address = branch_addres;
     }
 
     public String getCancel_service_id() {
@@ -42,11 +52,11 @@ public class CancelService {
         this.service_order_id = service_order_id;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -66,12 +76,20 @@ public class CancelService {
         this.detail_reason = detail_reason;
     }
 
-    public String getName() {
-        return name;
+    public String getService_name() {
+        return service_name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setService_name(String service_name) {
+        this.service_name = service_name;
+    }
+
+    public String getUser_name() {
+        return user_name;
+    }
+
+    public void setUser_name(String user_name) {
+        this.user_name = user_name;
     }
 
     public String getPhone_number() {
@@ -88,5 +106,37 @@ public class CancelService {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public double getTotal_price() {
+        return total_price;
+    }
+
+    public void setTotal_price(double total_price) {
+        this.total_price = total_price;
+    }
+
+    public String getBranch_id() {
+        return branch_id;
+    }
+
+    public void setBranch_id(String branch_id) {
+        this.branch_id = branch_id;
+    }
+
+    public String getBranch_name() {
+        return branch_name;
+    }
+
+    public void setBranch_name(String branch_name) {
+        this.branch_name = branch_name;
+    }
+
+    public String getBranch_addres() {
+        return branch_address;
+    }
+
+    public void setBranch_addres(String branch_addres) {
+        this.branch_address = branch_addres;
     }
 }

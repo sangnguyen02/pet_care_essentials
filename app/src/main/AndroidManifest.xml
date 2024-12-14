@@ -33,6 +33,12 @@
             android:name=".Activities.User.NotificationActivity"
             android:exported="false" />
         <activity
+            android:name=".Activities.User.Service.DisplayOrderServiceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.User.Service.CancelServiceActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.User.Review.AllReviewedActivity"
             android:exported="false" />
 
