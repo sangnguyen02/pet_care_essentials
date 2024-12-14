@@ -5,6 +5,7 @@ import java.util.Date;
 public class ServiceOrder {
     private String service_order_id;
     private String service_id;
+    private  String account_id;
     private String service_name;
     private String type;
     private String order_date;
@@ -21,9 +22,10 @@ public class ServiceOrder {
     public ServiceOrder() {
     }
 
-    public ServiceOrder(String service_order_id, String service_id, String service_name, String type, String order_date, double total_price, String name, String phone_number, String email, String branch_id, String branch_name, String branch_address, String time, int status) {
+    public ServiceOrder(String service_order_id, String service_id, String account_id, String service_name, String type, String order_date, double total_price, String name, String phone_number, String email, String branch_id, String branch_name, String branch_address, String time, int status) {
         this.service_order_id = service_order_id;
         this.service_id = service_id;
+        this.account_id = account_id;
         this.service_name = service_name;
         this.type = type;
         this.order_date = order_date;
@@ -36,6 +38,14 @@ public class ServiceOrder {
         this.branch_address = branch_address;
         this.time = time;
         this.status = status;
+    }
+
+    public String getAccount_id() {
+        return account_id;
+    }
+
+    public void setAccount_id(String account_id) {
+        this.account_id = account_id;
     }
 
     public int getStatus() {
