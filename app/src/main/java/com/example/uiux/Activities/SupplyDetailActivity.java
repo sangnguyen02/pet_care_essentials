@@ -63,7 +63,7 @@ import java.util.Objects;
 
 public class SupplyDetailActivity extends AppCompatActivity implements SupplyDetailOptionAdapter.OnSupplyOptionClickListener {
     MaterialCardView bottomSheetAddToCart, mcv_minus, mcv_plus, mcv_supply_review;
-    MaterialButton btn_confirm_add_to_cart;
+    MaterialButton btn_confirm_add_to_cart, btn_buy_now;
     BottomSheetBehavior bottomSheetBehaviorAddToCart;
     LottieAnimationView aniLove;
     ImageView img_back, img_supply, img_arrow, img_supply_add_to_cart;
@@ -132,6 +132,7 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
         mcv_supply_review.setOnClickListener(view -> {
             Intent gotoReview = new Intent(SupplyDetailActivity.this, SupplyReviewActivity.class);
             gotoReview.putExtra("supplyId", supplyId);
+            gotoReview.putExtra("fromSupplyDetail", true);
             startActivity(gotoReview);
         });
 
@@ -235,8 +236,6 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
         img_back.setOnClickListener(view -> {
             finish();
         });
-
-
 
     }
 

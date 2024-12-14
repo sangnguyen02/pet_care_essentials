@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -58,6 +59,7 @@ public class SupplyReviewActivity extends AppCompatActivity {
     DatabaseReference reviewRef;
     SharedPreferences preferences;
     String accountId , supplyId, no_of_reviews;
+    Boolean fromSupplyDetail = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +74,10 @@ public class SupplyReviewActivity extends AppCompatActivity {
         } else {
             Log.e("SupplyReviewActivity", "No supplyId received!");
         }
+
+
+
+
 
         initWidget();
         preferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
@@ -117,6 +123,11 @@ public class SupplyReviewActivity extends AppCompatActivity {
         btn_send_review.setOnClickListener(view -> {
             sendReview();
         });
+
+        fromSupplyDetail = getIntent().getBooleanExtra("fromSupplyDetail", false);
+        if(fromSupplyDetail) {
+            btn_write_review.setVisibility(View.GONE);
+        }
 
     }
     void sendReview() {

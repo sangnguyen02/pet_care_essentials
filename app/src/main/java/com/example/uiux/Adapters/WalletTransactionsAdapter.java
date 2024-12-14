@@ -66,7 +66,7 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<WalletTransa
         }
          public void bind(WalletHistory walletHistory) {
              String status =  walletHistory.getStatus();
-             tv_wallet_transaction_message.setText(walletHistory.getMessage() != null ? walletHistory.getMessage() : "N/A");
+             tv_wallet_transaction_message.setText("Message: " + (walletHistory.getMessage() != null ? walletHistory.getMessage() : "N/A"));
 
              tv_wallet_transaction_date.setText(walletHistory.getDate());
 

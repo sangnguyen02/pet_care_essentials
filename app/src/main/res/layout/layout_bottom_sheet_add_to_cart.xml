@@ -7,8 +7,8 @@
     android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardBackgroundColor="@color/white"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/primary"
+    app:strokeWidth="2dp"
+    app:strokeColor="@color/gradient"
     app:cardCornerRadius="8dp"
     app:behavior_hideable="true"
     app:behavior_peekHeight="0dp"
@@ -244,20 +244,35 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/label_quantity" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_confirm_add_to_cart"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/edt_height"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:backgroundTint="@color/tabLayout_background"
-            android:text="@string/confirm_add_to_cart"
-            android:textSize="16sp"
-            app:shapeAppearanceOverlay="@style/Button5"
+            android:layout_height="wrap_content"
+            android:weightSum="1"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/line3" />
+            app:layout_constraintTop_toBottomOf="@+id/line3"
+            >
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_confirm_add_to_cart"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/edt_height"
+                android:layout_weight="0.5"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:backgroundTint="@color/tabLayout_background"
+                android:text="Add to Cart"
+                android:textSize="16sp"
+                android:fontFamily="@font/roboto_bold"
+                app:shapeAppearanceOverlay="@style/Button5"
+                />
+
+
+
+        </LinearLayout>
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

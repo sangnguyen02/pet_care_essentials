@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.User.CartActivity;
 import com.example.uiux.Activities.User.Map.BranchMapActivity;
+import com.example.uiux.Activities.User.NotificationActivity;
 import com.example.uiux.Activities.User.Order.OrderActivity;
 import com.example.uiux.Activities.User.Pet.UpdatePetInfoActivity;
 import com.example.uiux.Activities.User.Profile.PhoneUpdateProfileActivity;
@@ -43,8 +44,8 @@ public class ProfileFragment extends Fragment {
     String phone;
     String accountId;
     CircleImageView img_avatar, img_setting;
-    ImageView img_cart_at_profile, img_red_circle_at_profile;
-    TextView tv_username, tv_number_of_cart_item_at_profile;
+    ImageView img_cart_at_profile, img_red_circle_at_profile, img_notify_at_profile, img_red_circle_notify_at_profile;
+    TextView tv_username, tv_number_of_cart_item_at_profile, tv_number_of_notify_at_profile;
     DatabaseReference databaseReference;
     DatabaseReference cartItems;
     SharedPreferences preferences;
@@ -69,6 +70,7 @@ public class ProfileFragment extends Fragment {
 
         initWidget();
         displayNoOfCartItem();
+        displayNoOfNotification();
         loadUserProfile();
 
         img_avatar.setOnClickListener(view -> {
@@ -86,10 +88,18 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        img_notify_at_profile.setOnClickListener(view -> {
+            Intent gotoNoti = new Intent(rootView.getContext(), NotificationActivity.class);
+            startActivity(gotoNoti);
+
+        });
+
         img_cart_at_profile.setOnClickListener(view -> {
             Intent intent = new Intent(rootView.getContext(), CartActivity.class);
             startActivity(intent);
         });
+
+
 
         mcv_help_center.setOnClickListener(view -> {
 
@@ -141,8 +151,11 @@ public class ProfileFragment extends Fragment {
 
     void initWidget() {
         tv_number_of_cart_item_at_profile = rootView.findViewById(R.id.tv_number_of_cart_item_at_profile);
+        tv_number_of_notify_at_profile = rootView.findViewById(R.id.tv_number_of_notify_at_profile);
+        img_notify_at_profile = rootView.findViewById(R.id.img_notify_at_profile);
         img_cart_at_profile = rootView.findViewById(R.id.img_cart_at_profile);
         img_red_circle_at_profile = rootView.findViewById(R.id.img_red_circle_at_profile);
+        img_red_circle_notify_at_profile = rootView.findViewById(R.id.img_red_circle_notify_at_profile);
         img_avatar = rootView.findViewById(R.id.img_avatar);
         img_setting = rootView.findViewById(R.id.img_setting);
         tv_username = rootView.findViewById(R.id.tv_username);
@@ -172,6 +185,33 @@ public class ProfileFragment extends Fragment {
                 } else {
                     tv_number_of_cart_item_at_profile.setVisibility(View.GONE);
                     img_red_circle_at_profile.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi nếu có (tuỳ theo yêu cầu của bạn)
+            }
+        });
+    }
+
+    void displayNoOfNotification() {
+        cartItems = FirebaseDatabase.getInstance().getReference("Notification");
+        cartItems.orderByChild("account_id").equalTo(accountId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Đếm số lượng item trong giỏ
+                long itemCount = dataSnapshot.getChildrenCount();
+
+                // Kiểm tra và cập nhật giao diện tùy vào số lượng item
+                if (itemCount > 0) {
+                    // Hiển thị số lượng item trong giỏ
+                    tv_number_of_notify_at_profile.setVisibility(View.VISIBLE);
+                    tv_number_of_notify_at_profile.setText(String.valueOf(itemCount));
+                    img_red_circle_notify_at_profile.setVisibility(View.VISIBLE);
+                } else {
+                    tv_number_of_notify_at_profile.setVisibility(View.GONE);
+                    img_red_circle_notify_at_profile.setVisibility(View.GONE);
                 }
             }
 
