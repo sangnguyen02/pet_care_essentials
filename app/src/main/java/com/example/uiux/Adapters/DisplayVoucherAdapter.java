@@ -91,12 +91,12 @@ public class DisplayVoucherAdapter extends RecyclerView.Adapter<DisplayVoucherAd
 
         public void bind(Voucher voucher) {
             // Bind data to UI elements
-            voucherCode.setText("Mã: " + voucher.getCode());
-            category.setText("Danh mục: " + voucher.getCategory());
-            description.setText("Giảm " + voucher.getDiscount_percent() + "% - Tối đa " +
+            voucherCode.setText("Code: " + voucher.getCode());
+            category.setText("Category: " + voucher.getCategory());
+            description.setText("Discount " + voucher.getDiscount_percent() + "% - Maximum " +
                     voucher.getMax_discount_amount() + "đ");
-            validity.setText("HSD: " + voucher.getStart_date() + " đến " + voucher.getEnd_date());
-            minvalue.setText("Đơn tối thiểu: "+voucher.getMinimum_order_value());
+            validity.setText("From: " + voucher.getStart_date() + " to " + voucher.getEnd_date());
+            minvalue.setText("Minimun Value: "+voucher.getMinimum_order_value());
 
         }
     }

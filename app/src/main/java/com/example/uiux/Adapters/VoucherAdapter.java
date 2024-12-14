@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.Admin.Supplies.EditSuppliesActivity;
 import com.example.uiux.Activities.Admin.Voucher.EditVoucherActivity;
+import com.example.uiux.Activities.User.Profile.EditAddressActivity;
 import com.example.uiux.Model.Discount;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Voucher;
 import com.example.uiux.R;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -80,9 +82,41 @@ public class VoucherAdapter  extends  RecyclerView.Adapter<VoucherAdapter.Vouche
                 int position = getAdapterPosition();
                 Voucher voucher = voucherList.get(position);
 
-                Intent intent = new Intent(context, EditVoucherActivity.class);
-                intent.putExtra("voucher_id", voucher.getVoucher_id());
-                context.startActivity(intent);
+
+
+                new AlertDialog.Builder(context)
+                        .setItems(new CharSequence[]{"Edit", "Delete"}, (dialog, which) -> {
+                            if (which == 0) {
+                                Intent intent = new Intent(context, EditVoucherActivity.class);
+                                intent.putExtra("voucher_id", voucher.getVoucher_id());
+                                context.startActivity(intent);
+
+                            } else if (which == 1) {
+                                // Nếu người dùng chọn "Xóa"
+                                new AlertDialog.Builder(context)
+                                        .setTitle("Confirm")
+                                        .setMessage("Are you sure")
+                                        .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+                                            // Thực hiện xóa địa chỉ khỏi cơ sở dữ liệu
+                                            deleteVoucherFromDatabase(voucher.getVoucher_id());
+
+                                            // Xóa địa chỉ khỏi danh sách và cập nhật giao diện
+                                            voucherList.remove(position); // Loại bỏ địa chỉ khỏi danh sách
+                                            notifyItemRemoved(position);  // Thông báo cho RecyclerView item bị xóa
+                                            notifyItemRangeChanged(position, voucherList.size()); // Cập nhật range các item khác
+
+                                            // Thông báo người dùng
+                                            Toast.makeText(context, "Delete voucher successfully", Toast.LENGTH_SHORT).show();
+                                        })
+                                        .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
+                                            // Nếu người dùng chọn "Không", đóng dialog
+                                            confirmDialog.dismiss();
+                                        })
+                                        .show();
+                            }
+                        })
+                        .show();
+
             });
         }
 
@@ -98,6 +132,11 @@ public class VoucherAdapter  extends  RecyclerView.Adapter<VoucherAdapter.Vouche
             start_date.setText(voucher.getStart_date());
             end_date.setText(voucher.getEnd_date());
 
+        }
+        private void deleteVoucherFromDatabase(String addressId) {
+            // Ví dụ: Firebase hoặc một cơ sở dữ liệu khác
+            FirebaseDatabase.getInstance().getReference("Voucher").child(addressId).removeValue();
+            // Hoặc gọi API xóa nếu cần
         }
     }
 }
