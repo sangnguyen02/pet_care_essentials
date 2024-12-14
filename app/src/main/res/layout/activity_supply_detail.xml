@@ -57,6 +57,53 @@
                     app:lottie_rawRes="@raw/love"
                     app:lottie_speed="2" />
 
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout_cart"
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:layout_marginEnd="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_back_supply_detail"
+                    app:layout_constraintEnd_toStartOf="@+id/ani_love"
+                    app:layout_constraintTop_toTopOf="@+id/img_back_supply_detail">
+
+                    <ImageView
+                        android:id="@+id/img_cart_at_detail"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/ripple_effect"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/cart_at_detail"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/img_red_circle_at_detail"
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        app:layout_constraintBottom_toTopOf="@+id/img_cart_at_detail"
+                        app:layout_constraintEnd_toEndOf="@+id/img_cart_at_detail"
+                        app:layout_constraintStart_toEndOf="@+id/img_cart_at_detail"
+                        app:layout_constraintTop_toTopOf="@+id/img_cart_at_detail"
+                        app:srcCompat="@drawable/red_circle_png"
+                        tools:ignore="ContentDescription" />
+
+                    <TextView
+                        android:id="@+id/tv_number_of_cart_item_at_detail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/roboto_bold"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="8sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/img_red_circle_at_detail"
+                        app:layout_constraintEnd_toEndOf="@id/img_red_circle_at_detail"
+                        app:layout_constraintStart_toStartOf="@+id/img_red_circle_at_detail"
+                        app:layout_constraintTop_toTopOf="@+id/img_red_circle_at_detail"
+                        tools:ignore="HardcodedText,SmallSp" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>

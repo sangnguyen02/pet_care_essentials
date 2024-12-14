@@ -45,9 +45,9 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/img_back_my_categories"
-                app:layout_constraintStart_toEndOf="@+id/img_back_my_categories"
-                app:layout_constraintTop_toTopOf="@+id/img_back_my_categories"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back_my_discount"
+                app:layout_constraintStart_toEndOf="@+id/img_back_my_discount"
+                app:layout_constraintTop_toTopOf="@+id/img_back_my_discount"
                 tools:ignore="HardcodedText" />
 
             <ImageView

@@ -352,6 +352,7 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         }
 
         startActivity(gotoOrderPayment);
+        finish();
 
     }
     private String setExpected_delivery_date(String orderDate, int deliveryMethodId) {

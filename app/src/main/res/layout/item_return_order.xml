@@ -51,6 +51,7 @@
                 android:id="@+id/tv_return_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:fontFamily="@font/roboto_flex"
                 android:text="John Doe"
                 android:textSize="11sp" />
@@ -67,6 +68,7 @@
                 android:id="@+id/tv_return_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:fontFamily="@font/roboto_flex"
                 android:text="+123456789"
                 android:textSize="11sp" />
@@ -83,6 +85,7 @@
                 android:id="@+id/tv_return_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:fontFamily="@font/roboto_flex"
                 android:text="2024-12-03"
                 android:textSize="11sp" />

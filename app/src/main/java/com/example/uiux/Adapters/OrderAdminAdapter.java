@@ -20,6 +20,7 @@ import com.example.uiux.Activities.OrderDetailActivity;
 import com.example.uiux.Activities.User.Order.EditOrderActivity;
 import com.example.uiux.Model.BranchStore;
 import com.example.uiux.Model.Order;
+import com.example.uiux.Model.Supplies;
 import com.example.uiux.R;
 import com.example.uiux.Utils.CurrencyFormatter;
 import com.example.uiux.Utils.OrderStatus;
@@ -50,19 +51,25 @@ public class OrderAdminAdapter  extends RecyclerView.Adapter<OrderAdminAdapter.O
 
     }
 
+    public void updateList(List<Order> newList) {
+        this.orderList = newList;
+        notifyDataSetChanged();  // Notify RecyclerView of data change
+    }
+
     @Override
     public int getItemCount() {
         return orderList.size();
     }
     class OrderAdminViewHolder  extends RecyclerView.ViewHolder
     {
-        TextView tv_order_total_price, tv_buyer_info , tv_buyer_address, tv_order_date, tv_order_status;
+        TextView tv_order_id, tv_order_total_price, tv_buyer_info , tv_buyer_address, tv_order_date, tv_order_status;
         CardView cv_order_status;
 
         public OrderAdminViewHolder(@NonNull View itemView) {
             super(itemView);
 
 //            txtSoluong=itemView.findViewById(R.id.textViewQuantity);
+            tv_order_id = itemView.findViewById(R.id.tv_order_id);
             tv_order_total_price=itemView.findViewById(R.id.tv_order_total_price);
             tv_buyer_info=itemView.findViewById(R.id.tv_buyer_info);
             tv_buyer_address=itemView.findViewById(R.id.tv_buyer_address);
@@ -90,6 +97,7 @@ public class OrderAdminAdapter  extends RecyclerView.Adapter<OrderAdminAdapter.O
         }
         @OptIn(markerClass = ExperimentalBadgeUtils.class)
         public void bind(Order order) {
+            tv_order_id.setText("Order ID: " + order.getOrder_id());
             tv_order_total_price.setText("Total amount: " + CurrencyFormatter.formatCurrency(order.getTotal_price(), itemView.getContext().getString(R.string.currency_vn)));
             tv_buyer_info.setText("Buyer: " + order.getName_customer() + " | " + order.getPhone_number());
             tv_buyer_address.setText("Address " + order.getAddress());

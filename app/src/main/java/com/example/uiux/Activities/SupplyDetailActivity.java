@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.Admin.Supplies.UpdateSuppliesActivity;
+import com.example.uiux.Activities.User.CartActivity;
 import com.example.uiux.Activities.User.Review.SupplyReviewActivity;
 import com.example.uiux.Adapters.BestSellerAdapter;
 import com.example.uiux.Adapters.SameSuppliesAdapter;
@@ -66,13 +67,14 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
     MaterialButton btn_confirm_add_to_cart, btn_buy_now;
     BottomSheetBehavior bottomSheetBehaviorAddToCart;
     LottieAnimationView aniLove;
-    ImageView img_back, img_supply, img_arrow, img_supply_add_to_cart;
+    ImageView img_back, img_supply, img_arrow, img_supply_add_to_cart, img_red_circle_at_detail, img_cart_at_detail;
     MaterialCardView mcv_description, mcv_add_to_cart;
     RecyclerView rcv_img_list, rcv_option_list, rcv_same_supplies;
     SupplyImageListAdapter supplyImageListAdapter;
     List<String> imageUrls  = new ArrayList<>();
     List<Supplies_Review> suppliesReviews;
-    TextView tv_supply_title, tv_supply_description, tv_supply_price, tv_price_add_to_cart, tv_total_stock_quantity, tv_quantity_of_supply, tv_rating_supply_detail;
+    TextView tv_supply_title, tv_supply_description, tv_supply_price, tv_price_add_to_cart,
+            tv_total_stock_quantity, tv_quantity_of_supply, tv_rating_supply_detail, tv_number_of_cart_item_at_detail;
     DatabaseReference databaseReference, detailRef, cartRef, reviewRef;;
     String accountId;
     String supplyId;
@@ -84,6 +86,8 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
     boolean isOptionSelected = false;
     ProgressBar progressBar_sameSupplies;
     List<Supplies> sameSuppliesList;
+
+    DatabaseReference cartQuantityRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +107,8 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
         } else {
             Toast.makeText(this, "Supply ID not found.", Toast.LENGTH_SHORT).show();
         }
+
+        displayNoOfCartItem();
 
         // Set trạng thái ẩn đi ở onCreate()
         bottomSheetBehaviorAddToCart.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -141,6 +147,13 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
 
     private void initWidget() {
         aniLove = findViewById(R.id.ani_love);
+        img_cart_at_detail = findViewById(R.id.img_cart_at_detail);
+        img_cart_at_detail.setOnClickListener(view -> {
+            Intent intent = new Intent(SupplyDetailActivity.this, CartActivity.class);
+            startActivity(intent);
+        });
+        tv_number_of_cart_item_at_detail = findViewById(R.id.tv_number_of_cart_item_at_detail);
+        img_red_circle_at_detail = findViewById(R.id.img_red_circle_at_detail);
         progressBar_sameSupplies = findViewById(R.id.progressBar_sameSupplies);
         tv_rating_supply_detail = findViewById(R.id.tv_rating_supply_detail);
         tv_supply_title = findViewById(R.id.tv_supply_title);
@@ -150,10 +163,12 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
 
         // Bottomsheet
         tv_price_add_to_cart = findViewById(R.id.tv_price_add_to_cart);
+        tv_price_add_to_cart.setText("");
         tv_total_stock_quantity = findViewById(R.id.tv_total_stock_quantity);
         mcv_minus = findViewById(R.id.mcv_minus);
         mcv_plus = findViewById(R.id.mcv_plus);
         tv_quantity_of_supply = findViewById(R.id.tv_quantity_of_supply);
+        tv_quantity_of_supply.setText("1");
         btn_confirm_add_to_cart = findViewById(R.id.btn_confirm_add_to_cart);
 
         img_back = findViewById(R.id.img_back_supply_detail);
@@ -238,15 +253,50 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
         });
 
     }
+    void displayNoOfCartItem() {
+        cartQuantityRef = FirebaseDatabase.getInstance().getReference("Cart").child(accountId);
+        cartQuantityRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Đếm số lượng item trong giỏ
+                long itemCount = dataSnapshot.getChildrenCount();
+
+                // Kiểm tra và cập nhật giao diện tùy vào số lượng item
+                if (itemCount > 0) {
+                    // Hiển thị số lượng item trong giỏ
+                    tv_number_of_cart_item_at_detail.setVisibility(View.VISIBLE);
+                    tv_number_of_cart_item_at_detail.setText(String.valueOf(itemCount));
+                    img_red_circle_at_detail.setVisibility(View.VISIBLE);
+                } else {
+                    tv_number_of_cart_item_at_detail.setVisibility(View.GONE);
+                    img_red_circle_at_detail.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Xử lý lỗi nếu có (tuỳ theo yêu cầu của bạn)
+            }
+        });
+    }
 
     private void addToCart(String supplyId) {
         if (accountId != null) {
             int quantity = Integer.parseInt(tv_quantity_of_supply.getText().toString());
+            if(quantity == 0) {
+                Toast.makeText(SupplyDetailActivity.this, "Quantity cannot be zero.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(tv_price_add_to_cart.getText().equals("") || supplyDetailOptionAdapter.getSelectedOptionName().isEmpty() || supplyDetailOptionAdapter.getSelectedOptionName() == null) {
+                Toast.makeText(SupplyDetailActivity.this, "Please select the option.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            String selectedSupplySize = supplyDetailOptionAdapter.getSelectedOptionName();
             String priceStr = tv_price_add_to_cart.getText().toString().replace(getString(R.string.currency_vn), "").trim();
             priceStr = priceStr.replace(".", "").trim();
             double price = Double.parseDouble(priceStr);
             String supplyTitle = tv_supply_title.getText().toString();
-            String selectedSupplySize = supplyDetailOptionAdapter.getSelectedOptionName();
+
             String combinedKey = generateCombinedKey(supplyId, selectedSupplySize);
             cartRef = FirebaseDatabase.getInstance().getReference("Cart").child(accountId).child(combinedKey);
 
@@ -271,6 +321,8 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
                         cartRef.setValue(newCartItem);
                         Toast.makeText(SupplyDetailActivity.this, "Added to cart.", Toast.LENGTH_SHORT).show();
                     }
+
+                    bottomSheetBehaviorAddToCart.setState(BottomSheetBehavior.STATE_HIDDEN);
                 }
 
                 @Override

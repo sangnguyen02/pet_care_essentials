@@ -33,6 +33,7 @@ import com.example.uiux.Model.Supplies_Detail;
 import com.example.uiux.Model.Voucher;
 import com.example.uiux.Model.WalletHistory;
 import com.example.uiux.R;
+import com.example.uiux.Utils.OrderStatus;
 import com.example.uiux.ZaloPay.Api.CreateOrder;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
@@ -166,6 +167,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
                 confirmPINLauncher.launch(intent);
                 if (selectedSupplies != null && !selectedSupplies.isEmpty()) {
                     for (String supply_combinedKey : selectedSupplies) {
+                        Log.e("Supply Combined key", supply_combinedKey);
                         updateCartAndDeleteItem(supply_combinedKey);
                     }
                 }
@@ -415,6 +417,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
                 .getReference("Cart")
                 .child(accountId)
                 .child(supply_combinedKey);
+        Log.e("UpdateCartAndDeleteItem", supply_combinedKey);
 
         String[] splits = splitCombinedKey(supply_combinedKey);
         DatabaseReference supplyImportRef = FirebaseDatabase.getInstance()
@@ -458,13 +461,14 @@ public class OrderPaymentActivity extends AppCompatActivity {
     }
 
     private void updateStock(DatabaseReference supplyRef, String size, int quantity, String nodeType, Runnable onComplete) {
+        final String sanitizedSize = size.replace(",", ".");
         supplyRef.child(nodeType).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 boolean updated = false;
                 for (DataSnapshot detailSnapshot : snapshot.getChildren()) {
                     Supplies_Detail suppliesDetail = detailSnapshot.getValue(Supplies_Detail.class);
-                    if (suppliesDetail != null && suppliesDetail.getSize().equals(size)) {
+                    if (suppliesDetail != null && suppliesDetail.getSize().equals(sanitizedSize)) {
                         int stockQuantity = suppliesDetail.getQuantity();
                         int updatedStockQuantity = stockQuantity - quantity;
                         detailSnapshot.getRef().child("quantity").setValue(updatedStockQuantity);
@@ -531,6 +535,10 @@ public class OrderPaymentActivity extends AppCompatActivity {
                     updateOrder(orderId,2);
                     updateWallet(total);
                     CreateHistory();
+                    Intent goToOrderStatus = new Intent(OrderPaymentActivity.this, OrderActivity.class);
+                    goToOrderStatus.putExtra("targetTab", OrderStatus.PENDING); // Tab Đang xác nhận
+                    startActivity(goToOrderStatus);
+                    finish();
                 } else {
                     // Nếu PIN sai hoặc người dùng hủy
                     Toast.makeText(this, "PIN không hợp lệ hoặc bạn đã hủy.", Toast.LENGTH_SHORT).show();

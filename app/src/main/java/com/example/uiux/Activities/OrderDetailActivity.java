@@ -284,8 +284,13 @@ public class OrderDetailActivity extends AppCompatActivity {
 
                         updateStatusUI(order.getStatus());
 
+                        if(order.getStatus() == OrderStatus.RETURNED) {
+                            spinner_order_status.setEnabled(false);
+                            btn_order_save.setVisibility(View.GONE);
+                        }
+
                         if(order.getStatus() == OrderStatus.DELIVERED) {
-                            if(accountType == 0) {
+                            if(accountType == 0 && (order.getStatus() == OrderStatus.DELIVERED)) {
                                 btn_return_order.setVisibility(View.VISIBLE);
                             }
                         }
@@ -322,8 +327,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         statusList.add(OrderStatus.getStatusName(OrderStatus.PREPARING));
         statusList.add(OrderStatus.getStatusName(OrderStatus.SHIPPING));
         statusList.add(OrderStatus.getStatusName(OrderStatus.DELIVERED));
-        statusList.add(OrderStatus.getStatusName(OrderStatus.CANCELED));
-        statusList.add(OrderStatus.getStatusName(OrderStatus.RETURNED));
+//        statusList.add(OrderStatus.getStatusName(OrderStatus.CANCELED));
+//        statusList.add(OrderStatus.getStatusName(OrderStatus.RETURNED));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 OrderDetailActivity.this,

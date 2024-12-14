@@ -34,7 +34,7 @@ import java.util.List;
 public class UpdateVoucherActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
-    private ImageView imgv_back_add_supplies, imgv_add_supplies;
+    private ImageView img_back_my_vouncher, imgv_add_vouncher;
     private VoucherAdapter voucherAdapter;
     private List<Voucher> voucherList = new ArrayList<>();
     private DatabaseReference databaseReference;
@@ -45,14 +45,14 @@ public class UpdateVoucherActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_update_voucher);
-        imgv_back_add_supplies = findViewById(R.id.img_back_my_supplies);
-        imgv_add_supplies = findViewById(R.id.imgv_add_supplies);
+        img_back_my_vouncher = findViewById(R.id.img_back_my_vouncher);
+        imgv_add_vouncher = findViewById(R.id.imgv_add_vouncher);
 
-        imgv_back_add_supplies.setOnClickListener(view -> {
+        img_back_my_vouncher.setOnClickListener(view -> {
             finish();
         });
 
-        imgv_add_supplies.setOnClickListener(view -> {
+        imgv_add_vouncher.setOnClickListener(view -> {
             Intent intent = new Intent(UpdateVoucherActivity.this, VoucherActivity.class);
             startActivity(intent);
         });
