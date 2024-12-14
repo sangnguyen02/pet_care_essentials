@@ -37,6 +37,7 @@ import com.example.uiux.Model.Service;
 import com.example.uiux.Model.ServiceOrder;
 import com.example.uiux.R;
 import com.example.uiux.Utils.CurrencyFormatter;
+import com.example.uiux.Utils.OrderServiceStatus;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.database.DataSnapshot;
@@ -191,7 +192,8 @@ public class BookServiceActivity extends AppCompatActivity {
                 branch_id,
                 branch_name,
                 branch_address,
-                timeSlot
+                timeSlot,
+                OrderServiceStatus.BOOK
         );
 
         // 6. Lưu thông tin đơn hàng vào Firebase

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="@color/light_bg"
+    >
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_cancel_order_app_bar"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        app:cardBackgroundColor="@color/white"
+        app:cardElevation="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/img_back_cancel_order"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/ripple_effect"
+                android:clickable="true"
+                android:focusable="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/back"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/roboto_bold"
+                android:text="Cancel Order Service"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back_cancel_order"
+                app:layout_constraintStart_toEndOf="@+id/img_back_cancel_order"
+                app:layout_constraintTop_toTopOf="@+id/img_back_cancel_order"
+                tools:ignore="HardcodedText" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+    <TextView
+        android:id="@+id/tv_cancel_order_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Chọn lý do hủy dịch vụ"
+        android:textSize="18sp"
+        android:fontFamily="@font/roboto_bold"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/cv_cancel_order_app_bar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- RadioGroup để hiển thị danh sách lý do -->
+    <RadioGroup
+        android:id="@+id/rg_cancel_reasons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_cancel_order_title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Các lý do có sẵn -->
+        <RadioButton
+            android:id="@+id/rb_reason1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I booked the wrong service" />
+
+        <RadioButton
+            android:id="@+id/rb_reason2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I booked the wrong time" />
+
+        <RadioButton
+            android:id="@+id/rb_reason3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Found a better price elsewhere" />
+
+        <RadioButton
+            android:id="@+id/rb_reason4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Service quality is not satisfactory" />
+
+        <RadioButton
+            android:id="@+id/rb_reason5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Changed my mind about the service" />
+
+        <RadioButton
+            android:id="@+id/rb_other_reason"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Other reasons" />
+    </RadioGroup>
+
+    <!-- TextBox để nhập lý do khác (ẩn ban đầu) -->
+    <!--    <EditText-->
+    <!--        android:id="@+id/et_other_reason"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:hint="Nhập lý do của bạn"-->
+    <!--        android:visibility="gone"-->
+    <!--        android:inputType="text"-->
+    <!--        android:layout_marginTop="16dp"-->
+    <!--        app:layout_constraintTop_toBottomOf="@id/rg_cancel_reasons"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent" />-->
+
+    <EditText
+        android:id="@+id/et_other_reason"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:layout_margin="16dp"
+        android:hint="Write your reason here..."
+        android:gravity="top|start"
+        android:padding="16dp"
+        android:background="@drawable/rounded_edittext_background"
+        android:inputType="textMultiLine"
+        android:maxLines="6"
+        android:scrollbars="vertical"
+        android:overScrollMode="always"
+        android:scrollbarSize="0dp"
+        android:fontFamily="@font/roboto_flex"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/rg_cancel_reasons"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+    <!-- Nút xác nhận hủy đơn hàng -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_cancel_order"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_marginTop="24dp"
+        android:text="Cancel Order"
+        android:backgroundTint="@color/gradient"
+        app:shapeAppearanceOverlay="@style/Button5"
+        app:layout_constraintTop_toBottomOf="@id/et_other_reason"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
