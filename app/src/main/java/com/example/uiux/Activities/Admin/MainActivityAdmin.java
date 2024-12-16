@@ -22,6 +22,7 @@ import com.example.uiux.Activities.Admin.Discount.UpdateDiscountActivity;
 import com.example.uiux.Activities.Admin.Order.DisplayReturnActivity;
 import com.example.uiux.Activities.Admin.Services.DisplayServiceBookingActivity;
 import com.example.uiux.Activities.Admin.Services.UpdateServiceActivity;
+import com.example.uiux.Activities.Admin.Statistic.StatisticAllRevenueActivity;
 import com.example.uiux.Activities.Admin.Supplies.UpdateSuppliesActivity;
 import com.example.uiux.Activities.Admin.Supplies.SuppliesImportActivity;
 import com.example.uiux.Activities.Admin.Type.TypeActivity;
@@ -143,8 +144,9 @@ public class MainActivityAdmin extends AppCompatActivity {
         });
 
         order_statistic_btn.setOnClickListener(view -> {
-//            Intent intent=new Intent(MainActivityAdmin.this, UpdateServiceActivity.class);
-//            startActivity(intent);
+            Intent intent=new Intent(MainActivityAdmin.this, StatisticAllRevenueActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         discount_btn.setOnClickListener(view -> {
