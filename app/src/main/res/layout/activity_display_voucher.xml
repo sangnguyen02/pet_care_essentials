@@ -22,7 +22,7 @@
             android:layout_height="match_parent">
 
             <ImageView
-                android:id="@+id/img_back_my_address"
+                android:id="@+id/img_back_choose_vouncher"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginStart="16dp"
@@ -46,9 +46,9 @@
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="@+id/img_back_my_address"
-                app:layout_constraintStart_toEndOf="@+id/img_back_my_address"
-                app:layout_constraintTop_toTopOf="@+id/img_back_my_address"
+                app:layout_constraintBottom_toBottomOf="@+id/img_back_choose_vouncher"
+                app:layout_constraintStart_toEndOf="@+id/img_back_choose_vouncher"
+                app:layout_constraintTop_toTopOf="@+id/img_back_choose_vouncher"
                 tools:ignore="HardcodedText" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

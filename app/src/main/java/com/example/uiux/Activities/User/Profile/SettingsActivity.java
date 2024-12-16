@@ -94,6 +94,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void signOutUser() {
         SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("accountID");
         editor.remove("accountType");  // This will remove the accountType value
         editor.apply();
 

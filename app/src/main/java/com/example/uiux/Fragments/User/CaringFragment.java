@@ -57,6 +57,7 @@ public class CaringFragment extends Fragment implements ServiceUserAdapter.OnSer
         loadServices();
 
         btn_book_service.setOnClickListener(view -> {
+
             Intent goToBook = new Intent(rootView.getContext(), BookServiceActivity.class);
             goToBook.putExtra("serviceId", selectedService.getService_id());
             rootView.getContext().startActivity(goToBook);

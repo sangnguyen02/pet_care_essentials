@@ -267,10 +267,10 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         deliveryMethodList.add(new DeliveryMethod(3, getString(R.string.shipping_expedited), expeditedCost));
         deliveryMethodAdapter = new DeliveryMethodAdapter(this, deliveryMethodList);
         rcv_delivery_method.setAdapter(deliveryMethodAdapter);
+
         updateTotalPayment(totalPayment);
         deliveryMethodAdapter.setOnDeliveryMethodSelectedListener(cost -> {
-
-             totalWithDeliveryCost =cost+ totalPayment ;
+            totalWithDeliveryCost =cost+ totalPayment ;
             deliveryCost=cost;
             updateTotalPayment(totalWithDeliveryCost);
         });
@@ -401,6 +401,12 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
                         cartPaymentAdapter.notifyDataSetChanged();
                         totalPayment += cartItem.getTotalPrice();
                         tv_total_payment.setText(CurrencyFormatter.formatCurrency(totalPayment, getString(R.string.currency_vn)));
+                        DeliveryMethod defaultDeliveryMethod = deliveryMethodList.get(0);
+                        if (defaultDeliveryMethod != null) {
+                            deliveryCost = defaultDeliveryMethod.getCost();
+                            totalWithDeliveryCost = totalPayment + deliveryCost;
+                            updateTotalPayment(totalWithDeliveryCost);
+                        }
                     }
                 }
 

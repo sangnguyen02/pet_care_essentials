@@ -172,6 +172,7 @@ public class EditPetInfoActivity extends AppCompatActivity {
                                             .addOnCompleteListener(task -> {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(EditPetInfoActivity.this, "Pet profile updated successfully", Toast.LENGTH_SHORT).show();
+                                                    finish();
                                                 } else {
                                                     Toast.makeText(EditPetInfoActivity.this, "Failed to update image URLs", Toast.LENGTH_SHORT).show();
                                                 }

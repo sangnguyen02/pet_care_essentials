@@ -14,6 +14,7 @@ import com.example.uiux.Activities.Admin.Services.DisplayServiceBookingActivity;
 import com.example.uiux.Activities.User.Service.CancelServiceActivity;
 import com.example.uiux.Model.ServiceOrder;
 import com.example.uiux.R;
+import com.example.uiux.Utils.CurrencyFormatter;
 
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class BookingServiceAdminAdapter extends RecyclerView.Adapter<BookingServ
         holder.tvServiceName.setText(serviceOrder.getService_name());
         holder.tvServiceType.setText(serviceOrder.getType());
         holder.tvOrderDate.setText(serviceOrder.getOrder_date());
-        holder.tvTotalPrice.setText(String.valueOf(serviceOrder.getTotal_price()));
+        holder.tvTotalPrice.setText(CurrencyFormatter.formatCurrency(serviceOrder.getTotal_price(), holder.itemView.getContext().getString(R.string.currency_vn)));
         holder.tvBranchName.setText(serviceOrder.getBranch_name());
         holder.tvBranchAddress.setText(serviceOrder.getBranch_address());
         holder.tvTime.setText(serviceOrder.getTime());

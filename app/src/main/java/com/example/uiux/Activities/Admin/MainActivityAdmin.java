@@ -5,8 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -25,6 +28,7 @@ import com.example.uiux.Activities.Admin.Type.TypeActivity;
 import com.example.uiux.Activities.Admin.Type.UpdateTypeActivity;
 import com.example.uiux.Activities.Admin.Voucher.UpdateVoucherActivity;
 import com.example.uiux.Activities.SplashActivity;
+import com.example.uiux.Activities.User.MainActivityUser;
 import com.example.uiux.Activities.User.Order.PaypalActivity;
 import com.example.uiux.Activities.User.Order.UpdateOrderActivity;
 import com.example.uiux.R;
@@ -40,11 +44,8 @@ public class MainActivityAdmin extends AppCompatActivity {
             branch_store_btn, order_approve_btn, order_review_btn, order_statistic_btn, discount_btn, vouncher_btn;
 
     ImageButton sign_out_admin;
-    DatabaseReference suppliesRef;
-    DatabaseReference suppliesImageRef;
-    DatabaseReference suppliesImportRef;
-    DatabaseReference suppliesPriceRef;
-    DatabaseReference suppliesReviewRef;
+    long lastBackPressedTime = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,15 +53,21 @@ public class MainActivityAdmin extends AppCompatActivity {
         EdgeToEdge.enable(this);
         getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_main_admin);
+        OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
+        dispatcher.addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (lastBackPressedTime + 2000 > System.currentTimeMillis()) {
+                    // Nếu bấm lần thứ 2 trong khoảng thời gian ngắn, thoát ứng dụng
+                    finish(); // Hoặc gọi super.onBackPressed() nếu muốn thực hiện hành động mặc định
+                } else {
+                    // Nếu không, cập nhật thời gian và thông báo
+                    lastBackPressedTime = System.currentTimeMillis();
+                    Toast.makeText(MainActivityAdmin.this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         mAuth = FirebaseAuth.getInstance();
-
-        // Khởi tạo Database Reference cho các model
-        suppliesRef = FirebaseDatabase.getInstance().getReference("Supplies");
-        suppliesImageRef = FirebaseDatabase.getInstance().getReference("Supplies_Image");
-        suppliesImportRef = FirebaseDatabase.getInstance().getReference("Supplies_Import");
-        suppliesPriceRef = FirebaseDatabase.getInstance().getReference("Supplies_Price");
-        suppliesReviewRef = FirebaseDatabase.getInstance().getReference("Supplies_Review");
-
 
         category_btn=findViewById(R.id.category);
         type_btn=findViewById(R.id.type);

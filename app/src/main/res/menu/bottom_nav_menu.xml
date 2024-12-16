@@ -12,11 +12,11 @@
 <!--        android:icon="@drawable/nav2_selector"-->
 <!--        />-->
 
-    <item
-        android:id="@+id/wishlist_screen"
-        android:title="@string/wishlist"
-        android:icon="@drawable/nav3_selector"
-        />
+<!--    <item-->
+<!--        android:id="@+id/wishlist_screen"-->
+<!--        android:title="@string/wishlist"-->
+<!--        android:icon="@drawable/nav3_selector"-->
+<!--        />-->
 
     <item
         android:id="@+id/caring_screen"

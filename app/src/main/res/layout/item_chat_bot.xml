@@ -3,7 +3,36 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:gravity="start"
-    android:orientation="horizontal">
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/linear_bot_recommendation"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:id="@+id/img_bot_recommendation"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:textColor="@color/grey"
+            android:textSize="14sp"
+            android:layout_gravity="center"
+            android:text="Tap for more detail"
+            android:fontFamily="@font/roboto_flex"
+            />
+
+
+
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/tv_message_bot"

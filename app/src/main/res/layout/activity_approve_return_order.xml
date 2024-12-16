@@ -140,29 +140,55 @@
                 android:textSize="16sp"
                 android:fontFamily="@font/roboto_bold" />
 
-            <TextView
-                android:id="@+id/tvCustomerName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Name: " />
 
-            <TextView
-                android:id="@+id/tvCustomerPhone"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Phone: " />
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="4dp"
+                app:cardElevation="10dp"
+                android:outlineSpotShadowColor="@color/light_bg"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="4dp"
+                    android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvCustomerName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Name: " />
 
-            <TextView
-                android:id="@+id/tvCustomerEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Email: " />
+                    <TextView
+                        android:id="@+id/tvCustomerPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Phone: " />
 
-            <TextView
-                android:id="@+id/tvCustomerAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Address: " />
+                    <TextView
+                        android:id="@+id/tvCustomerEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Email: " />
+
+                    <TextView
+                        android:id="@+id/tvCustomerAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Address: "
+                        android:ellipsize="end"
+                        />
+
+                </LinearLayout>
+
+
+
+            </androidx.cardview.widget.CardView>
+
+
+
+
 
             <!-- Thông tin đơn hàng -->
             <TextView
@@ -174,39 +200,59 @@
                 android:textSize="16sp"
                 android:fontFamily="@font/roboto_bold" />
 
-            <TextView
-                android:id="@+id/tvTotalPrice"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Total Price: " />
+                app:cardCornerRadius="4dp"
+                app:cardElevation="10dp"
+                app:cardBackgroundColor="@color/white"
+                android:outlineSpotShadowColor="@color/light_bg"
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="4dp"
+                    >
 
-            <TextView
-                android:id="@+id/tvPaymentStatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Payment Status: " />
+                    <TextView
+                        android:id="@+id/tvTotalPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Total Price: " />
 
-            <TextView
-                android:id="@+id/tvDeliveryDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Delivery Date: " />
+                    <TextView
+                        android:id="@+id/tvPaymentStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Payment Status: " />
 
-            <TextView
-                android:id="@+id/tvOrderDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Order Date: " />
+                    <TextView
+                        android:id="@+id/tvDeliveryDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Delivery Date: " />
 
-            <!-- Ngày yêu cầu trả hàng -->
-            <TextView
-                android:id="@+id/tvRequestReturnDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Request Return Date: " />
+                    <TextView
+                        android:id="@+id/tvOrderDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Order Date: " />
 
-            <!-- Lý do trả hàng -->
+                    <!-- Ngày yêu cầu trả hàng -->
+                    <TextView
+                        android:id="@+id/tvRequestReturnDate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Request Return Date: " />
+
+
+                </LinearLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -216,17 +262,37 @@
                 android:textSize="16sp"
                 android:fontFamily="@font/roboto_bold" />
 
-            <TextView
-                android:id="@+id/tvReturnReason"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Reason: " />
+                app:cardCornerRadius="4dp"
+                app:cardElevation="10dp"
+                app:cardBackgroundColor="@color/white"
+                android:outlineSpotShadowColor="@color/light_bg"
+                >
 
-            <TextView
-                android:id="@+id/tvReturnDetailReason"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Detail Reason: " />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="4dp">
+                    <TextView
+                        android:id="@+id/tvReturnReason"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Reason: " />
+
+                    <TextView
+                        android:id="@+id/tvReturnDetailReason"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Detail Reason: " />
+
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAprove"

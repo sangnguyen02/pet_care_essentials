@@ -108,7 +108,14 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
             Toast.makeText(this, "Supply ID not found.", Toast.LENGTH_SHORT).show();
         }
 
-        displayNoOfCartItem();
+        if (accountId != null) {
+            displayNoOfCartItem();
+        } else {
+            img_red_circle_at_detail.setVisibility(View.GONE);
+            img_cart_at_detail.setVisibility(View.GONE);
+            mcv_add_to_cart.setVisibility(View.GONE);
+        }
+
 
         // Set trạng thái ẩn đi ở onCreate()
         bottomSheetBehaviorAddToCart.setState(BottomSheetBehavior.STATE_HIDDEN);
@@ -287,7 +294,15 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
                 Toast.makeText(SupplyDetailActivity.this, "Quantity cannot be zero.", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if(tv_price_add_to_cart.getText().equals("") || supplyDetailOptionAdapter.getSelectedOptionName().isEmpty() || supplyDetailOptionAdapter.getSelectedOptionName() == null) {
+            if(tv_price_add_to_cart.getText().equals("") || tv_price_add_to_cart.getText().toString().isEmpty()) {
+                Toast.makeText(SupplyDetailActivity.this, "Please select the option.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(supplyDetailOptionAdapter.getSelectedOptionName().isEmpty()) {
+                Toast.makeText(SupplyDetailActivity.this, "Please select the option.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if(supplyDetailOptionAdapter.getSelectedOptionName() == null) {
                 Toast.makeText(SupplyDetailActivity.this, "Please select the option.", Toast.LENGTH_SHORT).show();
                 return;
             }

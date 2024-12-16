@@ -143,6 +143,9 @@ public class ApproveReturnOrderActivity extends AppCompatActivity {
                 InfoReturnOrder infoReturnOrder = task.getResult().getValue(InfoReturnOrder.class);
                 if (infoReturnOrder != null) {
                     tvReturnReason.setText("Reason: " + getReturnReason(infoReturnOrder.getReason()));
+                    if(infoReturnOrder.getDetail_reason().isEmpty()) {
+                        tvReturnDetailReason.setVisibility(View.GONE);
+                    }
                     tvReturnDetailReason.setText("Detail Reason: " + (infoReturnOrder.getDetail_reason() != null ? infoReturnOrder.getDetail_reason() : "N/A"));
                     tvRequestReturnDate.setText("Request Return Date: " + infoReturnOrder.getRequest_date());
                     loadProductImages(infoReturnOrder.getImageUrls());

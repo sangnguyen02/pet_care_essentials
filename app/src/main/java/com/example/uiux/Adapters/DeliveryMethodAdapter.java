@@ -19,7 +19,7 @@ import java.util.List;
 public class DeliveryMethodAdapter extends RecyclerView.Adapter<DeliveryMethodAdapter.DeliveryMethodViewHolder> {
     private Context context;
     private List<DeliveryMethod> deliveryMethods;
-    private int selectedPosition = -1;
+    private int selectedPosition = 0;
     private OnDeliveryMethodSelectedListener listener;
 
     public DeliveryMethodAdapter(Context context, List<DeliveryMethod> deliveryMethods) {

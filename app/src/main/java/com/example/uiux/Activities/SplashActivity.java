@@ -87,12 +87,14 @@ public class SplashActivity extends AppCompatActivity {
                         if (accountType == 1) {
                             Intent intent = new Intent(SplashActivity.this, MainActivityAdmin.class);
                             startActivity(intent);
+                            finish();
                         } else {
                             Intent intent = new Intent(SplashActivity.this, MainActivityUser.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("phone_number", phone);
                             intent.putExtras(bundle);
                             startActivity(intent);
+                            finish();
                         }
                     }
                 } else {

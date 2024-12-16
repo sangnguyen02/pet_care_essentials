@@ -67,10 +67,8 @@ public class BookServiceActivity extends AppCompatActivity {
     MaterialButton btn_confirm_book;
     String accountId;
     String branch_id;
-
     String branch_name;
     String branch_address;
-
     String email;
     String phone_number;
     String name;
@@ -126,11 +124,23 @@ public class BookServiceActivity extends AppCompatActivity {
 //        String formattedDate = dateFormat.format(dateOrder);
         SharedPreferences preferences =  getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         accountId = preferences.getString("accountID", null);
-        Log.e("ID",accountId);
+
         getAccountInfo();
         btn_confirm_book.setOnClickListener(view -> {
-                timeSlot=timeAdapter.getSelectedTimeSlot();
+            if (accountId == null) {
+                Toast.makeText(this, "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (branch_id == null || branch_id.isEmpty()) {
+                Toast.makeText(this, "Please select a branch before booking", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            timeSlot=timeAdapter.getSelectedTimeSlot();
             order_date=dayAdapter.getSelectedDay();
+            if (timeSlot == null || timeSlot.isEmpty() || order_date == null || order_date.isEmpty()) {
+                Toast.makeText(this, "Please select a date and time slot", Toast.LENGTH_SHORT).show();
+                return;
+            }
                 createServiceOrder();
         });
 

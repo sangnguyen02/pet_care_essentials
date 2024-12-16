@@ -58,26 +58,45 @@
     <!-- Spinner for selecting Branch -->
 
     <!-- RecyclerView to display service orders -->
-    <Spinner
-        android:id="@+id/spinner_branch"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_spinner_branch"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_height="56dp"
+        android:layout_margin="8dp"
+        app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cv_my_address_app_bar" />
+        app:layout_constraintTop_toBottomOf="@+id/cv_my_address_app_bar"
+        >
+        <Spinner
+            android:id="@+id/spinner_branch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
+            />
+
+
+    </androidx.cardview.widget.CardView>
+<!--    <Spinner-->
+<!--        android:id="@+id/spinner_branch"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="4dp"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/cv_my_address_app_bar" />-->
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_branch">
+        app:layout_constraintTop_toBottomOf="@+id/cv_spinner_branch">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcv_my_store"

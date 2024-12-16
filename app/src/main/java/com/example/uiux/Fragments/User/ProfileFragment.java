@@ -70,32 +70,55 @@ public class ProfileFragment extends Fragment {
         }
 
         initWidget();
-        displayNoOfCartItem();
-        displayNoOfNotification();
+        if (accountId != null) {
+            displayNoOfCartItem();
+            displayNoOfNotification();
+
+        }  else {
+            img_cart_at_profile.setVisibility(View.GONE);
+            img_red_circle_at_profile.setVisibility(View.GONE);
+            img_notify_at_profile.setVisibility(View.GONE);
+            img_red_circle_notify_at_profile.setVisibility(View.GONE);
+            tv_number_of_notify_at_profile.setVisibility(View.GONE);
+            tv_number_of_cart_item_at_profile.setVisibility(View.GONE);
+        }
         loadUserProfile();
 
+
         img_avatar.setOnClickListener(view -> {
+            if (accountId == null) {
+                Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(rootView.getContext(), PhoneUpdateProfileActivity.class);
             intent.putExtra("phone_no", phone);
             startActivity(intent);
         });
 
         img_setting.setOnClickListener(view -> {
-            if (accountId != null) {
-                Intent intent = new Intent(rootView.getContext(), SettingsActivity.class);
-                startActivity(intent);
-            } else {
-                Toast.makeText(rootView.getContext(), "Account ID is not available", Toast.LENGTH_SHORT).show();
+            if (accountId == null) {
+                Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                return;
             }
+            Intent intent = new Intent(rootView.getContext(), SettingsActivity.class);
+            startActivity(intent);
         });
 
         img_notify_at_profile.setOnClickListener(view -> {
+            if (accountId == null) {
+                Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent gotoNoti = new Intent(rootView.getContext(), NotificationActivity.class);
             startActivity(gotoNoti);
 
         });
 
         img_cart_at_profile.setOnClickListener(view -> {
+            if (accountId == null) {
+                Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(rootView.getContext(), CartActivity.class);
             startActivity(intent);
         });
@@ -107,6 +130,10 @@ public class ProfileFragment extends Fragment {
         });
 
         mcv_pet_profile.setOnClickListener(view -> {
+            if (accountId == null) {
+                Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent goToPetProfile = new Intent(rootView.getContext(), UpdatePetInfoActivity.class);
             startActivity(goToPetProfile);
         });
@@ -118,30 +145,50 @@ public class ProfileFragment extends Fragment {
         mcv_myService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (accountId == null) {
+                    Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent goToMap = new Intent(rootView.getContext(), DisplayOrderServiceActivity.class);
                 startActivity(goToMap);
             }
         });
 
         to_pay.setOnClickListener(view -> {
+            if (accountId == null) {
+                Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent goToOrderStatus = new Intent(rootView.getContext(), OrderActivity.class);
             goToOrderStatus.putExtra("targetTab", OrderStatus.PENDING); // Tab Đang xác nhận
             startActivity(goToOrderStatus);
         });
 
         to_ship.setOnClickListener(view -> {
+            if (accountId == null) {
+                Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent goToOrderStatus = new Intent(rootView.getContext(), OrderActivity.class);
             goToOrderStatus.putExtra("targetTab", OrderStatus.PREPARING); // Tab Đang chuẩn bị
             startActivity(goToOrderStatus);
         });
 
         to_receive.setOnClickListener(view -> {
+            if (accountId == null) {
+                Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent goToOrderStatus = new Intent(rootView.getContext(), OrderActivity.class);
             goToOrderStatus.putExtra("targetTab", OrderStatus.SHIPPING); // Tab Đang giao
             startActivity(goToOrderStatus);
         });
 
         completed.setOnClickListener(view -> {
+            if (accountId == null) {
+                Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent goToOrderStatus = new Intent(rootView.getContext(), OrderActivity.class);
             goToOrderStatus.putExtra("targetTab", OrderStatus.DELIVERED); // Tab hoàn thành
             startActivity(goToOrderStatus);
@@ -258,7 +305,7 @@ public class ProfileFragment extends Fragment {
                     }
                 } else {
                     // If the user doesn't exist, prompt them to create a profile
-                    Toast.makeText(rootView.getContext(), "No existing profile found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(rootView.getContext(), "You are logging in with guest role", Toast.LENGTH_SHORT).show();
                 }
             }
 

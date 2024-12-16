@@ -79,9 +79,9 @@
                     android:text="November, 30 2024"
                     android:textColor="@color/grey"
                     android:textSize="12sp"
-                    app:layout_constraintBottom_toBottomOf="@+id/ratingBar_user"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_review_username"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/ratingBar_user" />
+                    app:layout_constraintTop_toTopOf="@+id/tv_review_username" />
 
                 <TextView
                     android:id="@+id/tv_review_content"

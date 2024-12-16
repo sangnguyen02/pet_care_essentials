@@ -90,7 +90,7 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
 
                     // Tạo một AlertDialog với 2 lựa chọn: Edit và Delete
                     new AlertDialog.Builder(context)
-                            .setItems(new CharSequence[]{"Edit", "Complete"}, (dialog, which) -> {
+                            .setItems(new CharSequence[]{"Review", "Complete"}, (dialog, which) -> {
                                 if (which == 0) {
                                     Intent intent = new Intent(context, ApproveReturnOrderActivity.class);
                                     intent.putExtra("info_return_id", infoReturnOrder.getInfo_return_id());

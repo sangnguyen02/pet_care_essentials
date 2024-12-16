@@ -54,41 +54,42 @@
 
             <LinearLayout
                 android:id="@+id/linear_supply_text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="@+id/img_cart_item"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/img_cart_item"
                 app:layout_constraintTop_toTopOf="@+id/img_cart_item">
 
                 <TextView
                     android:id="@+id/tv_cart_item_title"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:text="Supply Title"
-                    android:textSize="14sp"
                     android:fontFamily="@font/roboto_bold"
-                    android:textColor="@color/black"/>
+                    android:text="Supply Title"
+                    android:textColor="@color/black"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/tv_cart_item_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Size"
-                    android:textSize="12sp"
                     android:fontFamily="@font/roboto_bold"
-                    android:textColor="@color/grey"/>
+                    android:text="Size"
+                    android:textColor="@color/grey"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tv_cart_item_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Price"
-                    android:textSize="12sp"
                     android:fontFamily="@font/roboto_bold"
-                    android:textColor="@color/black"/>
+                    android:text="Price"
+                    android:textColor="@color/black"
+                    android:textSize="12sp" />
 
             </LinearLayout>
 

@@ -64,7 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Chọn lý do hủy đơn hàng"
+        android:text="Select a reason for cancellation"
         android:textSize="18sp"
         android:fontFamily="@font/roboto_bold"
         android:layout_marginBottom="16dp"
@@ -88,25 +88,25 @@
             android:id="@+id/rb_reason1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tôi đặt nhầm sản phẩm" />
+            android:text="I ordered the wrong product" />
 
         <RadioButton
             android:id="@+id/rb_reason2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thời gian giao hàng quá lâu" />
+            android:text="The delivery time is too long" />
 
         <RadioButton
             android:id="@+id/rb_reason3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sản phẩm đã tìm thấy giá tốt hơn" />
+            android:text="I found a better price for the product" />
 
         <RadioButton
             android:id="@+id/rb_other_reason"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lý do khác" />
+            android:text="Other reason" />
     </RadioGroup>
 
     <!-- TextBox để nhập lý do khác (ẩn ban đầu) -->

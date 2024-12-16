@@ -43,7 +43,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.rcv_order_child.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), RecyclerView.VERTICAL, false));
         holder.rcv_order_child.setAdapter(orderChildAdapter);
 
-        holder.label_total_items.setText("Total items: " + String.valueOf(getItemCount()));
+        holder.label_total_items.setText("Total items: " + String.valueOf(orderChildAdapter.getItemCount()));
         holder.tv_order_item_total_price.setText(CurrencyFormatter.formatCurrency(order.getTotal_price(), context.getString(R.string.currency_vn)));
 
 

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DisplayVoucherActivity extends AppCompatActivity {
+    private ImageView img_back_choose_vouncher;
     private RecyclerView recyclerView;
     private DisplayVoucherAdapter displayVoucherAdapter;
     private List<Voucher> voucherList = new ArrayList<>();
@@ -39,7 +40,8 @@ public class DisplayVoucherActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_display_voucher);
 
-
+        img_back_choose_vouncher = findViewById(R.id.img_back_choose_vouncher);
+        img_back_choose_vouncher.setOnClickListener(view -> finish());
         // Set up RecyclerView
         recyclerView = findViewById(R.id.rcv_my_vouncher); // ID from XML layout
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

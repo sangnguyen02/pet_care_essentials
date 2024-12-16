@@ -57,7 +57,7 @@ public class UpdateOrderActivity extends AppCompatActivity {
         initWidget();
         img_back_order_status.setOnClickListener(view -> finish());
 
-        rcv_admin_order.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
+        rcv_admin_order.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
 
         orderAdminAdapter = new OrderAdminAdapter(orderList, this);
         rcv_admin_order.setAdapter(orderAdminAdapter);

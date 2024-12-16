@@ -6,7 +6,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.Manifest;
+import android.widget.Toast;
+
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
+import androidx.activity.OnBackPressedDispatcher;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -34,6 +38,7 @@ public class MainActivityUser extends AppCompatActivity {
     String phone;
     DatabaseReference accountRef;
     String fcm_token;
+    long lastBackPressedTime = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +52,20 @@ public class MainActivityUser extends AppCompatActivity {
             }
         }
         initWidget();
+        OnBackPressedDispatcher dispatcher = getOnBackPressedDispatcher();
+        dispatcher.addCallback(new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (lastBackPressedTime + 2000 > System.currentTimeMillis()) {
+                    // Nếu bấm lần thứ 2 trong khoảng thời gian ngắn, thoát ứng dụng
+                    finish(); // Hoặc gọi super.onBackPressed() nếu muốn thực hiện hành động mặc định
+                } else {
+                    // Nếu không, cập nhật thời gian và thông báo
+                    lastBackPressedTime = System.currentTimeMillis();
+                    Toast.makeText(MainActivityUser.this, "Press back again to exit", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         replaceFragment(new HomeFragment());
 //        BadgeDrawable badgeDrawable = binding.bottomNavigationView.getOrCreateBadge(R.id.cart_screen);
@@ -75,9 +94,9 @@ public class MainActivityUser extends AppCompatActivity {
 //                case R.id.cart_screen:
 //                    replaceFragment(new CartFragment());
 //                    break;
-                case R.id.wishlist_screen:
-                    replaceFragment(new WishlistFragment());
-                    break;
+//                case R.id.wishlist_screen:
+//                    replaceFragment(new WishlistFragment());
+//                    break;
                 case R.id.caring_screen:
                     replaceFragment(new CaringFragment());
                     break;

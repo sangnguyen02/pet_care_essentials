@@ -24,11 +24,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.uiux.Activities.AllSuppliesActivity;
 import com.example.uiux.Activities.User.CartActivity;
 import com.example.uiux.Activities.User.ChatBotActivity;
+import com.example.uiux.Activities.User.PaymentActivity;
 import com.example.uiux.Activities.User.SearchActivity;
 import com.example.uiux.Adapters.BannerAdapter;
 import com.example.uiux.Adapters.BestSellerAdapter;
@@ -101,6 +103,10 @@ public class HomeFragment extends Fragment {
         initWidget();
         displayNoOfCartItem();
         animatedText();
+        if(accountId == null ) {
+            iv_red_circle.setVisibility(View.GONE);
+            tv_number_of_cart_item.setVisibility(View.GONE);
+        }
 
         return rootView;
     }
@@ -113,6 +119,10 @@ public class HomeFragment extends Fragment {
         });
         fab_chatbot = rootView.findViewById(R.id.fab_chatbot);
         fab_chatbot.setOnClickListener(view -> {
+            if (accountId == null) {
+                Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent goToChat = new Intent(rootView.getContext(), ChatBotActivity.class);
             startActivity(goToChat);
         });
@@ -143,8 +153,13 @@ public class HomeFragment extends Fragment {
         });
 
         cart.setOnClickListener(view -> {
+            if (accountId == null) {
+                Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
+                return;
+            }
             Intent intent = new Intent(rootView.getContext(), CartActivity.class);
             startActivity(intent);
+
         });
 
         search_view.setOnClickListener(view -> {
@@ -161,30 +176,33 @@ public class HomeFragment extends Fragment {
     }
 
     void displayNoOfCartItem() {
-        cartItems = FirebaseDatabase.getInstance().getReference("Cart").child(accountId);
-        cartItems.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Đếm số lượng item trong giỏ
-                long itemCount = dataSnapshot.getChildrenCount();
+        if (accountId != null) {
+            cartItems = FirebaseDatabase.getInstance().getReference("Cart").child(accountId);
+            cartItems.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    // Đếm số lượng item trong giỏ
+                    long itemCount = dataSnapshot.getChildrenCount();
 
-                // Kiểm tra và cập nhật giao diện tùy vào số lượng item
-                if (itemCount > 0) {
-                    // Hiển thị số lượng item trong giỏ
-                    tv_number_of_cart_item.setVisibility(View.VISIBLE);
-                    tv_number_of_cart_item.setText(String.valueOf(itemCount));
-                    iv_red_circle.setVisibility(View.VISIBLE);
-                } else {
-                    tv_number_of_cart_item.setVisibility(View.GONE);
-                    iv_red_circle.setVisibility(View.GONE);
+                    // Kiểm tra và cập nhật giao diện tùy vào số lượng item
+                    if (itemCount > 0) {
+                        // Hiển thị số lượng item trong giỏ
+                        tv_number_of_cart_item.setVisibility(View.VISIBLE);
+                        tv_number_of_cart_item.setText(String.valueOf(itemCount));
+                        iv_red_circle.setVisibility(View.VISIBLE);
+                    } else {
+                        tv_number_of_cart_item.setVisibility(View.GONE);
+                        iv_red_circle.setVisibility(View.GONE);
+                    }
                 }
-            }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Xử lý lỗi nếu có (tuỳ theo yêu cầu của bạn)
-            }
-        });
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    // Xử lý lỗi nếu có (tuỳ theo yêu cầu của bạn)
+                }
+            });
+        }
+
     }
 
     void animatedText() {

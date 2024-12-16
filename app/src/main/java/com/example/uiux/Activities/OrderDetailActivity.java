@@ -72,11 +72,11 @@ import okhttp3.Response;
 
 public class OrderDetailActivity extends AppCompatActivity {
 
-    MaterialCardView mcv_order_update;
+    MaterialCardView mcv_order_update, mcv_tracking_bar;
     Spinner spinner_order_status;
     MaterialButton btn_order_save, btn_return_order, btn_cancel_order;
     ImageView img_back_order_detail;
-    TextView tv_order_buyer_name, tv_order_buyer_phone, tv_order_address_detail, tv_order_ward_district_province, tv_order_total_amount, tv_order_detail_date, tv_vouncher_selected, tv_vouncher_discount_amount;
+    TextView tv_order_buyer_name, tv_order_buyer_phone, tv_order_address_detail, tv_order_ward_district_province, tv_order_total_amount, tv_order_detail_date, tv_tracking_bar;
     RecyclerView rcv_order_payment;
     CartPaymentAdapter cartPaymentAdapter;
     SharedPreferences preferences;
@@ -158,6 +158,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         tvStatusPreparing = findViewById(R.id.tv_status_preparing);
         tvStatusDelivering = findViewById(R.id.tv_status_delivering);
         tvStatusCompleted = findViewById(R.id.tv_status_completed);
+        mcv_tracking_bar = findViewById(R.id.mcv_tracking_bar);
+        tv_tracking_bar = findViewById(R.id.tv_tracking_bar);
 
         img_back_order_detail = findViewById(R.id.img_back_order_detail);
         img_back_order_detail.setOnClickListener(view -> finish());
@@ -245,6 +247,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             intent.putExtra("order_id", order_id); // Truyền order_id vào Intent
             Log.e("Order_ID", order_id);  // Ghi log để kiểm tra order_id
             startActivity(intent);
+            finish();
 
         });
 
@@ -254,6 +257,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             intent.putExtra("order_id", order_id); // Truyền order_id vào Intent
             Log.e("Order_ID", order_id);  // Ghi log để kiểm tra order_id
             startActivity(intent);
+            finish();
 
         });
 
@@ -287,6 +291,8 @@ public class OrderDetailActivity extends AppCompatActivity {
                         if(order.getStatus() == OrderStatus.RETURNED) {
                             spinner_order_status.setEnabled(false);
                             btn_order_save.setVisibility(View.GONE);
+                            tv_tracking_bar.setVisibility(View.GONE);
+                            mcv_tracking_bar.setVisibility(View.GONE);
                         }
 
                         if(order.getStatus() == OrderStatus.DELIVERED) {
@@ -304,6 +310,10 @@ public class OrderDetailActivity extends AppCompatActivity {
                                 order.getStatus() == OrderStatus.PREPARING ||
                                 order.getStatus() == OrderStatus.SHIPPING)) {
                             btn_cancel_order.setVisibility(View.VISIBLE);
+                        }
+                        if (order.getStatus() == OrderStatus.CANCELED) {
+                            tv_tracking_bar.setVisibility(View.GONE);
+                            mcv_tracking_bar.setVisibility(View.GONE);
                         }
 
 
@@ -327,8 +337,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         statusList.add(OrderStatus.getStatusName(OrderStatus.PREPARING));
         statusList.add(OrderStatus.getStatusName(OrderStatus.SHIPPING));
         statusList.add(OrderStatus.getStatusName(OrderStatus.DELIVERED));
-//        statusList.add(OrderStatus.getStatusName(OrderStatus.CANCELED));
-//        statusList.add(OrderStatus.getStatusName(OrderStatus.RETURNED));
+        statusList.add(OrderStatus.getStatusName(OrderStatus.CANCELED));
+        statusList.add(OrderStatus.getStatusName(OrderStatus.RETURNED));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 OrderDetailActivity.this,
