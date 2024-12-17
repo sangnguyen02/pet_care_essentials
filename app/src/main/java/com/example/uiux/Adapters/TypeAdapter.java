@@ -86,7 +86,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.TypeViewHolder
                                             mListType.remove(position);
                                             notifyItemRemoved(position);
                                             notifyItemRangeChanged(position, mListType.size());
-                                            Toast.makeText(context, "Đã xóa loai thành công", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT).show();
                                         })
                                         .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
                                             // Nếu người dùng chọn "Không", đóng dialog

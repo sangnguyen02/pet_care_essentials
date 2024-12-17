@@ -391,10 +391,7 @@ public class RouteBranchActivity extends AppCompatActivity {
                                 .withPoint(destination);
                         pointAnnotationManager.create(pointAnnotationOptions);
 
-                        // Hiển thị Toast
-                        Toast.makeText(RouteBranchActivity.this,
-                                "Longitude: " + longtitude + ", Latitude: " + latitude,
-                                Toast.LENGTH_LONG).show();
+
 
 
                     }

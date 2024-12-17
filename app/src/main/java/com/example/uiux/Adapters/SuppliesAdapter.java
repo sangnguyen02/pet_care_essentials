@@ -99,7 +99,7 @@ public class SuppliesAdapter  extends RecyclerView.Adapter<SuppliesAdapter.Suppl
                                             suppliesList.remove(position);
                                             notifyItemRemoved(position);
                                             notifyItemRangeChanged(position, suppliesList.size());
-                                            Toast.makeText(context, "Đã xóa sản phẩm thành công", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, "Product deleted successfully", Toast.LENGTH_SHORT).show();
                                         })
                                         .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
                                             // Nếu người dùng chọn "Không", đóng dialog

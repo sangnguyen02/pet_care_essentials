@@ -85,7 +85,7 @@ public class SuppliesReviewAdapter  extends RecyclerView.Adapter<SuppliesReviewA
 
 
                         if (account != null) {
-                            tv_review_username.setText(account.getFullname() != null ? account.getFullname() : "Chưa cập nhật");
+                            tv_review_username.setText(account.getFullname() != null ? account.getFullname() : "Not updated yet");
 
                             if (account.getImage() != null && !account.getImage().isEmpty()) {
                                 Glide.with(context)
@@ -98,7 +98,7 @@ public class SuppliesReviewAdapter  extends RecyclerView.Adapter<SuppliesReviewA
                             }
                         }
                     } else {
-                        Toast.makeText(context, "Không tìm thấy người dùng", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "User not found", Toast.LENGTH_SHORT).show();
                     }
                 }
 

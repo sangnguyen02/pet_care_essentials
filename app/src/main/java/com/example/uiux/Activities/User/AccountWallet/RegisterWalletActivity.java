@@ -45,7 +45,6 @@ public class RegisterWalletActivity extends AppCompatActivity {
 
         SharedPreferences preferences =  getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         accountId = preferences.getString("accountID", null);
-        Log.e("ID",accountId);
 
         initWidget();
 
@@ -111,7 +110,6 @@ public class RegisterWalletActivity extends AppCompatActivity {
 
                 if (isAccountIdExist) {
                     // Nếu account_id đã tồn tại
-                    Log.e("Firebase Check", "Account already registered!");
                     Toast.makeText(RegisterWalletActivity.this, "Account already registered!", Toast.LENGTH_SHORT).show();
                 } else {
                     // Nếu account_id chưa tồn tại, tiến hành đăng ký

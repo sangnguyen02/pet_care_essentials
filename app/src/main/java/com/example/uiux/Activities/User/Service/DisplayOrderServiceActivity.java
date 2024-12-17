@@ -47,7 +47,7 @@ public class DisplayOrderServiceActivity extends AppCompatActivity {
         initWidget();
         SharedPreferences preferences =  getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         accountId = preferences.getString("accountID", null);
-        Log.e("ID",accountId);
+
         img_back_order_status.setOnClickListener(view -> finish());
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));

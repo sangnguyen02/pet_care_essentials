@@ -86,7 +86,7 @@ public class CategoryAdminAdapter extends RecyclerView.Adapter<CategoryAdminAdap
                                             categoryList.remove(position);
                                             notifyItemRemoved(position);
                                             notifyItemRangeChanged(position, categoryList.size());
-                                            Toast.makeText(context, "Đã xóa danh mục thành công", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, "Category deleted successfully", Toast.LENGTH_SHORT).show();
                                         })
                                         .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
                                             // Nếu người dùng chọn "Không", đóng dialog

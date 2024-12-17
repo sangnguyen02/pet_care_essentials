@@ -136,11 +136,11 @@ public class SupplyReviewActivity extends AppCompatActivity {
         String comment = edt_review.getText().toString().trim();
 
         if (rating == 0) {
-            edt_review.setError("Vui lòng chọn số sao");
+            edt_review.setError("Please select number of stars");
             return;
         }
         if (comment.isEmpty()) {
-            edt_review.setError("Vui lòng nhập nội dung đánh giá");
+            edt_review.setError("Please enter review content");
             return;
         }
 
@@ -185,9 +185,9 @@ public class SupplyReviewActivity extends AppCompatActivity {
                             ratingBar_review.setRating(0);
                             loadSupplyReview();
                             bottomSheetBehaviorAddReview.setState(BottomSheetBehavior.STATE_HIDDEN);
-                            showToast("Đánh giá đã được cập nhật!");
+                            showToast("Review has been updated!");
                         } else {
-                            showToast("Đã có lỗi xảy ra, vui lòng thử lại!");
+                            showToast("An error occurred, please try again!");
                         }
                     });
 
@@ -210,9 +210,9 @@ public class SupplyReviewActivity extends AppCompatActivity {
                             ratingBar_review.setRating(0);
                             loadSupplyReview();
                             bottomSheetBehaviorAddReview.setState(BottomSheetBehavior.STATE_HIDDEN);
-                            showToast("Đánh giá đã được gửi!");
+                            showToast("Review has been submitted!");
                         } else {
-                            showToast("Đã có lỗi xảy ra, vui lòng thử lại!");
+                            showToast("An error occurred, please try again!");
                         }
                     });
                 }

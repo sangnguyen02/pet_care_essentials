@@ -147,8 +147,6 @@ public class EditBranchStoreActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Ward selectedWard = (Ward) adapterView.getItemAtPosition(i);
-
-                Toast.makeText(getApplicationContext(), "Select ward: " + selectedWard.getWardName(), Toast.LENGTH_SHORT).show();
                 selectedWardName=selectedWard.getWardName();
 
 
@@ -166,7 +164,6 @@ public class EditBranchStoreActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 District selectedDistrict = (District) parentView.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "Select district: " + selectedDistrict.getDistrictName(), Toast.LENGTH_SHORT).show();
                 selectedDistrictName=selectedDistrict.getDistrictName();
 
                 // Gọi API để lấy danh sách phường/xã theo district_id
@@ -197,7 +194,6 @@ public class EditBranchStoreActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 Province selectedProvince = (Province) parentView.getItemAtPosition(position);
-                Toast.makeText(getApplicationContext(), "Select province: " + selectedProvince.getProvinceName(), Toast.LENGTH_SHORT).show();
                // branchStore.setProvince(selectedProvince.getProvinceId()+"+"+selectedProvince.getProvinceName());
                 selectedProvinceName=selectedProvince.getProvinceName();
 

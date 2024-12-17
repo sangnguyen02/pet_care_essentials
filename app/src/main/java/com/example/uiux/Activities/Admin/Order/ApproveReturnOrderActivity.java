@@ -206,10 +206,10 @@ public class ApproveReturnOrderActivity extends AppCompatActivity {
         orderRef.child("status").setValue(status).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Log.d("UpdateOrderStatus", "Order status updated to: " + status);
-                Toast.makeText(this, "Trạng thái đơn hàng đã được cập nhật.", Toast.LENGTH_SHORT).show();
+
             } else {
                 Log.e("UpdateOrderStatus", "Failed to update order status: " + task.getException());
-                Toast.makeText(this, "Cập nhật trạng thái đơn hàng thất bại.", Toast.LENGTH_SHORT).show();
+
             }
         });
     }

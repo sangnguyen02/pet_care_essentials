@@ -249,39 +249,7 @@ public class CartActivity extends AppCompatActivity {
             });
         }
     }
-//    public void getCategoryForSupplies(List<CartItem> selectedItems) {
-//        List<String> supplyIds = new ArrayList<>();
-//        for (CartItem item : selectedItems) {
-//            supplyIds.add(item.getSupply_id());
-//        }
-//
-//        DatabaseReference supplyRef = FirebaseDatabase.getInstance().getReference("Supplies");
-//        List<String> categories = new ArrayList<>();
-//
-//        for (String supplyId : supplyIds) {
-//            supplyRef.child(supplyId).addListenerForSingleValueEvent(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    // Lấy thông tin category của sản phẩm
-//                    String category = snapshot.child("category").getValue(String.class);
-//
-//                    if (category != null && !categories.contains(category)) {
-//                        categories.add(category);
-//                    }
-//
-//                    // Kiểm tra xem đã có đủ dữ liệu từ tất cả các sản phẩm
-//                    if (categories.size() == supplyIds.size()) {
-//                        checkCategoryMatch(categories);
-//                    }
-//                }
-//
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//                    Log.e("FirebaseError", "Error fetching supply data: " + error.getMessage());
-//                }
-//            });
-//        }
-//    }
+
 public void getCategoryForSupplies(List<CartItem> selectedItems) {
     List<String> supplyIds = new ArrayList<>();
     for (CartItem item : selectedItems) {

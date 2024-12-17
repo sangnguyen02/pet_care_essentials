@@ -86,15 +86,15 @@ public class ConfirmPINActivity extends AppCompatActivity {
                             setResult(RESULT_OK);
                             finish();
                         } else {
-                            showToast("Mã PIN không đúng. Vui lòng thử lại!");
+                            showToast("Incorrect PIN. Please try again!");
                             clearPinInputs();
                         }
                     }
                 } else {
-                    showToast("Ví không tồn tại. Vui lòng kiểm tra lại!");
+                    showToast("Wallet does not exist. Please check again!");
                 }
             } else {
-                showToast("Lỗi khi kiểm tra mã PIN: " + task.getException().getMessage());
+                showToast("Error checking PIN code: " + task.getException().getMessage());
             }
         });
     }
