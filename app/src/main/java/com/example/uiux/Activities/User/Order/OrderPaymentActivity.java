@@ -259,14 +259,14 @@ public class OrderPaymentActivity extends AppCompatActivity {
 
                 if (wallet_Id == null) {
                     Log.e("WalletID", "No wallet ID found for account ID: " + accountId);
-                    Toast.makeText(OrderPaymentActivity.this, "Không tìm thấy ví tương ứng!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(OrderPaymentActivity.this, "No matching wallet found!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("FirebaseError", "Failed to read wallet ID: " + error.getMessage());
-                Toast.makeText(OrderPaymentActivity.this, "Lỗi khi lấy dữ liệu ví!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(OrderPaymentActivity.this, "Error retrieving wallet data!", Toast.LENGTH_SHORT).show();
             }
         });
     }

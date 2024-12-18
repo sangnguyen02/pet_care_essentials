@@ -115,7 +115,7 @@ public class UserReturnOrderActivity extends AppCompatActivity {
 
         // Kiểm tra lý do hợp lệ
         if (reason == 4 && detailReason.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập lý do khác!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter another reason!", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -168,7 +168,7 @@ public class UserReturnOrderActivity extends AppCompatActivity {
         returnOrderRef.child(returnOrderId).setValue(returnOrder).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 updateOrderStatus(6);
-                Toast.makeText(this, "Yêu cầu trả hàng đã được gửi!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Return request has been sent!", Toast.LENGTH_SHORT).show();
                 finish();
             } else {
                 Log.e("ReturnOrder", "Failed to save return order: " + task.getException());
@@ -224,11 +224,11 @@ public class UserReturnOrderActivity extends AppCompatActivity {
         // Cập nhật trường "status" trong đơn hàng
         orderRef.child(orderId).child("status").setValue(newStatus).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Log.d("UpdateOrderStatus", "Order status updated to: " + newStatus);
-                Toast.makeText(this, "Trạng thái đơn hàng đã được cập nhật.", Toast.LENGTH_SHORT).show();
+
+
             } else {
-                Log.e("UpdateOrderStatus", "Failed to update order status: " + task.getException());
-                Toast.makeText(this, "Cập nhật trạng thái đơn hàng thất bại.", Toast.LENGTH_SHORT).show();
+
+
             }
         });
     }

@@ -97,7 +97,7 @@ public class UserCancelOrderActivity extends AppCompatActivity {
         int selectedReasonId = rgCancelReasons.getCheckedRadioButtonId();
 
         if (selectedReasonId == -1) {
-            Toast.makeText(this, "Vui lòng chọn lý do hủy đơn hàng", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please select reason for canceling order", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -109,7 +109,7 @@ public class UserCancelOrderActivity extends AppCompatActivity {
             // Lấy lý do khác
             otherType = etOtherReason.getText().toString().trim();
             if (otherType.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập lý do khác", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Please enter other reason", Toast.LENGTH_SHORT).show();
                 return;
             }
             reason = otherType;
@@ -133,12 +133,12 @@ public class UserCancelOrderActivity extends AppCompatActivity {
         cancelOrderRef.child(cancelId).setValue(cancelOrder)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Toast.makeText(this, "Hủy đơn hàng thành công", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Order Cancellation Successful", Toast.LENGTH_SHORT).show();
                         checkPayment(orderId);
                         updateOrderStatus(4);
                         finish();
                     } else {
-                        Toast.makeText(this, "Hủy đơn hàng thất bại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Cancel order failed", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -153,30 +153,26 @@ public class UserCancelOrderActivity extends AppCompatActivity {
                     Order order = dataSnapshot.getValue(Order.class);
                     if (order != null && order.getIs_completed_payment() == 1) {
                         // Thanh toán hoàn tất
-                        Toast.makeText(UserCancelOrderActivity.this, "Thanh toán hoàn tất", Toast.LENGTH_SHORT).show();
-                        Log.e("Thanh toán hoàn tất","Thanh toán hoàn tất");
-                        // Bạn có thể thực hiện các hành động khác nếu thanh toán đã hoàn tất
+                        Toast.makeText(UserCancelOrderActivity.this, "Payment Completed", Toast.LENGTH_SHORT).show();
                         totalPrice=order.getTotal_price();
                         Refund();
                     } else {
                         // Thanh toán chưa hoàn tất
-                        Toast.makeText(UserCancelOrderActivity.this, "Thanh toán chưa hoàn tất", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UserCancelOrderActivity.this, "Payment not completed", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(UserCancelOrderActivity.this, "Đơn hàng không tồn tại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UserCancelOrderActivity.this, "Order does not exist", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Xử lý khi truy vấn bị hủy hoặc lỗi
-                Toast.makeText(UserCancelOrderActivity.this, "Lỗi khi truy vấn đơn hàng", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserCancelOrderActivity.this, "Error when querying order", Toast.LENGTH_SHORT).show();
             }
         });
     }
     private void Refund() {
-        // Log để kiểm tra giá trị của accountId
-        Log.e("ID", accountId);
 
         // Truy vấn vào Firebase với cấu trúc chính xác
         accountWalletRef
@@ -200,25 +196,25 @@ public class UserCancelOrderActivity extends AppCompatActivity {
                                     accountWalletRef.child(accountWallet.getWallet_id()).child("balance").setValue(newBalance)
                                             .addOnCompleteListener(task -> {
                                                 if (task.isSuccessful()) {
-                                                    Toast.makeText(UserCancelOrderActivity.this, "Hoàn tiền thành công", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(UserCancelOrderActivity.this, "Refund successful", Toast.LENGTH_SHORT).show();
                                                     // Tạo lịch sử giao dịch hoàn tiền
                                                     CreateHistory();
                                                 } else {
-                                                    Toast.makeText(UserCancelOrderActivity.this, "Hoàn tiền thất bại", Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(UserCancelOrderActivity.this, "Refund failed", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
                                 }
                             }
                         } else {
                             // Nếu ví của người dùng không tồn tại
-                            Toast.makeText(UserCancelOrderActivity.this, "Ví không tồn tại", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UserCancelOrderActivity.this, "Wallet does not exist", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                         // Xử lý khi truy vấn bị lỗi
-                        Toast.makeText(UserCancelOrderActivity.this, "Lỗi khi truy vấn ví người dùng", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UserCancelOrderActivity.this, "Error while querying user wallet", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -244,28 +240,23 @@ public class UserCancelOrderActivity extends AppCompatActivity {
         walletHistoryRef.child(walletHistoryId).setValue(walletHistory)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        // Thông báo thành công khi ghi lịch sử
-                        Toast.makeText(UserCancelOrderActivity.this, "Lịch sử giao dịch đã được ghi lại", Toast.LENGTH_SHORT).show();
+
                     } else {
-                        // Thông báo thất bại khi ghi lịch sử
-                        Toast.makeText(UserCancelOrderActivity.this, "Ghi lại lịch sử giao dịch thất bại", Toast.LENGTH_SHORT).show();
+
                     }
                 });
     }
     private void updateOrderStatus(int newStatus) {
         if (orderId == null || orderId.isEmpty()) {
-            Log.e("UpdateOrderStatus", "Order ID is null or empty.");
             return;
         }
 
         // Cập nhật trường "status" trong đơn hàng
         orderRef.child(orderId).child("status").setValue(newStatus).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Log.d("UpdateOrderStatus", "Order status updated to: " + newStatus);
-                Toast.makeText(this, "Trạng thái đơn hàng đã được cập nhật.", Toast.LENGTH_SHORT).show();
+
             } else {
-                Log.e("UpdateOrderStatus", "Failed to update order status: " + task.getException());
-                Toast.makeText(this, "Cập nhật trạng thái đơn hàng thất bại.", Toast.LENGTH_SHORT).show();
+
             }
         });
     }

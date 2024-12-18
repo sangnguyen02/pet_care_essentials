@@ -107,7 +107,7 @@ public class EntryActivity extends AppCompatActivity {
                         goToNextActivity(user); // Chuyển sang activity tiếp theo
                     }
                 } else {
-                    Toast.makeText(EntryActivity.this, "Đăng nhập thất bại", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EntryActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });

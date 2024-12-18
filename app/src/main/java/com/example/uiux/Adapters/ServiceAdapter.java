@@ -91,7 +91,7 @@ public class ServiceAdapter extends  RecyclerView.Adapter<ServiceAdapter.Service
                                             serviceList.remove(position);
                                             notifyItemRemoved(position);
                                             notifyItemRangeChanged(position, serviceList.size());
-                                            Toast.makeText(context, "Đã xóa sản phẩm thành công", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(context, "Product deleted successfully", Toast.LENGTH_SHORT).show();
                                         })
                                         .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
                                             // Nếu người dùng chọn "Không", đóng dialog

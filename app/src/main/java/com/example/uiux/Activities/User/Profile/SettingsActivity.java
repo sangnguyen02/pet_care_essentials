@@ -46,7 +46,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         SharedPreferences preferences =  getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         accountId = preferences.getString("accountID", null);
-        Log.e("Wallet account 0", accountId);
+
 
         walletRef = FirebaseDatabase.getInstance().getReference("Account Wallet");
         checkWalletExist();

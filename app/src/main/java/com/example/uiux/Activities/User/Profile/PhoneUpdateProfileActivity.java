@@ -88,7 +88,7 @@ public class PhoneUpdateProfileActivity extends AppCompatActivity {
     String birthday = Objects.requireNonNull(edt_birthday.getText()).toString().trim();
 
     if (fullName.isEmpty() || phone.isEmpty() || email.isEmpty() ||  birthday.equals("Ngày sinh chưa chọn")) {
-        Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Please enter complete information", Toast.LENGTH_SHORT).show();
         return;
     }
 

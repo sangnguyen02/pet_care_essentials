@@ -212,7 +212,7 @@ public class BranchMapActivity extends AppCompatActivity {
         if (statusIndex >= 0 && statusIndex < branchStatusArray.length) {
             branchStatusTextView.setText(branchStatusArray[statusIndex]);
         } else {
-            branchStatusTextView.setText("Không rõ trạng thái");
+            branchStatusTextView.setText("Status Unknown");
         }
         booking.setOnClickListener(new View.OnClickListener() {
             @Override

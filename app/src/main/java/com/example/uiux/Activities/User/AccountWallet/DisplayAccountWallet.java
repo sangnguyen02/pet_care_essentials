@@ -98,7 +98,6 @@ public class DisplayAccountWallet extends AppCompatActivity {
 
         SharedPreferences preferences =  getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         accountId = preferences.getString("accountID", null);
-        Log.e(" account display", accountId);
 
         walletRef = FirebaseDatabase.getInstance().getReference("Account Wallet");
         walletHistoryRef = FirebaseDatabase.getInstance().getReference("Wallet History");
@@ -177,8 +176,7 @@ public class DisplayAccountWallet extends AppCompatActivity {
                     AccountWallet wallet = dataSnapshot.getValue(AccountWallet.class);
                     txtBalance.setText(CurrencyFormatter.formatCurrency(wallet.getBalance(), getString(R.string.currency_vn)));
                 } else {
-                        // Không tìm thấy ví cho account_id
-                    Log.e("Log Wallet account display", "No wallet found for this account.");
+
 
                     txtBalance.setText("No wallet found for this account.");
                 }
@@ -208,7 +206,7 @@ public class DisplayAccountWallet extends AppCompatActivity {
                     Model.Account account = dataSnapshot.getValue(Model.Account.class);
 
                     if (account != null) {
-                        tv_wallet_username.setText(account.getFullname() != null ? account.getFullname() : "Chưa cập nhật");
+                        tv_wallet_username.setText(account.getFullname() != null ? account.getFullname() : "Not updated yet");
                         // Load image if it exists
                         if (account.getImage() != null) {
                             Glide.with(getApplicationContext())
@@ -234,7 +232,6 @@ public class DisplayAccountWallet extends AppCompatActivity {
     }
 
     private void loadWalletHistory() {
-        Log.e("Wallet ID trong history", wallet_Id);
 
         walletHistoryRef.orderByChild("wallet_id").equalTo(wallet_Id).addValueEventListener(new ValueEventListener() {
             @Override
@@ -277,7 +274,7 @@ public class DisplayAccountWallet extends AppCompatActivity {
                     startActivity(intent);
                 } else {
                     // Nếu PIN sai hoặc người dùng hủy
-                    Toast.makeText(this, "PIN không hợp lệ hoặc bạn đã hủy.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Invalid PIN or you have canceled.", Toast.LENGTH_SHORT).show();
                 }
             });
 }

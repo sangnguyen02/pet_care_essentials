@@ -75,33 +75,7 @@ public class DisplayServiceBookingActivity extends AppCompatActivity {
 
 
     }
-//    private void FetchSpinnerBranch() {
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference ref = database.getReference("Branch Store");
-//        ref.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                List<String> cateList = new ArrayList<>(); // Danh sách chứa các "type" từ Firebase
-//                final Map<String, String> cateMap = new HashMap<>(); // Lưu type_id và type
-//                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-//                    BranchStore category = snapshot.getValue(BranchStore.class);
-//                    if (category != null && category.getStatus() != 2&&category.getStatus() != 3) {
-//                        cateList.add(category.getBranch_name());
-//                        cateMap.put(category.getBranch_name(), category.getBranch_Store_id()); // Map "type" với "type_id"
-//                    }
-//                }
-//
-//                ArrayAdapter<String> adapter = new ArrayAdapter<>(DisplayServiceBookingActivity.this, android.R.layout.simple_spinner_item, cateList);
-//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//                spinnerBranch.setAdapter(adapter);
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
+
 private void FetchSpinnerBranch() {
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference ref = database.getReference("Branch Store");

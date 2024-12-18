@@ -111,7 +111,7 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
                                                 infoReturnOrderList.remove(position);
                                                 notifyItemRemoved(position);
                                                 notifyItemRangeChanged(position, infoReturnOrderList.size());
-                                                Toast.makeText(context, "Đã trả hàng thành công", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(context, "Returned successfully", Toast.LENGTH_SHORT).show();
                                             })
                                             .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
                                                 // Nếu người dùng chọn "Không", đóng dialog
@@ -250,7 +250,7 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
             orderRef.child(order_id).child("status").setValue(status).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     // Trạng thái đã được cập nhật
-                    String statusMessage = (status == OrderStatus.RETURN_PRODUCT_WAITING) ? "Yêu cầu trả hàng đã được phê duyệt." : "Yêu cầu trả hàng đã bị từ chối.";
+                    String statusMessage = (status == OrderStatus.RETURN_PRODUCT_WAITING) ? "Return request approved." : "The return request was denied.";
                     Log.e("Message from ReturnAdapter",statusMessage);
                 } else {
                     // Cập nhật thất bại

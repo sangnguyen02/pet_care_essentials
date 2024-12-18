@@ -102,7 +102,7 @@ public class UserUpdateProfile extends AppCompatActivity {
         String birthday = edt_birthday.getText().toString().trim();
 
         if (fullName.isEmpty() || phone.isEmpty() || email.isEmpty() ||  birthday.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter complete information", Toast.LENGTH_SHORT).show();
             return;
         }
 

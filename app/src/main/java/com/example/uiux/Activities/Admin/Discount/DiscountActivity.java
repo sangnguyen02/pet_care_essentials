@@ -84,12 +84,12 @@ public class DiscountActivity extends AppCompatActivity {
             startDate = dateFormat.parse(startDateStr);
             // Kiểm tra nếu ngày bắt đầu phải lớn hơn hôm nay
             if (startDate == null || !startDate.after(today)) {
-                Toast.makeText(DiscountActivity.this, "Ngày bắt đầu phải lớn hơn hôm nay.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DiscountActivity.this, "Start date must be greater than today.", Toast.LENGTH_SHORT).show();
                 return;
             }
         } catch (ParseException e) {
             e.printStackTrace();
-            Toast.makeText(DiscountActivity.this, "Định dạng ngày không hợp lệ.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DiscountActivity.this, "Invalid date format.", Toast.LENGTH_SHORT).show();
             return;
         }
 
