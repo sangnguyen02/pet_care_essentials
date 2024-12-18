@@ -421,6 +421,26 @@ public class AddressActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Uploaded", Toast.LENGTH_SHORT).show();
         });
     }
+    private void uploadAddressToFirebase() {
+        String detailAddress = edt_address.getText().toString();
+        if (!detailAddress.isEmpty()) {
+            accountAddress.setAddress_details(detailAddress);
+            String id = databaseReference.push().getKey();
+            if (id != null) {
+                accountAddress.setAccount_address_id(id);
+                databaseReference.child(id).setValue(accountAddress)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Toast.makeText(AddressActivity.this, "Address successfully saved", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(AddressActivity.this, "Failed to save address!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }
+        } else {
+            Toast.makeText(AddressActivity.this, "Please enter the detail address!", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void WardSelection() {
         wardSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -466,27 +486,6 @@ public class AddressActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parentView) {
             }
         });
-    }
-
-    private void uploadAddressToFirebase() {
-        String detailAddress = edt_address.getText().toString();
-        if (!detailAddress.isEmpty()) {
-            accountAddress.setAddress_details(detailAddress);
-            String id = databaseReference.push().getKey();
-            if (id != null) {
-                accountAddress.setAccount_address_id(id);
-                databaseReference.child(id).setValue(accountAddress)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Toast.makeText(AddressActivity.this, "Address successfully saved", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(AddressActivity.this, "Failed to save address!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
-        } else {
-            Toast.makeText(AddressActivity.this, "Please enter the detail address!", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private class FetchProvincesTask extends AsyncTask<String, Void, List<Province>> {

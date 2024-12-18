@@ -41,6 +41,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class EditAddressActivity extends AppCompatActivity {
 
@@ -84,7 +85,7 @@ public class EditAddressActivity extends AppCompatActivity {
         //Sự kiện Chọn quận huyện
         DistrictSelection();
         //Sự kiện Chọn xã/phường
-        Wardselection();
+        WardSelection();
         saveBTN.setOnClickListener(v -> {
             String detailAddress = detailAdressTv.getText().toString().trim();
             accountAddress.setIs_default(checkBoxDefault.isChecked());
@@ -170,71 +171,6 @@ public class EditAddressActivity extends AppCompatActivity {
             }
         });
     }
-    private void Wardselection() {
-        wardSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Ward selectedWard = (Ward) adapterView.getItemAtPosition(i);
-                accountAddress.setWard(selectedWard.getWardId()+"+"+ selectedWard.getWardName());
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-    }
-    private void DistrictSelection() {
-        // Xử lý sự kiện chọn quận/huyện
-        districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                District selectedDistrict = (District) parentView.getItemAtPosition(position);
-
-                accountAddress.setDistrict(selectedDistrict.getDistrictId()+"+"+selectedDistrict.getDistrictName());
-
-                // Gọi API để lấy danh sách phường/xã theo district_id
-                new FetchWardsTask().execute("https://vapi.vnappmob.com/api/province/ward/" + selectedDistrict.getDistrictId());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Không có gì được chọn
-            }
-        });
-    }
-    private void ProvinceSelection() {
-
-        new FetchProvincesTask().execute("https://vapi.vnappmob.com/api/province/");
-        provinceSpinner.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    removeInvalidItems(provinceAdapter); // Gọi phương thức xóa các mục không hợp lệ
-                    provinceAdapter.notifyDataSetChanged(); // Cập nhật adapter
-                }
-                return false; // Trả về false để cho p
-            }
-        });
-        // Xử lý sự kiện chọn tỉnh
-        provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                Province selectedProvince = (Province) parentView.getItemAtPosition(position);
-                accountAddress.setProvince(selectedProvince.getProvinceId()+"+"+selectedProvince.getProvinceName());
-
-                // Gọi API để lấy danh sách quận/huyện theo province_id
-                new FetchDistrictsTask().execute("https://vapi.vnappmob.com/api/province/district/" + selectedProvince.getProvinceId());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // Không có gì được chọn
-            }
-        });
-    }
-
     private void removeInvalidItems(ArrayAdapter<Province> provinceAdapter) {
         // Duyệt qua adapter từ cuối đến đầu
         for (int i = provinceAdapter.getCount() - 1; i >= 0; i--) {
@@ -246,199 +182,196 @@ public class EditAddressActivity extends AppCompatActivity {
             }
         }
     }
+    private void WardSelection() {
+        wardSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+                Ward selectedWard = (Ward) adapterView.getItemAtPosition(position);
+                accountAddress.setWard(selectedWard.getWardId() + "+" + selectedWard.getWardName());
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
+    }
 
+    private void DistrictSelection() {
+        districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                District selectedDistrict = (District) parentView.getItemAtPosition(position);
+                accountAddress.setDistrict(selectedDistrict.getDistrictId() + "+" + selectedDistrict.getDistrictName());
+                new FetchWardsTask().execute("https://esgoo.net/api-tinhthanh/3/" + selectedDistrict.getDistrictId() + ".htm");
+            }
 
-    // AsyncTask để lấy danh sách tỉnh từ API
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+        });
+    }
+
+    private void ProvinceSelection() {
+        new EditAddressActivity.FetchProvincesTask().execute("https://esgoo.net/api-tinhthanh/1/0.htm");
+//        provinceSpinner.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View view, MotionEvent motionEvent) {
+//                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+//                    removeInvalidItems(provinceAdapter); // Gọi phương thức xóa các mục không hợp lệ
+//                    provinceAdapter.notifyDataSetChanged(); // Cập nhật adapter
+//                }
+//                return false; // Trả về false để cho p
+//            }
+//        });
+
+        provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                Province selectedProvince = (Province) parentView.getItemAtPosition(position);
+                accountAddress.setProvince(selectedProvince.getProvinceId() + "+" + selectedProvince.getProvinceName());
+                new EditAddressActivity.FetchDistrictsTask().execute("https://esgoo.net/api-tinhthanh/2/" + selectedProvince.getProvinceId() + ".htm");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
+        });
+    }
+
     private class FetchProvincesTask extends AsyncTask<String, Void, List<Province>> {
-
         @Override
         protected List<Province> doInBackground(String... strings) {
-            String urlString = strings[0];
-            try {
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setConnectTimeout(5000);
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder result = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    result.append(line);
-                }
-                reader.close();
-
-                return parseProvinces(result.toString());
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
+            return fetchData(strings[0], this::parseProvinces);
         }
 
         @Override
         protected void onPostExecute(List<Province> provinces) {
-            super.onPostExecute(provinces);
             if (provinces != null) {
-                // Thêm hint vào danh sách
-                String[] Province=accountAddress.getProvince().split("\\+");
-                provinces.add(0, new Province("-1", Province[1], ""));
-
+                provinces.add(0, new Province("-1", "Select Province", ""));
                 provinceAdapter = new ArrayAdapter<>(EditAddressActivity.this, android.R.layout.simple_spinner_item, provinces);
                 provinceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 provinceSpinner.setAdapter(provinceAdapter);
             } else {
-                Toast.makeText(EditAddressActivity.this, "Cannot get provinces data!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditAddressActivity.this, "Failed to load provinces", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-    // AsyncTask để lấy danh sách quận/huyện từ API
-    private class FetchDistrictsTask extends AsyncTask<String, Void, List<District>> {
 
-        @Override
-        protected List<District> doInBackground(String... strings) {
-            String urlString = strings[0];
+        private List<Province> parseProvinces(String json) {
+            List<Province> provinceList = new ArrayList<>();
             try {
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setConnectTimeout(5000);
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder result = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    result.append(line);
+                JSONObject jsonObject = new JSONObject(json);
+                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject provinceObject = jsonArray.getJSONObject(i);
+                    provinceList.add(new Province(
+                            provinceObject.getString("id"),
+                            provinceObject.getString("full_name")
+                    ));
                 }
-                reader.close();
-
-                return parseDistricts(result.toString());
-
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return null;
+            return provinceList;
+        }
+    }
+
+
+    private class FetchDistrictsTask extends AsyncTask<String, Void, List<District>> {
+        @Override
+        protected List<District> doInBackground(String... strings) {
+            return fetchData(strings[0], this::parseDistricts);
         }
 
         @Override
         protected void onPostExecute(List<District> districts) {
-            super.onPostExecute(districts);
             if (districts != null) {
-                // Thêm hint vào danh sách
-                String[] District=accountAddress.getDistrict().split("\\+");
-                districts.add(0, new District("-1", District[1]));
-
+                districts.add(0, new District("-1", "Select District"));
                 districtAdapter = new ArrayAdapter<>(EditAddressActivity.this, android.R.layout.simple_spinner_item, districts);
                 districtAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 districtSpinner.setAdapter(districtAdapter);
             } else {
-                Toast.makeText(EditAddressActivity.this, "Cannot get districts data!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditAddressActivity.this, "Failed to load districts", Toast.LENGTH_SHORT).show();
             }
         }
-    }
-    // AsyncTask để lấy danh sách phường/xã từ API
-    private class FetchWardsTask extends AsyncTask<String, Void, List<Ward>> {
 
-        @Override
-        protected List<Ward> doInBackground(String... strings) {
-            String urlString = strings[0];
+        private List<District> parseDistricts(String json) {
+            List<District> districtList = new ArrayList<>();
+
             try {
-                URL url = new URL(urlString);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                urlConnection.setRequestMethod("GET");
-                urlConnection.setConnectTimeout(5000);
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-                StringBuilder result = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    result.append(line);
+                JSONObject jsonObject = new JSONObject(json);
+                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject districtObject = jsonArray.getJSONObject(i);
+                    districtList.add(new District(
+                            districtObject.getString("id"),
+                            districtObject.getString("full_name")
+                            //districtObject.getString("full_name")
+                    ));
                 }
-                reader.close();
-
-                return parseWards(result.toString());
-
-            } catch (Exception e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return null;
+            return districtList;
+        }
+    }
+
+    private class FetchWardsTask extends AsyncTask<String, Void, List<Ward>> {
+        @Override
+        protected List<Ward> doInBackground(String... strings) {
+            return fetchData(strings[0], this::parseWards);
         }
 
         @Override
         protected void onPostExecute(List<Ward> wards) {
-            super.onPostExecute(wards);
             if (wards != null) {
-                // Thêm mục hint vào danh sách
-                String[] Ward=accountAddress.getWard().split("\\+");
-                wards.add(0, new Ward("-1", Ward[1]));
-
+                wards.add(0, new Ward("-1", "Select Ward"));
                 wardAdapter = new ArrayAdapter<>(EditAddressActivity.this, android.R.layout.simple_spinner_item, wards);
                 wardAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 wardSpinner.setAdapter(wardAdapter);
             } else {
-                Toast.makeText(EditAddressActivity.this, "Cannot get wards data!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(EditAddressActivity.this, "Failed to load wards", Toast.LENGTH_SHORT).show();
             }
+        }
+
+        private List<Ward> parseWards(String json) {
+            List<Ward> wardList = new ArrayList<>();
+
+            try {
+                JSONObject jsonObject = new JSONObject(json);
+                JSONArray jsonArray = jsonObject.getJSONArray("data");
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject wardObject = jsonArray.getJSONObject(i);
+                    wardList.add(new Ward(
+                            wardObject.getString("id"),
+                            wardObject.getString("full_name")
+                            //wardObject.getString("full_name")
+                    ));
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return wardList;
         }
     }
-    // Phân tích JSON thành danh sách các đối tượng Province
-    private List<Province> parseProvinces(String json) {
-        List<Province> provinceList = new ArrayList<>();
+
+    private <T> List<T> fetchData(String urlString, Function<String, List<T>> parser) {
         try {
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray resultsArray = jsonObject.getJSONArray("results");
-
-            for (int i = 0; i < resultsArray.length(); i++) {
-                JSONObject provinceObject = resultsArray.getJSONObject(i);
-                String id = provinceObject.getString("province_id");
-                String name = provinceObject.getString("province_name");
-
-                Province province = new Province(id, name, "");
-                provinceList.add(province);
+            URL url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(5000);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            StringBuilder result = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                result.append(line);
             }
-        } catch (JSONException e) {
+            reader.close();
+            return parser.apply(result.toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
-        return provinceList;
-    }
-    // Phân tích JSON thành danh sách các đối tượng District
-    private List<District> parseDistricts(String json) {
-        List<District> districtList = new ArrayList<>();
-        try {
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray resultsArray = jsonObject.getJSONArray("results");
-
-            for (int i = 0; i < resultsArray.length(); i++) {
-                JSONObject districtObject = resultsArray.getJSONObject(i);
-                String id = districtObject.getString("district_id");
-                String name = districtObject.getString("district_name");
-
-                District district = new District(id, name);
-                districtList.add(district);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return districtList;
-    }
-    // Phân tích JSON thành danh sách các đối tượng Ward
-    private List<Ward> parseWards(String json) {
-        List<Ward> wardList = new ArrayList<>();
-        try {
-            JSONObject jsonObject = new JSONObject(json);
-            JSONArray resultsArray = jsonObject.getJSONArray("results");
-
-            for (int i = 0; i < resultsArray.length(); i++) {
-                JSONObject wardObject = resultsArray.getJSONObject(i);
-                String id = wardObject.getString("ward_id");
-                String name = wardObject.getString("ward_name");
-
-                Ward ward = new Ward(id, name);
-                wardList.add(ward);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return wardList;
+        return null;
     }
 }
