@@ -39,6 +39,7 @@ dependencyResolutionManagement {
 
 
         }
+        maven { url 'https://jitpack.io' }
     }
 }
 

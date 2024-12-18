@@ -40,7 +40,6 @@ public class AllSuppliesActivity extends AppCompatActivity {
     List<String> chipList;
     List<Supplies> suppliesList;
     List<Supplies_Review> reviewList;
-
     private boolean isLoading = false;
     private String lastLoadedKey = null;
 
@@ -159,7 +158,10 @@ public class AllSuppliesActivity extends AppCompatActivity {
                 suppliesList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Supplies supply = snapshot.getValue(Supplies.class);
-                    suppliesList.add(supply);
+                    if(supply != null && supply.getStatus() != 0) {
+                        suppliesList.add(supply);
+                    }
+
                     lastLoadedKey = snapshot.getKey(); // Cập nhật lastLoadedKey
                 }
                 allSuppliesAdapter.notifyDataSetChanged();
@@ -194,7 +196,9 @@ public class AllSuppliesActivity extends AppCompatActivity {
                 List<Supplies> newSupplies = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Supplies supply = snapshot.getValue(Supplies.class);
-                    newSupplies.add(supply);
+                    if(supply != null && supply.getStatus() != 0 && supply.getStatus() != 2) {
+                        newSupplies.add(supply);
+                    }
                     lastLoadedKey = snapshot.getKey();
                 }
 

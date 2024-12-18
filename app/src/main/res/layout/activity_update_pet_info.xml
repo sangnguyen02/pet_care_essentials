@@ -309,7 +309,7 @@
                     android:layout_margin="16dp"
                     android:backgroundTint="@color/tabLayout_background"
                     android:fontFamily="@font/roboto_bold"
-                    android:text="View recommend supply"
+                    android:text="View recommend supplies"
                     android:textSize="14sp"
                     app:shapeAppearanceOverlay="@style/Button4"
                     app:layout_constraintBottom_toBottomOf="parent"

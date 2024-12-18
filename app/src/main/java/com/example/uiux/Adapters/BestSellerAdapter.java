@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -55,11 +56,12 @@ public class BestSellerAdapter extends RecyclerView.Adapter<BestSellerAdapter.Be
     }
 
      class BestSellerViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgBestSeller, imgStar;
+        ImageView imgBestSeller, img_status_best_seller;
         TextView tvTitle, tvPrice, tvRating;
 
         public BestSellerViewHolder(@NonNull View itemView) {
             super(itemView);
+            img_status_best_seller = itemView.findViewById(R.id.img_status_best_seller);
             imgBestSeller = itemView.findViewById(R.id.imgv_best_seller);
             tvTitle = itemView.findViewById(R.id.tv_title);
             tvPrice = itemView.findViewById(R.id.tv_price);
@@ -69,6 +71,10 @@ public class BestSellerAdapter extends RecyclerView.Adapter<BestSellerAdapter.Be
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 Supplies supplies = suppliesList.get(position);
+                if (supplies.getStatus() == 1) {
+                    Toast.makeText(itemView.getContext(), "This supply is out of stock", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(context, SupplyDetailActivity.class);
                 intent.putExtra("supply_id", supplies.getSupplies_id());
                 context.startActivity(intent);
@@ -110,6 +116,16 @@ public class BestSellerAdapter extends RecyclerView.Adapter<BestSellerAdapter.Be
 
          public void bind(Supplies supplies) {
              tvTitle.setText(supplies.getName() != null ? supplies.getName() : "N/A");
+
+             if (supplies.getStatus() == 1) {
+                 img_status_best_seller.setVisibility(View.VISIBLE);
+                 img_status_best_seller.setImageResource(R.drawable.soldout);
+             }
+
+             if (supplies.getStatus() == 3) {
+                 img_status_best_seller.setVisibility(View.VISIBLE);
+                 img_status_best_seller.setImageResource(R.drawable.newarrival);
+             }
 
              // Định dạng giá tiền
              DecimalFormat df = new DecimalFormat("#");

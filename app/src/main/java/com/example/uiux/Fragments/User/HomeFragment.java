@@ -290,7 +290,9 @@ public class HomeFragment extends Fragment {
                 mListBestSeller = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Supplies supply = snapshot.getValue(Supplies.class);
-                    mListBestSeller.add(supply);
+                    if(supply != null && supply.getStatus() != 0) {
+                        mListBestSeller.add(supply);
+                    }
                 }
 
                 // Lấy dữ liệu đánh giá

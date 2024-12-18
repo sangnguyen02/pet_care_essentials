@@ -203,6 +203,8 @@ public class EditSuppliesActivity extends AppCompatActivity {
                         .addOnFailureListener(e -> Toast.makeText(EditSuppliesActivity.this, "Failed to upload image " + (finalI + 1), Toast.LENGTH_SHORT).show());
             }
         }
+        Toast.makeText(EditSuppliesActivity.this, "Supplies updated successfully", Toast.LENGTH_SHORT).show();
+
     }
 
     // Đếm số ảnh đã chọn

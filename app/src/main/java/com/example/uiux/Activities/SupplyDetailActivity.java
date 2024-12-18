@@ -421,32 +421,58 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
     }
 
 
-    private void loadSupplyOptions(String supplyId) {
-        detailRef = FirebaseDatabase.getInstance().getReference("Supplies_Imports").child(supplyId);
-        detailRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Supplies_Detail> supplyDetailOptions = new ArrayList<>();
-                // Duyệt qua các child của snapshot
-                for (DataSnapshot optionSnapshot : snapshot.child("suppliesDetail").getChildren()) {
-                    Supplies_Detail option = optionSnapshot.getValue(Supplies_Detail.class);
-                    if (option != null) {
-                        supplyDetailOptions.add(option);
-                    }
+//    private void loadSupplyOptions(String supplyId) {
+//        detailRef = FirebaseDatabase.getInstance().getReference("Supplies_Imports").child(supplyId);
+//        detailRef.addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                List<Supplies_Detail> supplyDetailOptions = new ArrayList<>();
+//                // Duyệt qua các child của snapshot
+//                for (DataSnapshot optionSnapshot : snapshot.child("suppliesDetail").getChildren()) {
+//                    Supplies_Detail option = optionSnapshot.getValue(Supplies_Detail.class);
+//                    if (option != null) {
+//                        supplyDetailOptions.add(option);
+//                    }
+//                }
+//                // Khởi tạo adapter và set cho RecyclerView
+//                supplyDetailOptionAdapter = new SupplyDetailOptionAdapter(supplyDetailOptions, SupplyDetailActivity.this, SupplyDetailActivity.this);
+//                rcv_option_list.setLayoutManager(new GridLayoutManager(SupplyDetailActivity.this, 3));
+//                rcv_option_list.setAdapter(supplyDetailOptionAdapter);
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//                Toast.makeText(SupplyDetailActivity.this, "Failed to load supply options.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+private void loadSupplyOptions(String supplyId) {
+    detailRef = FirebaseDatabase.getInstance().getReference("Supplies_Price").child(supplyId);
+    detailRef.addValueEventListener(new ValueEventListener() {
+        @Override
+        public void onDataChange(@NonNull DataSnapshot snapshot) {
+            List<Supplies_Detail> supplyDetailOptions = new ArrayList<>();
+            // Duyệt qua các child của snapshot
+            for (DataSnapshot optionSnapshot : snapshot.child("suppliesDetailList").getChildren()) {
+                Supplies_Detail option = optionSnapshot.getValue(Supplies_Detail.class);
+                if (option != null) {
+                    supplyDetailOptions.add(option);
                 }
-                // Khởi tạo adapter và set cho RecyclerView
-                supplyDetailOptionAdapter = new SupplyDetailOptionAdapter(supplyDetailOptions, SupplyDetailActivity.this, SupplyDetailActivity.this);
-                rcv_option_list.setLayoutManager(new GridLayoutManager(SupplyDetailActivity.this, 3));
-                rcv_option_list.setAdapter(supplyDetailOptionAdapter);
-
             }
+            // Khởi tạo adapter và set cho RecyclerView
+            supplyDetailOptionAdapter = new SupplyDetailOptionAdapter(supplyDetailOptions, SupplyDetailActivity.this, SupplyDetailActivity.this);
+            rcv_option_list.setLayoutManager(new GridLayoutManager(SupplyDetailActivity.this, 3));
+            rcv_option_list.setAdapter(supplyDetailOptionAdapter);
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(SupplyDetailActivity.this, "Failed to load supply options.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
+        }
+
+        @Override
+        public void onCancelled(@NonNull DatabaseError error) {
+            Toast.makeText(SupplyDetailActivity.this, "Failed to load supply options.", Toast.LENGTH_SHORT).show();
+        }
+    });
+}
 
     @Override
     public void onSupplyOptionClick(double costPrice, int stockRemain) {
@@ -547,7 +573,7 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
                 sameSuppliesList = new ArrayList<>();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Supplies supply = snapshot.getValue(Supplies.class);
-                    if (supply != null && !supply.getSupplies_id().equals(currentSuppliesId)) {
+                    if (supply != null && !supply.getSupplies_id().equals(currentSuppliesId) && supply.getStatus() != 0) {
                         sameSuppliesList.add(supply);
                     }
                 }

@@ -1,5 +1,6 @@
 package com.example.uiux.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.example.uiux.Model.Supplies_Review;
 import com.example.uiux.Model.WalletHistory;
 import com.example.uiux.R;
 import com.example.uiux.Utils.CurrencyFormatter;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -47,6 +49,28 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<WalletTransa
     public void onBindViewHolder(@NonNull WalletTransactionsAdapter.WalletTransactionsViewHolder holder, int position) {
         WalletHistory walletHistory = transactionList.get(position);
         holder.bind(walletHistory);
+        holder.itemView.setOnClickListener(view -> {
+            new AlertDialog.Builder(context)
+                    .setItems(new CharSequence[]{"Delete"}, (dialog, which) -> {
+                        if (which == 0) {
+                            new AlertDialog.Builder(context)
+                                    .setTitle("Confirm")
+                                    .setMessage("Are you sure")
+                                    .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+                                        deleteWalletTransactionFromDatabase(walletHistory.getWallet_history_id());
+                                        transactionList.remove(position);
+                                        notifyItemRemoved(position);
+                                        notifyItemRangeChanged(position, transactionList.size());
+                                    })
+                                    .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
+                                        confirmDialog.dismiss();
+                                    })
+                                    .show();
+
+                        }
+                    })
+                    .show();
+        });
     }
 
     @Override
@@ -88,4 +112,8 @@ public class WalletTransactionsAdapter extends RecyclerView.Adapter<WalletTransa
 
 
      }
+
+    private void deleteWalletTransactionFromDatabase(String transactionId) {
+        FirebaseDatabase.getInstance().getReference("Wallet History").child(transactionId).removeValue();
+    }
 }

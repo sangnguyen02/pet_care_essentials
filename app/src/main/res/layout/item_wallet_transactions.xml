@@ -39,6 +39,7 @@
             android:textColor="@color/black"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="@+id/img_wallet_transaction_status"
+            app:layout_constraintEnd_toStartOf="@+id/tv_wallet_transaction_date"
             app:layout_constraintStart_toEndOf="@+id/img_wallet_transaction_status"
             app:layout_constraintTop_toTopOf="@+id/img_wallet_transaction_status"
             tools:ignore="HardcodedText" />

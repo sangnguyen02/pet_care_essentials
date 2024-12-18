@@ -16,6 +16,8 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
 import com.example.uiux.Model.Account_Address;
 import com.example.uiux.Model.District;
 import com.example.uiux.Model.Province;
@@ -60,6 +62,7 @@ public class EditAddressActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_edit_address);
         imgv_back = findViewById(R.id.imgv_back_edit_address);
         provinceSpinner = findViewById(R.id.provinceSpinner_edit);

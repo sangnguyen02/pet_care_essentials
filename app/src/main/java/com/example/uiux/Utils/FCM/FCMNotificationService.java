@@ -40,17 +40,17 @@ public class FCMNotificationService extends FirebaseMessagingService {
 
         Map<String, String> data = message.getData();
         String orderId = data.get("order_id");
-
-        Intent resultIntent = new Intent(this, OrderDetailActivity.class);
-        resultIntent.putExtra("order_id", orderId); // Truyền order_id qua Intent
-        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this,
-                0,
-                resultIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
-        );
+        String type = data.get("type");
+//        Intent resultIntent = new Intent(this, OrderDetailActivity.class);
+//        resultIntent.putExtra("order_id", orderId); // Truyền order_id qua Intent
+//        resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//
+//        PendingIntent pendingIntent = PendingIntent.getActivity(
+//                this,
+//                0,
+//                resultIntent,
+//                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+//        );
 
 //        Log.e("Title", Objects.requireNonNull(message.getNotification()).getTitle());
 //        Log.e("Content", Objects.requireNonNull(message.getNotification().getBody()));
@@ -68,7 +68,25 @@ public class FCMNotificationService extends FirebaseMessagingService {
         builder.setSmallIcon(R.drawable.logo_main);
         builder.setVibrate(pattern);
         builder.setPriority(Notification.PRIORITY_MAX);
-        builder.setContentIntent(pendingIntent);
+//        builder.setContentIntent(pendingIntent);
+        if ("order".equals(type) && orderId != null) {
+            // Nếu là thông báo order, thêm PendingIntent để mở màn hình chi tiết
+            Intent resultIntent = new Intent(this, OrderDetailActivity.class);
+            resultIntent.putExtra("order_id", orderId);
+            resultIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+            PendingIntent pendingIntent = PendingIntent.getActivity(
+                    this,
+                    0,
+                    resultIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+            );
+
+            builder.setContentIntent(pendingIntent);
+        } else {
+            // Nếu là thông báo service, không đặt PendingIntent
+            builder.setContentIntent(null);
+        }
 
 
         notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);

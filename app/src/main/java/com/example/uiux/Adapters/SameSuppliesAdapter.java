@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,11 +55,12 @@ public class SameSuppliesAdapter extends RecyclerView.Adapter<SameSuppliesAdapte
     }
 
      class SameSuppliesViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgv_same_supply, imgStar;
+        ImageView imgv_same_supply, img_status_same_supply;
         TextView tv_same_supply_title, tv_same_supply_price, tv_same_supply_rating;
 
         public SameSuppliesViewHolder(@NonNull View itemView) {
             super(itemView);
+            img_status_same_supply = itemView.findViewById(R.id.img_status_same_supply);
             imgv_same_supply = itemView.findViewById(R.id.imgv_same_supply);
             tv_same_supply_title = itemView.findViewById(R.id.tv_same_supply_title);
             tv_same_supply_price = itemView.findViewById(R.id.tv_same_supply_price);
@@ -68,6 +70,10 @@ public class SameSuppliesAdapter extends RecyclerView.Adapter<SameSuppliesAdapte
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 Supplies supplies = suppliesList.get(position);
+                if (supplies.getStatus() == 1) {
+                    Toast.makeText(itemView.getContext(), "This supply is out of stock", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(context, SupplyDetailActivity.class);
                 intent.putExtra("supply_id", supplies.getSupplies_id());
                 context.startActivity(intent);
@@ -110,6 +116,15 @@ public class SameSuppliesAdapter extends RecyclerView.Adapter<SameSuppliesAdapte
          public void bind(Supplies supplies) {
              tv_same_supply_title.setText(supplies.getName() != null ? supplies.getName() : "N/A");
 
+             if (supplies.getStatus() == 1) {
+                 img_status_same_supply.setVisibility(View.VISIBLE);
+                 img_status_same_supply.setImageResource(R.drawable.soldout);
+             }
+
+             if (supplies.getStatus() == 3) {
+                 img_status_same_supply.setVisibility(View.VISIBLE);
+                 img_status_same_supply.setImageResource(R.drawable.newarrival);
+             }
              // Định dạng giá tiền
              DecimalFormat df = new DecimalFormat("#");
              double sellPrice = Double.valueOf(Objects.requireNonNull(supplies.getSell_price()));

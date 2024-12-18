@@ -22,6 +22,7 @@ import com.example.uiux.Model.Category;
 import com.example.uiux.Model.Supplies;
 import com.example.uiux.Model.Type;
 import com.example.uiux.R;
+import com.example.uiux.Utils.CurrencyFormatter;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.database.DataSnapshot;
@@ -54,6 +55,11 @@ public class SuppliesAdapter  extends RecyclerView.Adapter<SuppliesAdapter.Suppl
     public void onBindViewHolder(@NonNull SuppliesAdapter.SuppliesViewHolder holder, int position) {
         Supplies supplies = suppliesList.get(position);
         holder.bind(supplies);
+    }
+
+    public void updateList(List<Supplies> newList) {
+        this.suppliesList = newList;
+        notifyDataSetChanged();  // Notify RecyclerView of data change
     }
 
     @Override
@@ -113,12 +119,19 @@ public class SuppliesAdapter  extends RecyclerView.Adapter<SuppliesAdapter.Suppl
         }
         public void bind(Supplies supplies) {
             suppName.setText(supplies.getName() != null ? supplies.getName() : "N/A");
-            suppSellPrice.setText(String.valueOf(supplies.getSell_price()));
+            suppSellPrice.setText(CurrencyFormatter.formatCurrency(supplies.getSell_price(), itemView.getContext().getString(R.string.currency_vn)));
             suppQuantity.setText(String.valueOf(supplies.getQuantity()));
             suppCate.setText(supplies.getCategory() != null ? supplies.getCategory() : "N/A");
             suppType.setText(supplies.getType() != null ? supplies.getType() : "N/A");
-            suppStatus.setText(String.valueOf(supplies.getStatus()));
+//            suppStatus.setText(String.valueOf(supplies.getStatus()));
+            int statusIndex = supplies.getStatus(); // Giả sử status trả về chỉ mục
+            String[] statusArray = context.getResources().getStringArray(R.array.suplies_status);
 
+            if (statusIndex >= 0 && statusIndex < statusArray.length) {
+                suppStatus.setText(statusArray[statusIndex]);
+            } else {
+                suppStatus.setText("Unknown"); // Trạng thái không hợp lệ
+            }
 
             List<String> imageUrls = supplies.getImageUrls();
             if (imageUrls != null && !imageUrls.isEmpty()) {

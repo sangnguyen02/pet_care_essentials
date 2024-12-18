@@ -1,11 +1,13 @@
 package com.example.uiux.Adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +17,13 @@ import com.example.uiux.Activities.User.Service.CancelServiceActivity;
 import com.example.uiux.Model.Account_Address;
 import com.example.uiux.Model.ServiceOrder;
 import com.example.uiux.R;
+import com.example.uiux.Utils.CurrencyFormatter;
+import com.example.uiux.Utils.FCM.FcmNotificationSender;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 
@@ -44,9 +53,9 @@ public class UserDisplayService extends RecyclerView.Adapter<UserDisplayService.
 
         // Bind data to the views
         holder.tvServiceName.setText(serviceOrder.getService_name());
-        holder.tvServiceType.setText(serviceOrder.getType());
+        holder.tvServiceType.setText("(" + serviceOrder.getType() + ")");
         holder.tvOrderDate.setText(serviceOrder.getOrder_date());
-        holder.tvTotalPrice.setText(String.valueOf(serviceOrder.getTotal_price()));
+        holder.tvTotalPrice.setText(CurrencyFormatter.formatCurrency(serviceOrder.getTotal_price(),holder.itemView.getContext().getString(R.string.currency_vn)));
         holder.tvBranchName.setText(serviceOrder.getBranch_name());
         holder.tvBranchAddress.setText(serviceOrder.getBranch_address());
         holder.tvTime.setText(serviceOrder.getTime());
@@ -77,11 +86,18 @@ public class UserDisplayService extends RecyclerView.Adapter<UserDisplayService.
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     ServiceOrder serviceOrder = serviceOrderList.get(position);
-                    Intent intent = new Intent(context, CancelServiceActivity.class);
-                    intent.putExtra("orderServiceId",serviceOrder.getService_order_id());
-                    intent.putExtra("service_id", serviceOrder.getService_id());
-                    intent.putExtra("service_name", serviceOrder.getService_name());
-                    context.startActivity(intent);
+                    new AlertDialog.Builder(context)
+                            .setItems(new CharSequence[]{"Cancel"}, (dialog, which) -> {
+                                if (which == 0) {
+                                    Intent intent = new Intent(context, CancelServiceActivity.class);
+                                    intent.putExtra("orderServiceId",serviceOrder.getService_order_id());
+                                    intent.putExtra("service_id", serviceOrder.getService_id());
+                                    intent.putExtra("service_name", serviceOrder.getService_name());
+                                    context.startActivity(intent);
+                                }
+                            })
+                            .show();
+
                 }
             });
         }

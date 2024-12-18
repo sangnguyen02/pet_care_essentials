@@ -1,5 +1,6 @@
 package com.example.uiux.Activities.User;
 
+import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageView;
@@ -28,7 +29,7 @@ import java.util.List;
 
 public class NotificationActivity extends AppCompatActivity {
 
-    ImageView img_back_notification;
+    ImageView img_back_notification, img_delete_all_notification;
     RecyclerView rcv_my_notification;
     MyNotificationAdapter myNotificationAdapter;
     List<Notification> notificationList;
@@ -45,9 +46,23 @@ public class NotificationActivity extends AppCompatActivity {
         accountId = preferences.getString("accountID", null);
         initWidget();
         loadNotification();
+
+        img_delete_all_notification.setOnClickListener(view -> {
+            new AlertDialog.Builder(this)
+                    .setTitle("Confirm")
+                    .setMessage("Are you sure")
+                    .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+                        deleteAllAccountNotification();
+                    })
+                    .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
+                        confirmDialog.dismiss();
+                    })
+                    .show();
+        });
     }
 
     void initWidget() {
+        img_delete_all_notification = findViewById(R.id.img_delete_all_notification);
         img_back_notification = findViewById(R.id.img_back_notification);
         img_back_notification.setOnClickListener(view -> finish());
         notificationList = new ArrayList<>();
@@ -83,4 +98,31 @@ public class NotificationActivity extends AppCompatActivity {
             }
         });
     }
+
+    void deleteAllAccountNotification() {
+        if (accountId == null || accountId.isEmpty()) {
+            return; // Nếu accountId không tồn tại thì không làm gì
+        }
+
+        DatabaseReference notiRef = FirebaseDatabase.getInstance().getReference("Notification");
+        notiRef.orderByChild("account_id").equalTo(accountId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    data.getRef().removeValue(); // Xóa từng thông báo trong danh sách
+                }
+                // Cập nhật giao diện sau khi xóa
+                notificationList.clear();
+                if (myNotificationAdapter != null) {
+                    myNotificationAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Xử lý khi xảy ra lỗi
+            }
+        });
+    }
+
 }

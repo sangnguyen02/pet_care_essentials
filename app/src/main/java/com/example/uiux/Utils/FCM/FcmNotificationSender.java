@@ -55,6 +55,7 @@ public class FcmNotificationSender {
             notificationObject.put("body", body);
 
             dataObject.put("order_id", orderId);
+            dataObject.put("type", orderId != null ? "order" : "service");
             Log.e("FcmNotificationSender", "Data Object: " + dataObject.toString());
 
 //            notificationObject.put("sound", "alarm.mp3");

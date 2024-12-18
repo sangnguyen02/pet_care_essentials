@@ -51,7 +51,7 @@ public class PhoneUpdateProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.light_bg));
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
         setContentView(R.layout.activity_phone_update_profile);
         initWidget();
 

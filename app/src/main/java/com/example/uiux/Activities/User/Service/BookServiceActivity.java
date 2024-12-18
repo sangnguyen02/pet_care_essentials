@@ -54,7 +54,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class BookServiceActivity extends AppCompatActivity {
-
     RecyclerView rcv_days, rcv_time_slots;
     DayAdapter dayAdapter;
     TimeAdapter timeAdapter;
@@ -211,7 +210,7 @@ public class BookServiceActivity extends AppCompatActivity {
         DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference("Service Order").child(orderId);
         orderRef.setValue(serviceOrder).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // Đơn hàng đã được tạo thành công
+                Toast.makeText(this, "Service booking created successfully", Toast.LENGTH_SHORT).show();
                 Log.e("createServiceOrder", "Order created successfully");
                 // Có thể chuyển hướng người dùng đến màn hình xác nhận hoặc thông báo thành công
             } else {

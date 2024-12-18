@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,11 +60,12 @@ public class AllSuppliesAdapter extends RecyclerView.Adapter<AllSuppliesAdapter.
     }
 
      class AllSuppliesViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgAllSupplies;
+        ImageView imgAllSupplies, img_status;
         TextView tvTitle, tvPrice, tvRating;
 
         public AllSuppliesViewHolder(@NonNull View itemView) {
             super(itemView);
+            img_status = itemView.findViewById(R.id.img_status);
             imgAllSupplies = itemView.findViewById(R.id.imgv_all_supplies);
             tvTitle = itemView.findViewById(R.id.tv_all_supplies_title);
             tvPrice = itemView.findViewById(R.id.tv_all_supplies_price);
@@ -72,6 +74,10 @@ public class AllSuppliesAdapter extends RecyclerView.Adapter<AllSuppliesAdapter.
             itemView.setOnClickListener(view -> {
                 int position = getAdapterPosition();
                 Supplies supplies = suppliesList.get(position);
+                if (supplies.getStatus() == 1) {
+                    Toast.makeText(itemView.getContext(), "This supply is out of stock", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(context, SupplyDetailActivity.class);
                 intent.putExtra("supply_id", supplies.getSupplies_id());
 
@@ -86,6 +92,16 @@ public class AllSuppliesAdapter extends RecyclerView.Adapter<AllSuppliesAdapter.
         }
          public void bind(Supplies supplies) {
              tvTitle.setText(supplies.getName() != null ? supplies.getName() : "N/A");
+
+             if (supplies.getStatus() == 1) {
+                 img_status.setVisibility(View.VISIBLE);
+                 img_status.setImageResource(R.drawable.soldout);
+             }
+
+             if (supplies.getStatus() == 3) {
+                 img_status.setVisibility(View.VISIBLE);
+                 img_status.setImageResource(R.drawable.newarrival);
+             }
 
              DecimalFormat df = new DecimalFormat("#");
              double sellPrice = Double.valueOf(Objects.requireNonNull(supplies.getSell_price()));
