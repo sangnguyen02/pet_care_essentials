@@ -2,6 +2,7 @@ package com.example.uiux.Activities.User.Profile;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
@@ -158,10 +159,9 @@ public class EditAddressActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                     accountAddress = snapshot.getValue(Account_Address.class);
+                    accountAddress = snapshot.getValue(Account_Address.class);
                     detailAdressTv.setText(accountAddress.getAddress_details());
-                     checkBoxDefault.setChecked(accountAddress.getIs_default());
-//                    }
+                    checkBoxDefault.setChecked(accountAddress.getIs_default());
                 }
             }
 
@@ -171,6 +171,7 @@ public class EditAddressActivity extends AppCompatActivity {
             }
         });
     }
+
     private void removeInvalidItems(ArrayAdapter<Province> provinceAdapter) {
         // Duyệt qua adapter từ cuối đến đầu
         for (int i = provinceAdapter.getCount() - 1; i >= 0; i--) {
@@ -182,7 +183,39 @@ public class EditAddressActivity extends AppCompatActivity {
             }
         }
     }
+    private void removeInvalidItemsDistrict(ArrayAdapter<District> provinceAdapter) {
+        // Duyệt qua adapter từ cuối đến đầu
+        for (int i = provinceAdapter.getCount() - 1; i >= 0; i--) {
+            District province = provinceAdapter.getItem(i);
+            // Kiểm tra nếu provinceId là "-1"
+            if (province != null && province.getDistrictId().equals("-1")) {
+                // Xóa mục không hợp lệ
+                provinceAdapter.remove(province);
+            }
+        }
+    }
+    private void removeInvalidItemsWard(ArrayAdapter<Ward> provinceAdapter) {
+        // Duyệt qua adapter từ cuối đến đầu
+        for (int i = provinceAdapter.getCount() - 1; i >= 0; i--) {
+            Ward province = provinceAdapter.getItem(i);
+            // Kiểm tra nếu provinceId là "-1"
+            if (province != null && province.getWardId().equals("-1")) {
+                // Xóa mục không hợp lệ
+                provinceAdapter.remove(province);
+            }
+        }
+    }
     private void WardSelection() {
+        wardSpinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    removeInvalidItemsWard(wardAdapter); // Gọi phương thức xóa các mục không hợp lệ
+                    wardAdapter.notifyDataSetChanged(); // Cập nhật adapter
+                }
+                return false; // Trả về false để cho p
+            }
+        });
         wardSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
@@ -197,7 +230,18 @@ public class EditAddressActivity extends AppCompatActivity {
     }
 
     private void DistrictSelection() {
+        districtSpinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    removeInvalidItemsDistrict(districtAdapter); // Gọi phương thức xóa các mục không hợp lệ
+                    districtAdapter.notifyDataSetChanged(); // Cập nhật adapter
+                }
+                return false; // Trả về false để cho p
+            }
+        });
         districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 District selectedDistrict = (District) parentView.getItemAtPosition(position);
@@ -213,16 +257,16 @@ public class EditAddressActivity extends AppCompatActivity {
 
     private void ProvinceSelection() {
         new EditAddressActivity.FetchProvincesTask().execute("https://esgoo.net/api-tinhthanh/1/0.htm");
-//        provinceSpinner.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View view, MotionEvent motionEvent) {
-//                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-//                    removeInvalidItems(provinceAdapter); // Gọi phương thức xóa các mục không hợp lệ
-//                    provinceAdapter.notifyDataSetChanged(); // Cập nhật adapter
-//                }
-//                return false; // Trả về false để cho p
-//            }
-//        });
+        provinceSpinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    removeInvalidItems(provinceAdapter); // Gọi phương thức xóa các mục không hợp lệ
+                    provinceAdapter.notifyDataSetChanged(); // Cập nhật adapter
+                }
+                return false; // Trả về false để cho p
+            }
+        });
 
         provinceSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
@@ -248,7 +292,8 @@ public class EditAddressActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<Province> provinces) {
             if (provinces != null) {
-                provinces.add(0, new Province("-1", "Select Province", ""));
+                String[] provinceParts = accountAddress.getProvince().split("\\+");
+                provinces.add(0, new Province("-1",provinceParts[1] , ""));
                 provinceAdapter = new ArrayAdapter<>(EditAddressActivity.this, android.R.layout.simple_spinner_item, provinces);
                 provinceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 provinceSpinner.setAdapter(provinceAdapter);
@@ -286,7 +331,8 @@ public class EditAddressActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<District> districts) {
             if (districts != null) {
-                districts.add(0, new District("-1", "Select District"));
+                String[] districtParts = accountAddress.getDistrict().split("\\+");
+                districts.add(0, new District("-1", districtParts[1]));
                 districtAdapter = new ArrayAdapter<>(EditAddressActivity.this, android.R.layout.simple_spinner_item, districts);
                 districtAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 districtSpinner.setAdapter(districtAdapter);
@@ -325,7 +371,8 @@ public class EditAddressActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<Ward> wards) {
             if (wards != null) {
-                wards.add(0, new Ward("-1", "Select Ward"));
+                String[] wardParts = accountAddress.getWard().split("\\+");
+                wards.add(0, new Ward("-1",wardParts[1]));
                 wardAdapter = new ArrayAdapter<>(EditAddressActivity.this, android.R.layout.simple_spinner_item, wards);
                 wardAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 wardSpinner.setAdapter(wardAdapter);
