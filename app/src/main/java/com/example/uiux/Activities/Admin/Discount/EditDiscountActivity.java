@@ -117,7 +117,7 @@ public class EditDiscountActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             if (task.isSuccessful()) {
                                 Toast.makeText(EditDiscountActivity.this, "Discount edit successfully!", Toast.LENGTH_SHORT).show();
-
+                                finish();
 
                             } else {
                                 Toast.makeText(EditDiscountActivity.this, "Failed to update discount", Toast.LENGTH_SHORT).show();

@@ -67,7 +67,7 @@ public class CategoryAdminAdapter extends RecyclerView.Adapter<CategoryAdminAdap
 
                 // Tạo một AlertDialog với 2 lựa chọn: Edit và Delete
                 new AlertDialog.Builder(context)
-                        .setItems(new CharSequence[]{"Edit", "Delete"}, (dialog, which) -> {
+                        .setItems(new CharSequence[]{"Edit"}, (dialog, which) -> {
                             if (which == 0) {
                                 Intent intent = new Intent(context, EditCategoryActivity.class);
                                 intent.putExtra("category_id", category.getCategory_id());
@@ -76,24 +76,25 @@ public class CategoryAdminAdapter extends RecyclerView.Adapter<CategoryAdminAdap
                                 intent.putExtra("category_status", category.getStatus());
                                 context.startActivity(intent);
 
-                            } else if (which == 1) {
-                                // Nếu người dùng chọn "Xóa"
-                                new AlertDialog.Builder(context)
-                                        .setTitle("Confirm")
-                                        .setMessage("Are you sure")
-                                        .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
-                                            deleteCategoryFromDatabase(category.getCategory_id());
-                                            categoryList.remove(position);
-                                            notifyItemRemoved(position);
-                                            notifyItemRangeChanged(position, categoryList.size());
-                                            Toast.makeText(context, "Delete successfully", Toast.LENGTH_SHORT).show();
-                                        })
-                                        .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
-                                            // Nếu người dùng chọn "Không", đóng dialog
-                                            confirmDialog.dismiss();
-                                        })
-                                        .show();
                             }
+//                            else if (which == 1) {
+//                                // Nếu người dùng chọn "Xóa"
+//                                new AlertDialog.Builder(context)
+//                                        .setTitle("Confirm")
+//                                        .setMessage("Are you sure")
+//                                        .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+//                                            deleteCategoryFromDatabase(category.getCategory_id());
+//                                            categoryList.remove(position);
+//                                            notifyItemRemoved(position);
+//                                            notifyItemRangeChanged(position, categoryList.size());
+//                                            Toast.makeText(context, "Delete successfully", Toast.LENGTH_SHORT).show();
+//                                        })
+//                                        .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
+//                                            // Nếu người dùng chọn "Không", đóng dialog
+//                                            confirmDialog.dismiss();
+//                                        })
+//                                        .show();
+//                            }
                         })
                         .show();
             });

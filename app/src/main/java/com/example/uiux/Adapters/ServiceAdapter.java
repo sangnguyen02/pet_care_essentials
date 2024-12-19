@@ -75,30 +75,31 @@ public class ServiceAdapter extends  RecyclerView.Adapter<ServiceAdapter.Service
 
                 // Tạo một AlertDialog với 2 lựa chọn: Edit và Delete
                 new AlertDialog.Builder(context)
-                        .setItems(new CharSequence[]{"Edit", "Delete"}, (dialog, which) -> {
+                        .setItems(new CharSequence[]{"Edit"}, (dialog, which) -> {
                             if (which == 0) {
                                 Intent intent = new Intent(context, EditServiceActivity.class);
                                 intent.putExtra("service_id", service.getService_id());
                                 context.startActivity(intent);
 
-                            } else if (which == 1) {
-                                // Nếu người dùng chọn "Xóa"
-                                new AlertDialog.Builder(context)
-                                        .setTitle("Confirm")
-                                        .setMessage("Are you sure")
-                                        .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
-                                            deleteServiceFromDatabase(service.getService_id());
-                                            serviceList.remove(position);
-                                            notifyItemRemoved(position);
-                                            notifyItemRangeChanged(position, serviceList.size());
-                                            Toast.makeText(context, "Product deleted successfully", Toast.LENGTH_SHORT).show();
-                                        })
-                                        .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
-                                            // Nếu người dùng chọn "Không", đóng dialog
-                                            confirmDialog.dismiss();
-                                        })
-                                        .show();
                             }
+//                            else if (which == 1) {
+//                                // Nếu người dùng chọn "Xóa"
+//                                new AlertDialog.Builder(context)
+//                                        .setTitle("Confirm")
+//                                        .setMessage("Are you sure")
+//                                        .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+//                                            deleteServiceFromDatabase(service.getService_id());
+//                                            serviceList.remove(position);
+//                                            notifyItemRemoved(position);
+//                                            notifyItemRangeChanged(position, serviceList.size());
+//                                            Toast.makeText(context, "Product deleted successfully", Toast.LENGTH_SHORT).show();
+//                                        })
+//                                        .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
+//                                            // Nếu người dùng chọn "Không", đóng dialog
+//                                            confirmDialog.dismiss();
+//                                        })
+//                                        .show();
+//                            }
                         })
                         .show();
             });

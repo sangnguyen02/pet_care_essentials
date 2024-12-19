@@ -147,8 +147,10 @@ public class EditCategoryActivity extends AppCompatActivity {
         // Nếu người dùng chọn ảnh mới
         if (selectedImageUri != null) {
             uploadImageToStorage();
+            finish();
         } else {
             Toast.makeText(EditCategoryActivity.this, "Category updated successfully", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 

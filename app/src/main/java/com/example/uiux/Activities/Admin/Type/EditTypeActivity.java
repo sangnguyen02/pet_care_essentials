@@ -62,6 +62,7 @@ public class EditTypeActivity extends AppCompatActivity {
             String updatedName = typeName.getText().toString().trim();
             typeRef.child("type").setValue(updatedName);
             Toast.makeText(EditTypeActivity.this, "Type updated successfully", Toast.LENGTH_SHORT).show();
+            finish();
         }
         else
         {

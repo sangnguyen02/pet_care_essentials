@@ -157,6 +157,7 @@ public class CategoryActivity extends AppCompatActivity {
                 // Reset giao diện sau khi thêm thành công
                 edtCategoryName.setText("");
                 img_addCategory.setImageResource(0);  // Xóa ảnh
+                finish();
             } else {
                 Toast.makeText(CategoryActivity.this, "Failed to add category", Toast.LENGTH_SHORT).show();
             }

@@ -193,6 +193,7 @@ public class EditSuppliesActivity extends AppCompatActivity {
                                             .addOnCompleteListener(task -> {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(EditSuppliesActivity.this, "Supplies updated successfully", Toast.LENGTH_SHORT).show();
+                                                    finish();
                                                 } else {
                                                     Toast.makeText(EditSuppliesActivity.this, "Failed to update image URLs", Toast.LENGTH_SHORT).show();
                                                 }
@@ -204,6 +205,7 @@ public class EditSuppliesActivity extends AppCompatActivity {
             }
         }
         Toast.makeText(EditSuppliesActivity.this, "Supplies updated successfully", Toast.LENGTH_SHORT).show();
+        finish();
 
     }
 

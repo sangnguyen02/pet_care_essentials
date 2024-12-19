@@ -109,6 +109,7 @@ public class DiscountActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 Toast.makeText(DiscountActivity.this, "Service added successfully!", Toast.LENGTH_SHORT).show();
                 clearInputFields();
+                finish();
             } else {
                 Toast.makeText(DiscountActivity.this, "Failed to add Service: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
             }

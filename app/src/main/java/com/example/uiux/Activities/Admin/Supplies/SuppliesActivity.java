@@ -160,6 +160,7 @@ public class SuppliesActivity extends AppCompatActivity {
             addSuppliesPriceToDatabase(supplyId);
 
             clearInputFields(); // Optional: clear the input fields after successful upload
+            finish();
         } else {
             Toast.makeText(SuppliesActivity.this, "Failed to add supply: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
         }

@@ -143,6 +143,7 @@ public class EditServiceActivity extends AppCompatActivity {
                                             .addOnCompleteListener(task -> {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(EditServiceActivity.this, "Service updated successfully", Toast.LENGTH_SHORT).show();
+                                                    finish();
                                                 } else {
                                                     Toast.makeText(EditServiceActivity.this, "Failed to update image URLs", Toast.LENGTH_SHORT).show();
                                                 }

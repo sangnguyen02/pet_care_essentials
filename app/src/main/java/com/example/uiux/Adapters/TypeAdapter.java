@@ -68,7 +68,7 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.TypeViewHolder
 
                 // Tạo một AlertDialog với 2 lựa chọn: Edit và Delete
                 new AlertDialog.Builder(context)
-                        .setItems(new CharSequence[]{"Edit", "Delete"}, (dialog, which) -> {
+                        .setItems(new CharSequence[]{"Edit"}, (dialog, which) -> {
                             if (which == 0) {
                                 Intent intent = new Intent(context, EditTypeActivity.class);
                                 intent.putExtra("type_id",type.getType_id());
@@ -76,24 +76,25 @@ public class TypeAdapter extends RecyclerView.Adapter<TypeAdapter.TypeViewHolder
 
                                 context.startActivity(intent);
 
-                            } else if (which == 1) {
-                                // Nếu người dùng chọn "Xóa"
-                                new AlertDialog.Builder(context)
-                                        .setTitle("Confirm")
-                                        .setMessage("Are you sure")
-                                        .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
-                                            deleteTypeFromDatabase(type.getType_id());
-                                            mListType.remove(position);
-                                            notifyItemRemoved(position);
-                                            notifyItemRangeChanged(position, mListType.size());
-                                            Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT).show();
-                                        })
-                                        .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
-                                            // Nếu người dùng chọn "Không", đóng dialog
-                                            confirmDialog.dismiss();
-                                        })
-                                        .show();
                             }
+//                            else if (which == 1) {
+//                                // Nếu người dùng chọn "Xóa"
+//                                new AlertDialog.Builder(context)
+//                                        .setTitle("Confirm")
+//                                        .setMessage("Are you sure")
+//                                        .setPositiveButton("Yes", (confirmDialog, confirmWhich) -> {
+//                                            deleteTypeFromDatabase(type.getType_id());
+//                                            mListType.remove(position);
+//                                            notifyItemRemoved(position);
+//                                            notifyItemRangeChanged(position, mListType.size());
+//                                            Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT).show();
+//                                        })
+//                                        .setNegativeButton("No", (confirmDialog, confirmWhich) -> {
+//                                            // Nếu người dùng chọn "Không", đóng dialog
+//                                            confirmDialog.dismiss();
+//                                        })
+//                                        .show();
+//                            }
                         })
                         .show();
             });

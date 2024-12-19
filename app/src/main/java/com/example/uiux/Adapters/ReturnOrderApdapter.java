@@ -69,6 +69,7 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
     class ReturnOrderViewHolder extends RecyclerView.ViewHolder
     {
         private ImageView img1;
+        String accountId;
         private TextView userName,userPhone,userAddress, requestDate;
 
         public ReturnOrderViewHolder(@NonNull View itemView) {
@@ -78,16 +79,18 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
             userPhone=itemView.findViewById(R.id.tv_return_phone);
 //            userAddress=itemView.findViewById(R.id.tv_return_address);
             requestDate=itemView.findViewById(R.id.tv_return_date);
-            SharedPreferences preferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-            String accountId = preferences.getString("accountID", null);
-            Log.e("accountID fom ReturnAdapter",accountId);
+//            SharedPreferences preferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+//            accountId = preferences.getString("accountID", null);
+//            Log.e("accountID fom ReturnAdapter",accountId);
+
+
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     InfoReturnOrder infoReturnOrder = infoReturnOrderList.get(position);
-
+                    getAccountIDByPhone(infoReturnOrder.getPhone_number());
                     // Tạo một AlertDialog với 2 lựa chọn: Edit và Delete
                     new AlertDialog.Builder(context)
                             .setItems(new CharSequence[]{"Review", "Complete"}, (dialog, which) -> {
@@ -140,6 +143,27 @@ public class ReturnOrderApdapter  extends RecyclerView.Adapter<ReturnOrderApdapt
             } else {
                 img1.setImageResource(R.drawable.product_sample);
             }
+        }
+
+        void getAccountIDByPhone(String phone) {
+            DatabaseReference accountRef = FirebaseDatabase.getInstance().getReference("Account");
+            accountRef.orderByChild("phone").equalTo(phone).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        for (DataSnapshot accountSnapshot : dataSnapshot.getChildren()) {
+                           accountId = accountSnapshot.getKey();
+                        }
+                    } else {
+                        Log.d("Account ID", "No account found with this phone number.");
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d("Account ID", "Error fetching account ID: " + databaseError.getMessage());
+                }
+            });
         }
 
 

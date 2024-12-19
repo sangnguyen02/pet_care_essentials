@@ -67,6 +67,7 @@ public class TypeActivity extends AppCompatActivity {
                 Toast.makeText(TypeActivity.this, "Type added successfully", Toast.LENGTH_SHORT).show();
                 // Reset giao diện sau khi thêm thành công
                 typeName.setText("");
+                finish();
 
             } else {
                 Toast.makeText(TypeActivity.this, "Failed to add Type", Toast.LENGTH_SHORT).show();

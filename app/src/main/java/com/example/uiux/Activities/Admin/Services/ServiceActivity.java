@@ -151,6 +151,7 @@ public class ServiceActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 Toast.makeText(ServiceActivity.this, "Service added successfully!", Toast.LENGTH_SHORT).show();
                 clearInputFields(); // Optional: clear the input fields after successful upload
+                finish();
             } else {
                 Toast.makeText(ServiceActivity.this, "Failed to add Service: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
             }
