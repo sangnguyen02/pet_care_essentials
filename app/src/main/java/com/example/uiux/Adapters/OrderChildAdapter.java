@@ -90,7 +90,7 @@ public class OrderChildAdapter extends RecyclerView.Adapter<OrderChildAdapter.Or
 
         if (String.valueOf(orderStatus).equals("3")) {
             holder.btn_review_supply.setVisibility(View.VISIBLE);
-            holder.btn_buy_again.setVisibility(View.VISIBLE);
+//            holder.btn_buy_again.setVisibility(View.VISIBLE);
 
             holder.btn_review_supply.setOnClickListener(view -> {
                 Intent goToReview = new Intent(holder.itemView.getContext(), SupplyReviewActivity.class);
