@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.uiux.Activities.User.CartActivity;
 import com.example.uiux.Activities.User.Map.BranchMapActivity;
+import com.example.uiux.Activities.User.Map.RouteBranchActivity;
 import com.example.uiux.Activities.User.NotificationActivity;
 import com.example.uiux.Activities.User.Order.OrderActivity;
 import com.example.uiux.Activities.User.Pet.UpdatePetInfoActivity;
@@ -41,7 +42,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ProfileFragment extends Fragment {
     View rootView;
     ConstraintLayout to_pay, to_ship, to_receive, completed;
-    MaterialCardView mcv_help_center, mcv_pet_profile, mcv_branches,mcv_myService;
+    MaterialCardView mcv_help_center, mcv_pet_profile, mcv_branches,mcv_myService, mcv_branch_directions;
     String phone;
     String accountId;
     CircleImageView img_avatar, img_setting;
@@ -154,6 +155,11 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        mcv_branch_directions.setOnClickListener(view -> {
+            Intent goToRoute = new Intent(rootView.getContext(), RouteBranchActivity.class);
+            startActivity(goToRoute);
+        });
+
         to_pay.setOnClickListener(view -> {
             if (accountId == null) {
                 Toast.makeText(rootView.getContext(), "Please log in to access this function", Toast.LENGTH_SHORT).show();
@@ -218,6 +224,7 @@ public class ProfileFragment extends Fragment {
         mcv_pet_profile = rootView.findViewById(R.id.mcv_pet_profile);
         mcv_branches = rootView.findViewById(R.id.mcv_branches);
         mcv_myService= rootView.findViewById(R.id.mcv_my_service_orders);
+        mcv_branch_directions = rootView.findViewById(R.id.mcv_branch_directions);
         to_pay = rootView.findViewById(R.id.to_pay);
         to_ship = rootView.findViewById(R.id.to_ship);
         to_receive = rootView.findViewById(R.id.to_receive);
