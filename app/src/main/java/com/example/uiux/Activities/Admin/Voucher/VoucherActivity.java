@@ -5,12 +5,14 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -49,15 +51,18 @@ public class VoucherActivity extends AppCompatActivity {
     private Calendar calendar = Calendar.getInstance();
     private ProgressDialog progressDialog;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-
+    private ImageView img_back_add_vouncher;
     private DatabaseReference voucherRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_voucher);
         // Initialize UI components
+        img_back_add_vouncher = findViewById(R.id.img_back_add_vouncher);
+        img_back_add_vouncher.setOnClickListener(view -> finish());
         category_spinner = findViewById(R.id.category_spinner);
         status_spinner = findViewById(R.id.status_spinner);
         voucher_code = findViewById(R.id.voucher_code);
@@ -115,6 +120,7 @@ public class VoucherActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 Toast.makeText(VoucherActivity.this, "Service added successfully!", Toast.LENGTH_SHORT).show();
                 clearInputFields();
+                finish();
             } else {
                 Toast.makeText(VoucherActivity.this, "Failed to add Service: " + Objects.requireNonNull(task.getException()).getMessage(), Toast.LENGTH_SHORT).show();
             }

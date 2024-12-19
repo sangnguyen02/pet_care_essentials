@@ -5,12 +5,14 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -47,12 +49,16 @@ public class EditVoucherActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
     private DatabaseReference voucherRef;
+    private ImageView img_back_edit_vouncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.white));
         setContentView(R.layout.activity_edit_voucher);
+        img_back_edit_vouncher = findViewById(R.id.img_back_edit_vouncher);
+        img_back_edit_vouncher.setOnClickListener(view -> finish());
         category_spinner = findViewById(R.id.category_spinner);
         status_spinner = findViewById(R.id.status_spinner);
         voucher_code = findViewById(R.id.voucher_code);
@@ -163,7 +169,8 @@ public class EditVoucherActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     progressDialog.dismiss();
                     if (task.isSuccessful()) {
-                        Toast.makeText(EditVoucherActivity.this, "Voucher added successfully!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditVoucherActivity.this, "Voucher updated successfully!", Toast.LENGTH_SHORT).show();
+                        finish();
                     } else {
                         // Handle error
                     }
