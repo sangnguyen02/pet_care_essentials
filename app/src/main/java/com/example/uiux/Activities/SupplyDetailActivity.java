@@ -86,7 +86,6 @@ public class SupplyDetailActivity extends AppCompatActivity implements SupplyDet
     boolean isOptionSelected = false;
     ProgressBar progressBar_sameSupplies;
     List<Supplies> sameSuppliesList;
-
     DatabaseReference cartQuantityRef;
 
     @Override
