@@ -1,7 +1,9 @@
 package com.example.uiux.Activities.Admin.Order;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,6 +19,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
+import com.example.uiux.Activities.User.Order.OrderPaymentActivity;
 import com.example.uiux.Model.InfoReturnOrder;
 import com.example.uiux.Model.Order;
 import com.example.uiux.R;
@@ -60,7 +63,15 @@ public class ApproveReturnOrderActivity extends AppCompatActivity {
         approveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProgressDialog progressDialog = new ProgressDialog(ApproveReturnOrderActivity.this);
+                progressDialog.setMessage("Processing ...");
+                progressDialog.setCancelable(false); // Người dùng không thể hủy
+                progressDialog.show();
                 UpdateOrderStatus(OrderStatus.RETURN_PRODUCT_WAITING);
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(ApproveReturnOrderActivity.this, "Payment Completed", Toast.LENGTH_SHORT).show();
+                }, 30000); // Thời gian trì hoãn 5 giây
             }
         });
         rejectBtn.setOnClickListener(new View.OnClickListener() {

@@ -1,9 +1,11 @@
 package com.example.uiux.Activities.User.CancelOrder;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -94,6 +96,10 @@ public class UserCancelOrderActivity extends AppCompatActivity {
     }
 
     private void cancelOrder() {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Processing order cancellation request...");
+        progressDialog.setCancelable(false); // Người dùng không thể hủy ProgressDialog
+        progressDialog.show();
         int selectedReasonId = rgCancelReasons.getCheckedRadioButtonId();
 
         if (selectedReasonId == -1) {
@@ -136,6 +142,12 @@ public class UserCancelOrderActivity extends AppCompatActivity {
                         Toast.makeText(this, "Order Cancellation Successful", Toast.LENGTH_SHORT).show();
                         checkPayment(orderId);
                         updateOrderStatus(4);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                progressDialog.dismiss();
+                            }
+                        }, 30000); // Giả lập thời gian xử lý là 3 giây
                         finish();
                     } else {
                         Toast.makeText(this, "Cancel order failed", Toast.LENGTH_SHORT).show();

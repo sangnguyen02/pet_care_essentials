@@ -2,11 +2,13 @@ package com.example.uiux.Activities.User;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
@@ -196,8 +198,18 @@ private ActivityResultLauncher<Intent> voucherLauncher = registerForActivityResu
         btn_order.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProgressDialog progressDialog = new ProgressDialog(view.getContext());
+                progressDialog.setMessage("Processing...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
 
                 SendData();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                    }
+                }, 30000); // Giả lập thời gian xử lý là 3 giây
 
             }
         });

@@ -1,9 +1,11 @@
 package com.example.uiux.Activities.User.Order;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
@@ -139,6 +141,11 @@ public class OrderPaymentActivity extends AppCompatActivity {
         btnConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProgressDialog progressDialog = new ProgressDialog(OrderPaymentActivity.this);
+                progressDialog.setMessage("Processing payment...");
+                progressDialog.setCancelable(false); // Người dùng không thể hủy
+                progressDialog.show();
+
                 if (voucherId!=null)
                 {
                     updateVoucherQuantity(voucherId);
@@ -149,6 +156,9 @@ public class OrderPaymentActivity extends AppCompatActivity {
                         updateCartAndDeleteItem(supply_combinedKey);
                     }
                 }
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                }, 30000); // Thời gian trì hoãn 5 giây
 
 
                 Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
@@ -161,6 +171,10 @@ public class OrderPaymentActivity extends AppCompatActivity {
         btnWallet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ProgressDialog progressDialog = new ProgressDialog(OrderPaymentActivity.this);
+                progressDialog.setMessage("Processing payment...");
+                progressDialog.setCancelable(false); // Người dùng không thể hủy
+                progressDialog.show();
 
                 Intent intent = new Intent(OrderPaymentActivity.this, ConfirmPINActivity.class);
                 intent.putExtra("wallet_id", wallet_Id);
@@ -171,6 +185,10 @@ public class OrderPaymentActivity extends AppCompatActivity {
                         updateCartAndDeleteItem(supply_combinedKey);
                     }
                 }
+                new Handler().postDelayed(() -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(OrderPaymentActivity.this, "Payment Completed", Toast.LENGTH_SHORT).show();
+                }, 30000); // Thời gian trì hoãn 5 giây
 
             }
         });
