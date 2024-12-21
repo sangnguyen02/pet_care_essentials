@@ -151,7 +151,7 @@ public class UserCancelOrderActivity extends AppCompatActivity {
                 // Kiểm tra xem đơn hàng có tồn tại không
                 if (dataSnapshot.exists()) {
                     Order order = dataSnapshot.getValue(Order.class);
-                    if (order != null && order.getIs_completed_payment() == 1) {
+                    if (order != null && order.getIs_completed_payment() != 0) {
                         // Thanh toán hoàn tất
                         Toast.makeText(UserCancelOrderActivity.this, "Payment Completed", Toast.LENGTH_SHORT).show();
                         totalPrice=order.getTotal_price();
