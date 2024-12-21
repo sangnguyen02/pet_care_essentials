@@ -154,7 +154,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
                 Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
                 intent1.putExtra("result","Confirmation successful");
                 startActivity(intent1);
-
+                finish();
             }
         });
         getWalletId();
@@ -210,6 +210,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
                                     }
                                 }
                                 startActivity(intent1);
+                                finish();
 
                             }
 
