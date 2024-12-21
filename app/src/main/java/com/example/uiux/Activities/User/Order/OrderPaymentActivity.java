@@ -152,7 +152,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
 
 
                 Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
-                intent1.putExtra("result","Xac nhan thanh cong");
+                intent1.putExtra("result","Confirmation successful");
                 startActivity(intent1);
 
             }
@@ -187,7 +187,6 @@ public class OrderPaymentActivity extends AppCompatActivity {
                     JSONObject data = orderApi.createOrder(totalString);
                     //lblZpTransToken.setVisibility(View.VISIBLE);
                     String code = data.getString("returncode");
-                    Toast.makeText(getApplicationContext(), "return_code: " + code, Toast.LENGTH_LONG).show();
 
                     if (code.equals("1")) {
                         // lblZpTransToken.setText("zptranstoken");
@@ -199,7 +198,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
                             @Override
                             public void onPaymentSucceeded(String s, String s1, String s2) {
                                 Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
-                                intent1.putExtra("result","Thanh toan thanh cong");
+                                intent1.putExtra("result","Order payment successful");
                                 if (voucherId!=null)
                                 {
                                     updateVoucherQuantity(voucherId);
@@ -217,7 +216,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
                             @Override
                             public void onPaymentCanceled(String s, String s1) {
                                 Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
-                                intent1.putExtra("result","Thanh toan bi cancel");
+                                intent1.putExtra("result","Payment was canceled");
                                 startActivity(intent1);
 
                             }
@@ -225,7 +224,7 @@ public class OrderPaymentActivity extends AppCompatActivity {
                             @Override
                             public void onPaymentError(ZaloPayError zaloPayError, String s, String s1) {
                                 Intent intent1= new Intent(OrderPaymentActivity.this,PaymentNotificationActivity.class);
-                                intent1.putExtra("result","Thanh toan bi loi");
+                                intent1.putExtra("result","Payment error");
                                 startActivity(intent1);
 
                             }
@@ -259,14 +258,14 @@ public class OrderPaymentActivity extends AppCompatActivity {
 
                 if (wallet_Id == null) {
                     Log.e("WalletID", "No wallet ID found for account ID: " + accountId);
-                    Toast.makeText(OrderPaymentActivity.this, "No matching wallet found!", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(OrderPaymentActivity.this, "No matching wallet found!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("FirebaseError", "Failed to read wallet ID: " + error.getMessage());
-                Toast.makeText(OrderPaymentActivity.this, "Error retrieving wallet data!", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(OrderPaymentActivity.this, "Error retrieving wallet data!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -314,18 +313,18 @@ public class OrderPaymentActivity extends AppCompatActivity {
                         orderRef.setValue(order)
                                 .addOnCompleteListener(task -> {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(OrderPaymentActivity.this, "Order updated successfully", Toast.LENGTH_SHORT).show();
+                                       // Toast.makeText(OrderPaymentActivity.this, "Order updated successfully", Toast.LENGTH_SHORT).show();
                                     } else {
-                                        Toast.makeText(OrderPaymentActivity.this, "Failed to update order", Toast.LENGTH_SHORT).show();
+                                       //Toast.makeText(OrderPaymentActivity.this, "Failed to update order", Toast.LENGTH_SHORT).show();
                                     }
                                 });
                     } else {
                         Log.e("UpdateOrder", "Order data not found.");
-                        Toast.makeText(OrderPaymentActivity.this, "Order data error", Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(OrderPaymentActivity.this, "Order data error", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Log.e("UpdateOrder", "Order ID does not exist in Firebase.");
-                    Toast.makeText(OrderPaymentActivity.this, "Order ID does not exist", Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(OrderPaymentActivity.this, "Order ID does not exist", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -362,14 +361,14 @@ public class OrderPaymentActivity extends AppCompatActivity {
                         voucherRef.setValue(voucher);
 
                         // Thông báo cập nhật thành công
-                        Toast.makeText(OrderPaymentActivity.this, "Voucher đã được giảm 1", Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(OrderPaymentActivity.this, "Voucher đã được giảm 1", Toast.LENGTH_SHORT).show();
                     } else
                     {
                         // Nếu voucher đã hết
-                        Toast.makeText(OrderPaymentActivity.this, "Voucher hết hạn sử dụng", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(OrderPaymentActivity.this, "Voucher hết hạn sử dụng", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(OrderPaymentActivity.this, "Voucher không tồn tại", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(OrderPaymentActivity.this, "Voucher không tồn tại", Toast.LENGTH_SHORT).show();
                 }
             }
 
