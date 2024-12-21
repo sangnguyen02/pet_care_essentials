@@ -1,7 +1,9 @@
 package com.example.uiux.Activities.Admin.Statistic;
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.DatePicker;
@@ -15,6 +17,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.uiux.Activities.User.Order.OrderPaymentActivity;
 import com.example.uiux.Model.CartItem;
 import com.example.uiux.Model.Order;
 import com.example.uiux.Model.Supplies;
@@ -426,10 +429,15 @@ public class StatisticAllRevenueActivity extends AppCompatActivity {
         supplyImportRef = FirebaseDatabase.getInstance().getReference("Supplies_Imports");
 
         // Load các thống kê
+        ProgressDialog progressDialog = new ProgressDialog(StatisticAllRevenueActivity.this);
+        progressDialog.setMessage("Processing ...");
+        progressDialog.setCancelable(false); // Người dùng không thể hủy
+        progressDialog.show();
         loadRevenueData();
         loadImportCostData();
         loadTopSellingProducts();
         loadProfitData();
+        progressDialog.dismiss();
 
 //        startDatePicker.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> updateData());
 //        endDatePicker.setOnDateChangedListener((view, year, monthOfYear, dayOfMonth) -> updateData());
