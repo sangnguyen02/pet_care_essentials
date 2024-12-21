@@ -1,10 +1,12 @@
 package com.example.uiux.Activities.User.ReturnOrder;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -94,6 +96,10 @@ public class UserReturnOrderActivity extends AppCompatActivity {
     }
 
     private void returnOrder() {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Processing order return request...");
+        progressDialog.setCancelable(false); // Người dùng không thể hủy ProgressDialog
+        progressDialog.show();
         getAccountInfo(); // Lấy thông tin tài khoản
 
         // Xác định lý do trả hàng
@@ -126,6 +132,12 @@ public class UserReturnOrderActivity extends AppCompatActivity {
                 uploadImageToFirebase(imageUris[i], i, imageUrls, reason, detailReason);
             }
         }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog.dismiss();
+            }
+        }, 30000); // Giả lập thời gian xử lý là 30 giây
     }
 
     private void uploadImageToFirebase(Uri imageUri, int index, List<String> imageUrls, int reason, String detailReason) {
