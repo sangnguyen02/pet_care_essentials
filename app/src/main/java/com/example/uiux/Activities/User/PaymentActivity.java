@@ -573,9 +573,13 @@ private void loadAccountInfo(String accountId) {
                     // Set address details, ward, district, province
                     TextView tvAddressDetail = findViewById(R.id.tv_address_detail);
                     TextView tvWardDistrictProvince = findViewById(R.id.tv_ward_district_province);
+                    String[] Province = accountAddress.getProvince().split("\\+");
+                    String[] District = accountAddress.getDistrict().split("\\+");
+                    String[] Ward = accountAddress.getWard().split("\\+");
+
+                    String fullAddress = Ward[1] + ", " + District[1] + ", " + Province[1];
 
                     tvAddressDetail.setText(accountAddress.getAddress_details());
-                    String fullAddress = accountAddress.getWard() + ", " + accountAddress.getDistrict() + ", " + accountAddress.getProvince();
                     tvWardDistrictProvince.setText(fullAddress);
                 }
             }

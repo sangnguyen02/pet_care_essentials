@@ -155,7 +155,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/textInputLayout2"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="240dp"
+                android:layout_width="220dp"
                 android:layout_height="60dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
@@ -183,8 +183,8 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_add_balance"
-                android:layout_width="120dp"
-                android:layout_height="60dp"
+                android:layout_width="100dp"
+                android:layout_height="62dp"
                 android:layout_marginEnd="8dp"
                 android:backgroundTint="@color/tabLayout_background"
                 android:fontFamily="@font/roboto_bold"
