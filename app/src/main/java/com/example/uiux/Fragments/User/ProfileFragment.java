@@ -25,6 +25,7 @@ import com.example.uiux.Activities.User.Map.RouteBranchActivity;
 import com.example.uiux.Activities.User.NotificationActivity;
 import com.example.uiux.Activities.User.Order.OrderActivity;
 import com.example.uiux.Activities.User.Pet.UpdatePetInfoActivity;
+import com.example.uiux.Activities.User.Profile.HelpCenterActivity;
 import com.example.uiux.Activities.User.Profile.PhoneUpdateProfileActivity;
 import com.example.uiux.Activities.User.Profile.SettingsActivity;
 import com.example.uiux.Activities.User.Service.DisplayOrderServiceActivity;
@@ -127,7 +128,8 @@ public class ProfileFragment extends Fragment {
 
 
         mcv_help_center.setOnClickListener(view -> {
-
+            Intent intent = new Intent(rootView.getContext(), HelpCenterActivity.class);
+            startActivity(intent);
         });
 
         mcv_pet_profile.setOnClickListener(view -> {

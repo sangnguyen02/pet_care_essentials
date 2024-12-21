@@ -123,4 +123,36 @@
     <string name="not_found">Not found</string>
     <string name="empty">Empty</string>
     <string name="review_approve"><![CDATA[Review & Approve]]></string>
+
+
+
+    <string name="question_1">What products and services does the app offer for pets?</string>
+    <string name="answer_1">The app offers a wide range of products for pets, including food, accessories, toys, clothing, and health care items. Additionally, you can book services such as grooming, hair trimming, and veterinary check-ups.</string>
+
+    <string name="question_2">How can I book pet care services through the app?</string>
+    <string name="answer_2">Simply go to the “Services” section, select the type of service you need, choose a suitable time and location, and confirm your booking. A confirmation order will be sent to you once the booking is completed.</string>
+
+    <string name="question_3">What types of pets can I find suitable products for?</string>
+    <string name="answer_3">The app provides products for various pets, including dogs, cats, and categories. You can filter products by pet type or category in the product catalog to make your search easier.</string>
+
+    <string name="question_4">Does the app have any loyalty programs or discounts for frequent customers?</string>
+    <string name="answer_4">We frequently offer special promotions, discounts, and vouchers for loyal customers.</string>
+
+    <string name="question_5">What should I do if I’m not satisfied with a product or service?</string>
+    <string name="answer_5">You can contact our customer support team through the app for assistance. We offer a 7-day return policy for unused products and will address any issues with services promptly to ensure your satisfaction.</string>
+
+    <string name="question_6">What payment methods are supported on the app?</string>
+    <string name="answer_6">The app supports various payment options, including ZaloPay, Paypal, Wallet, and cash on delivery (COD).</string>
+
+    <string name="question_7">Where can I track my orders and service bookings?</string>
+    <string name="answer_7">You can track your order status and service bookings in the “Order Service” section of the app. Detailed updates on your orders and appointments are provided there.</string>
+
+    <string name="question_8">Does the app offer home delivery?</string>
+    <string name="answer_8">We provide home delivery services nationwide. You can choose between express shipping or standard delivery, depending on your preference.</string>
+
+    <string name="question_9">How can I find discounted or promotional products?</string>
+    <string name="answer_9">Just visit the “Vouchers” section of the app when you order products to view a list of vouchers.</string>
+
+    <string name="question_10">Does the app offer pet care advice?</string>
+    <string name="answer_10">We have a team of experts ready to provide free advice through the store when you get in there. You can ask questions about nutrition, health, or pet care, and get quick responses from our specialists.</string>
 </resources>

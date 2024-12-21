@@ -30,29 +30,27 @@
         android:theme="@style/Theme.Uiux"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".Activities.User.Profile.HelpCenterActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.Admin.Statistic.StatisticAllRevenueActivity"
-            android:exported="false"
-            />
+            android:exported="false" />
         <activity
             android:name=".Activities.Admin.Services.DisplayServiceBookingActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.User.NotificationActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.User.Service.DisplayOrderServiceActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.User.Service.CancelServiceActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".Utils.FCM.FCMNotificationService"
@@ -68,8 +66,7 @@
         <activity
             android:name=".Activities.User.Service.BookServiceActivity"
             android:exported="false"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Activities.OrderDetailActivity"
             android:exported="false"
