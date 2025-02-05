@@ -364,7 +364,7 @@ public class ChatBotActivity extends AppCompatActivity {
     private void initGenerativeModel() {
         GenerativeModel gm = new GenerativeModel(
                 /* modelName */ "gemini-1.5-flash",
-                /* apiKey */ "AIzaSyCczBLARX9JUmi1AUlbDMEU0CEZ2MQQSlE");
+                /* apiKey */ "");
         model = GenerativeModelFutures.from(gm);
     }
 
